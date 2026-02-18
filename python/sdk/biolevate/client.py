@@ -4,7 +4,12 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from biolevate.resources.collections import CollectionsResource
+from biolevate.resources.extraction import ExtractionResource
+from biolevate.resources.files import FilesResource
+from biolevate.resources.provider_items import ProviderItemsResource
 from biolevate.resources.providers import ProvidersResource
+from biolevate.resources.question_answering import QuestionAnsweringResource
 
 if TYPE_CHECKING:
     from biolevate_client import AuthenticatedClient
@@ -36,6 +41,11 @@ class BiolevateClient:
         self._token = token
         self._client: AuthenticatedClient | None = None
         self._providers: ProvidersResource | None = None
+        self._items: ProviderItemsResource | None = None
+        self._files: FilesResource | None = None
+        self._collections: CollectionsResource | None = None
+        self._extraction: ExtractionResource | None = None
+        self._qa: QuestionAnsweringResource | None = None
 
     def _get_client(self) -> AuthenticatedClient:
         """Get or create the underlying authenticated client."""
@@ -54,6 +64,41 @@ class BiolevateClient:
         if self._providers is None:
             self._providers = ProvidersResource(self._get_client())
         return self._providers
+
+    @property
+    def items(self) -> ProviderItemsResource:
+        """Access the provider items resource for managing files/folders within providers."""
+        if self._items is None:
+            self._items = ProviderItemsResource(self._get_client())
+        return self._items
+
+    @property
+    def files(self) -> FilesResource:
+        """Access the files resource for managing indexed files."""
+        if self._files is None:
+            self._files = FilesResource(self._get_client())
+        return self._files
+
+    @property
+    def collections(self) -> CollectionsResource:
+        """Access the collections resource for managing file collections."""
+        if self._collections is None:
+            self._collections = CollectionsResource(self._get_client())
+        return self._collections
+
+    @property
+    def extraction(self) -> ExtractionResource:
+        """Access the extraction resource for metadata extraction jobs."""
+        if self._extraction is None:
+            self._extraction = ExtractionResource(self._get_client())
+        return self._extraction
+
+    @property
+    def qa(self) -> QuestionAnsweringResource:
+        """Access the question answering resource for QA jobs."""
+        if self._qa is None:
+            self._qa = QuestionAnsweringResource(self._get_client())
+        return self._qa
 
     async def __aenter__(self) -> BiolevateClient:
         """Enter async context."""

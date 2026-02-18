@@ -8,3 +8,4 @@ content_type_overrides:
 post_hooks:
   - "ruff check . --fix-only"
   - "ruff format ."
+  - "cp /workspace/tools/templates/python-client-pyproject.toml /workspace/python/client/pyproject.toml"

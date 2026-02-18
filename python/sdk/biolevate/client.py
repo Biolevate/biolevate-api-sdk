@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from biolevate.resources.providers import ProvidersResource
+
 if TYPE_CHECKING:
     from biolevate_client import AuthenticatedClient
 
@@ -13,6 +15,14 @@ class BiolevateClient:
 
     This client wraps the generated low-level client and provides
     a more ergonomic interface with additional features like pipelines.
+
+    Example:
+        ```python
+        async with BiolevateClient(base_url="https://api.biolevate.com", token="...") as client:
+            providers = await client.providers.list()
+            for provider in providers.data:
+                print(provider.name)
+        ```
     """
 
     def __init__(self, base_url: str, token: str) -> None:
@@ -25,6 +35,7 @@ class BiolevateClient:
         self._base_url = base_url
         self._token = token
         self._client: AuthenticatedClient | None = None
+        self._providers: ProvidersResource | None = None
 
     def _get_client(self) -> AuthenticatedClient:
         """Get or create the underlying authenticated client."""
@@ -36,6 +47,13 @@ class BiolevateClient:
                 token=self._token,
             )
         return self._client
+
+    @property
+    def providers(self) -> ProvidersResource:
+        """Access the providers resource for managing storage providers."""
+        if self._providers is None:
+            self._providers = ProvidersResource(self._get_client())
+        return self._providers
 
     async def __aenter__(self) -> BiolevateClient:
         """Enter async context."""

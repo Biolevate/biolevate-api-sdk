@@ -19,12 +19,17 @@ classifiers = [
 ]
 dependencies = [
     "biolevate-client",
+    "click>=8.0.0",
 ]
+
+[project.scripts]
+biolevate = "biolevate.cli:cli"
 
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0.0",
     "pytest-asyncio>=0.23.0",
+    "respx>=0.21.0",
     "ruff>=0.2.0",
 ]
 

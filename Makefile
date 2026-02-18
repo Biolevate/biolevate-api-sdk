@@ -32,9 +32,9 @@ generate-python: build-generators
 		--output-path /workspace/python/client \
 		--overwrite
 
-# Install Python workspace (all packages)
+# Install Python workspace (all packages with dev dependencies)
 install-python:
-	cd python && uv sync
+	cd python && uv sync --all-extras
 
 # Lint and format Python code
 lint-python:

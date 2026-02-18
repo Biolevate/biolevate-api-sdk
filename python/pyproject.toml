@@ -4,11 +4,22 @@ version = "0.0.0"
 description = "Biolevate Python SDK workspace"
 requires-python = ">=3.11"
 readme = "README.md"
+dependencies = [
+    "biolevate",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "ruff>=0.2.0",
+]
 
 [tool.uv.workspace]
 members = ["client", "sdk"]
 
 [tool.uv.sources]
+biolevate = { workspace = true }
 biolevate-client = { workspace = true }
 
 [tool.ruff]

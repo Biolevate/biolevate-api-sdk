@@ -6,7 +6,7 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.job import Job
+from ...models.qa_job_outputs import QAJobOutputs
 from ...types import Response
 
 
@@ -16,7 +16,7 @@ def _get_kwargs(
 
     _kwargs: dict[str, Any] = {
         "method": "get",
-        "url": "/api/core/qa/jobs/{job_id}".format(
+        "url": "/api/core/qa/jobs/{job_id}/results".format(
             job_id=quote(str(job_id), safe=""),
         ),
     }
@@ -24,11 +24,26 @@ def _get_kwargs(
     return _kwargs
 
 
-def _parse_response(*, client: AuthenticatedClient | Client, response: httpx.Response) -> Job | None:
+def _parse_response(*, client: AuthenticatedClient | Client, response: httpx.Response) -> QAJobOutputs | None:
     if response.status_code == 200:
-        response_200 = Job.from_dict(response.json())
+        response_200 = QAJobOutputs.from_dict(response.json())
 
         return response_200
+
+    if response.status_code == 401:
+        response_401 = QAJobOutputs.from_dict(response.json())
+
+        return response_401
+
+    if response.status_code == 403:
+        response_403 = QAJobOutputs.from_dict(response.json())
+
+        return response_403
+
+    if response.status_code == 404:
+        response_404 = QAJobOutputs.from_dict(response.json())
+
+        return response_404
 
     if client.raise_on_unexpected_status:
         raise errors.UnexpectedStatus(response.status_code, response.content)
@@ -36,7 +51,7 @@ def _parse_response(*, client: AuthenticatedClient | Client, response: httpx.Res
         return None
 
 
-def _build_response(*, client: AuthenticatedClient | Client, response: httpx.Response) -> Response[Job]:
+def _build_response(*, client: AuthenticatedClient | Client, response: httpx.Response) -> Response[QAJobOutputs]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -49,8 +64,10 @@ def sync_detailed(
     job_id: str,
     *,
     client: AuthenticatedClient | Client,
-) -> Response[Job]:
-    """Get QA job by ID
+) -> Response[QAJobOutputs]:
+    """Get QA job outputs
+
+     Returns the answers and results from the QA job
 
     Args:
         job_id (str):
@@ -60,7 +77,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Job]
+        Response[QAJobOutputs]
     """
 
     kwargs = _get_kwargs(
@@ -78,8 +95,10 @@ def sync(
     job_id: str,
     *,
     client: AuthenticatedClient | Client,
-) -> Job | None:
-    """Get QA job by ID
+) -> QAJobOutputs | None:
+    """Get QA job outputs
+
+     Returns the answers and results from the QA job
 
     Args:
         job_id (str):
@@ -89,7 +108,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Job
+        QAJobOutputs
     """
 
     return sync_detailed(
@@ -102,8 +121,10 @@ async def asyncio_detailed(
     job_id: str,
     *,
     client: AuthenticatedClient | Client,
-) -> Response[Job]:
-    """Get QA job by ID
+) -> Response[QAJobOutputs]:
+    """Get QA job outputs
+
+     Returns the answers and results from the QA job
 
     Args:
         job_id (str):
@@ -113,7 +134,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Job]
+        Response[QAJobOutputs]
     """
 
     kwargs = _get_kwargs(
@@ -129,8 +150,10 @@ async def asyncio(
     job_id: str,
     *,
     client: AuthenticatedClient | Client,
-) -> Job | None:
-    """Get QA job by ID
+) -> QAJobOutputs | None:
+    """Get QA job outputs
+
+     Returns the answers and results from the QA job
 
     Args:
         job_id (str):
@@ -140,7 +163,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Job
+        QAJobOutputs
     """
 
     return (

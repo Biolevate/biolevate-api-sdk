@@ -1,34 +1,54 @@
 from http import HTTPStatus
 from typing import Any
-from urllib.parse import quote
 
 import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.extract_job_inputs import ExtractJobInputs
+from ...models.create_qa_request import CreateQARequest
+from ...models.job import Job
 from ...types import Response
 
 
 def _get_kwargs(
-    job_id: str,
+    *,
+    body: CreateQARequest,
 ) -> dict[str, Any]:
+    headers: dict[str, Any] = {}
 
     _kwargs: dict[str, Any] = {
-        "method": "get",
-        "url": "/api/core/extraction/jobs/{job_id}/inputs".format(
-            job_id=quote(str(job_id), safe=""),
-        ),
+        "method": "post",
+        "url": "/api/core/qa/jobs",
     }
 
+    _kwargs["json"] = body.to_dict()
+
+    headers["Content-Type"] = "application/json"
+
+    _kwargs["headers"] = headers
     return _kwargs
 
 
-def _parse_response(*, client: AuthenticatedClient | Client, response: httpx.Response) -> ExtractJobInputs | None:
+def _parse_response(*, client: AuthenticatedClient | Client, response: httpx.Response) -> Job | None:
     if response.status_code == 200:
-        response_200 = ExtractJobInputs.from_dict(response.json())
+        response_200 = Job.from_dict(response.json())
 
         return response_200
+
+    if response.status_code == 400:
+        response_400 = Job.from_dict(response.json())
+
+        return response_400
+
+    if response.status_code == 401:
+        response_401 = Job.from_dict(response.json())
+
+        return response_401
+
+    if response.status_code == 403:
+        response_403 = Job.from_dict(response.json())
+
+        return response_403
 
     if client.raise_on_unexpected_status:
         raise errors.UnexpectedStatus(response.status_code, response.content)
@@ -36,7 +56,7 @@ def _parse_response(*, client: AuthenticatedClient | Client, response: httpx.Res
         return None
 
 
-def _build_response(*, client: AuthenticatedClient | Client, response: httpx.Response) -> Response[ExtractJobInputs]:
+def _build_response(*, client: AuthenticatedClient | Client, response: httpx.Response) -> Response[Job]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -46,25 +66,27 @@ def _build_response(*, client: AuthenticatedClient | Client, response: httpx.Res
 
 
 def sync_detailed(
-    job_id: str,
     *,
     client: AuthenticatedClient | Client,
-) -> Response[ExtractJobInputs]:
-    """Get extraction job inputs
+    body: CreateQARequest,
+) -> Response[Job]:
+    """Create QA job
+
+     Creates a new question answering job on the specified files
 
     Args:
-        job_id (str):
+        body (CreateQARequest):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[ExtractJobInputs]
+        Response[Job]
     """
 
     kwargs = _get_kwargs(
-        job_id=job_id,
+        body=body,
     )
 
     response = client.get_httpx_client().request(
@@ -75,49 +97,53 @@ def sync_detailed(
 
 
 def sync(
-    job_id: str,
     *,
     client: AuthenticatedClient | Client,
-) -> ExtractJobInputs | None:
-    """Get extraction job inputs
+    body: CreateQARequest,
+) -> Job | None:
+    """Create QA job
+
+     Creates a new question answering job on the specified files
 
     Args:
-        job_id (str):
+        body (CreateQARequest):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        ExtractJobInputs
+        Job
     """
 
     return sync_detailed(
-        job_id=job_id,
         client=client,
+        body=body,
     ).parsed
 
 
 async def asyncio_detailed(
-    job_id: str,
     *,
     client: AuthenticatedClient | Client,
-) -> Response[ExtractJobInputs]:
-    """Get extraction job inputs
+    body: CreateQARequest,
+) -> Response[Job]:
+    """Create QA job
+
+     Creates a new question answering job on the specified files
 
     Args:
-        job_id (str):
+        body (CreateQARequest):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[ExtractJobInputs]
+        Response[Job]
     """
 
     kwargs = _get_kwargs(
-        job_id=job_id,
+        body=body,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -126,26 +152,28 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    job_id: str,
     *,
     client: AuthenticatedClient | Client,
-) -> ExtractJobInputs | None:
-    """Get extraction job inputs
+    body: CreateQARequest,
+) -> Job | None:
+    """Create QA job
+
+     Creates a new question answering job on the specified files
 
     Args:
-        job_id (str):
+        body (CreateQARequest):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        ExtractJobInputs
+        Job
     """
 
     return (
         await asyncio_detailed(
-            job_id=job_id,
             client=client,
+            body=body,
         )
     ).parsed

@@ -31,7 +31,7 @@ def _get_kwargs(
 
     _kwargs: dict[str, Any] = {
         "method": "get",
-        "url": "/api/core/qa/jobs",
+        "url": "/api/core/extraction/jobs",
         "params": params,
     }
 
@@ -43,6 +43,11 @@ def _parse_response(*, client: AuthenticatedClient | Client, response: httpx.Res
         response_200 = PageDataJob.from_dict(response.json())
 
         return response_200
+
+    if response.status_code == 401:
+        response_401 = PageDataJob.from_dict(response.json())
+
+        return response_401
 
     if client.raise_on_unexpected_status:
         raise errors.UnexpectedStatus(response.status_code, response.content)
@@ -67,7 +72,9 @@ def sync_detailed(
     sort_property: str | Unset = UNSET,
     sort_order: str | Unset = UNSET,
 ) -> Response[PageDataJob]:
-    """List QA jobs for current user
+    """List extraction jobs
+
+     Returns a paginated list of extraction jobs for the current user
 
     Args:
         page_size (int):
@@ -105,7 +112,9 @@ def sync(
     sort_property: str | Unset = UNSET,
     sort_order: str | Unset = UNSET,
 ) -> PageDataJob | None:
-    """List QA jobs for current user
+    """List extraction jobs
+
+     Returns a paginated list of extraction jobs for the current user
 
     Args:
         page_size (int):
@@ -138,7 +147,9 @@ async def asyncio_detailed(
     sort_property: str | Unset = UNSET,
     sort_order: str | Unset = UNSET,
 ) -> Response[PageDataJob]:
-    """List QA jobs for current user
+    """List extraction jobs
+
+     Returns a paginated list of extraction jobs for the current user
 
     Args:
         page_size (int):
@@ -174,7 +185,9 @@ async def asyncio(
     sort_property: str | Unset = UNSET,
     sort_order: str | Unset = UNSET,
 ) -> PageDataJob | None:
-    """List QA jobs for current user
+    """List extraction jobs
+
+     Returns a paginated list of extraction jobs for the current user
 
     Args:
         page_size (int):

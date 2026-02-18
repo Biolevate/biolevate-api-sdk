@@ -1,26 +1,31 @@
 from http import HTTPStatus
 from typing import Any
-from urllib.parse import quote
 
 import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
+from ...models.create_extract_request import CreateExtractRequest
 from ...models.job import Job
 from ...types import Response
 
 
 def _get_kwargs(
-    job_id: str,
+    *,
+    body: CreateExtractRequest,
 ) -> dict[str, Any]:
+    headers: dict[str, Any] = {}
 
     _kwargs: dict[str, Any] = {
-        "method": "get",
-        "url": "/api/core/extraction/jobs/{job_id}".format(
-            job_id=quote(str(job_id), safe=""),
-        ),
+        "method": "post",
+        "url": "/api/core/extraction/jobs",
     }
 
+    _kwargs["json"] = body.to_dict()
+
+    headers["Content-Type"] = "application/json"
+
+    _kwargs["headers"] = headers
     return _kwargs
 
 
@@ -29,6 +34,21 @@ def _parse_response(*, client: AuthenticatedClient | Client, response: httpx.Res
         response_200 = Job.from_dict(response.json())
 
         return response_200
+
+    if response.status_code == 400:
+        response_400 = Job.from_dict(response.json())
+
+        return response_400
+
+    if response.status_code == 401:
+        response_401 = Job.from_dict(response.json())
+
+        return response_401
+
+    if response.status_code == 403:
+        response_403 = Job.from_dict(response.json())
+
+        return response_403
 
     if client.raise_on_unexpected_status:
         raise errors.UnexpectedStatus(response.status_code, response.content)
@@ -46,14 +66,16 @@ def _build_response(*, client: AuthenticatedClient | Client, response: httpx.Res
 
 
 def sync_detailed(
-    job_id: str,
     *,
     client: AuthenticatedClient | Client,
+    body: CreateExtractRequest,
 ) -> Response[Job]:
-    """Get extraction job by ID
+    """Create extraction job
+
+     Creates a new metadata extraction job on the specified files
 
     Args:
-        job_id (str):
+        body (CreateExtractRequest):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -64,7 +86,7 @@ def sync_detailed(
     """
 
     kwargs = _get_kwargs(
-        job_id=job_id,
+        body=body,
     )
 
     response = client.get_httpx_client().request(
@@ -75,14 +97,16 @@ def sync_detailed(
 
 
 def sync(
-    job_id: str,
     *,
     client: AuthenticatedClient | Client,
+    body: CreateExtractRequest,
 ) -> Job | None:
-    """Get extraction job by ID
+    """Create extraction job
+
+     Creates a new metadata extraction job on the specified files
 
     Args:
-        job_id (str):
+        body (CreateExtractRequest):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -93,20 +117,22 @@ def sync(
     """
 
     return sync_detailed(
-        job_id=job_id,
         client=client,
+        body=body,
     ).parsed
 
 
 async def asyncio_detailed(
-    job_id: str,
     *,
     client: AuthenticatedClient | Client,
+    body: CreateExtractRequest,
 ) -> Response[Job]:
-    """Get extraction job by ID
+    """Create extraction job
+
+     Creates a new metadata extraction job on the specified files
 
     Args:
-        job_id (str):
+        body (CreateExtractRequest):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -117,7 +143,7 @@ async def asyncio_detailed(
     """
 
     kwargs = _get_kwargs(
-        job_id=job_id,
+        body=body,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -126,14 +152,16 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    job_id: str,
     *,
     client: AuthenticatedClient | Client,
+    body: CreateExtractRequest,
 ) -> Job | None:
-    """Get extraction job by ID
+    """Create extraction job
+
+     Creates a new metadata extraction job on the specified files
 
     Args:
-        job_id (str):
+        body (CreateExtractRequest):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -145,7 +173,7 @@ async def asyncio(
 
     return (
         await asyncio_detailed(
-            job_id=job_id,
             client=client,
+            body=body,
         )
     ).parsed

@@ -1,0 +1,21 @@
+Biolevate QA Test Document
+
+Company: Biolevate Inc.
+Founded: 2020
+Headquarters: San Francisco, California
+CEO: Dr. Sarah Chen
+Number of Employees: 150
+
+Products:
+- Biolevate SDK: A Python SDK for document processing
+- Biolevate API: REST API for extraction and QA
+- Biolevate Cloud: Cloud-hosted document intelligence
+
+Key Features:
+- Automatic metadata extraction
+- Question answering over documents
+- Ontology detection
+- Multi-format support (PDF, TXT, DOCX)
+
+Contact: support@biolevate.io
+Website: https://biolevate.io

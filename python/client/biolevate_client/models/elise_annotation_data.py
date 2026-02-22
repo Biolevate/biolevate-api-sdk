@@ -157,8 +157,8 @@ class EliseAnnotationData(BaseModel):
             error_messages.append(str(e))
 
         if match > 1:
-            # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into EliseAnnotationData with oneOf schemas: EliseDocumentStatement, EliseExternalDocumentStatement, EliseFullDocumentStatement, EliseKnowledgeStatement, EliseReviewComment, EliseWebStatement. Details: " + ", ".join(error_messages))
+            # More than 1 match - use first successful parse (patched behavior)
+            pass  # raise ValueError("Multiple matches found when deserializing the JSON string into EliseAnnotationData with oneOf schemas: EliseDocumentStatement, EliseExternalDocumentStatement, EliseFullDocumentStatement, EliseKnowledgeStatement, EliseReviewComment, EliseWebStatement. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
             raise ValueError("No match found when deserializing the JSON string into EliseAnnotationData with oneOf schemas: EliseDocumentStatement, EliseExternalDocumentStatement, EliseFullDocumentStatement, EliseKnowledgeStatement, EliseReviewComment, EliseWebStatement. Details: " + ", ".join(error_messages))

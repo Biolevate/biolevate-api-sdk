@@ -36,7 +36,7 @@ class EliseMetaResult(BaseModel):
     answer: Optional[DataValue] = None
     reference_ids: Optional[List[AnnotationId]] = Field(default=None, alias="referenceIds")
     meta: Optional[StrictStr] = None
-    raw_value: Optional[Dict[str, Any]] = Field(default=None, alias="rawValue")
+    raw_value: Optional[Any] = Field(default=None, alias="rawValue")
     __properties: ClassVar[List[str]] = ["id", "explanation", "answerType", "answer", "referenceIds", "meta", "rawValue"]
 
     model_config = ConfigDict(

@@ -13,7 +13,9 @@ help:
 	@echo "  clean             - Clean generated artifacts"
 
 # Generate Python client from OpenAPI spec (via Docker)
-# Then apply patch so EliseOntologyMeta.meta_value is Any (backend sends arbitrary JSON)
+# Then apply patches:
+#   - EliseOntologyMeta.meta_value -> Any (backend sends arbitrary JSON)
+#   - oneOf classes accept first match instead of failing on multiple matches
 generate-python:
 	rm -rf python/client
 	docker run --rm \
@@ -22,6 +24,7 @@ generate-python:
 		generate \
 		-c /workspace/tools/openapi-generator-config.yaml
 	python3 tools/patch-elise-ontology-meta.py
+	python3 tools/patch-oneof-multiple-matches.py
 
 # Install Python workspace (all packages with dev dependencies)
 install-python:

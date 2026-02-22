@@ -1,0 +1,9 @@
+Title: Biolevate Extraction Test Document
+
+Authors: Jane Smith, John Doe
+
+Date: 2025-02-18
+
+Abstract: This document is used by the SDK extraction integration test. It contains structured metadata (title, authors, date) so that the extraction job has meaningful content to process and validate.
+
+Keywords: biolevate, extraction, metadata, integration test

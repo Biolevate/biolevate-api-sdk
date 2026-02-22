@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Re-apply meta_value type override after OpenAPI codegen.
+"""Patch Dict[str, Any] fields to Any for arbitrary JSON values.
 
-The backend returns metaValue as an arbitrary Java-serialized value (object,
+The backend returns certain fields as arbitrary Java-serialized values (object,
 array, string, etc.). The generator emits Optional[Dict[str, Any]] for
 type: object; we override to Optional[Any] so any JSON value is accepted.
 
@@ -14,25 +14,52 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-TARGET = REPO_ROOT / "python/client/biolevate_client/models/elise_ontology_meta.py"
+MODELS_DIR = REPO_ROOT / "python/client/biolevate_client/models"
 
-OLD = '    meta_value: Optional[Dict[str, Any]] = Field(default=None, alias="metaValue")'
-NEW = '    meta_value: Optional[Any] = Field(default=None, alias="metaValue")'
+PATCHES: list[tuple[str, str, str]] = [
+    (
+        "elise_ontology_meta.py",
+        '    meta_value: Optional[Dict[str, Any]] = Field(default=None, alias="metaValue")',
+        '    meta_value: Optional[Any] = Field(default=None, alias="metaValue")',
+    ),
+    (
+        "elise_meta_result.py",
+        '    raw_value: Optional[Dict[str, Any]] = Field(default=None, alias="rawValue")',
+        '    raw_value: Optional[Any] = Field(default=None, alias="rawValue")',
+    ),
+]
 
 
 def main() -> int:
-    if not TARGET.is_file():
-        print(f"Target not found: {TARGET}", file=sys.stderr)
+    patched = []
+    skipped = []
+    errors = []
+
+    for filename, old, new in PATCHES:
+        target = MODELS_DIR / filename
+        if not target.is_file():
+            errors.append(f"Target not found: {target}")
+            continue
+        text = target.read_text()
+        if new in text:
+            skipped.append(filename)
+            continue
+        if old not in text:
+            errors.append(f"{filename}: target line not found; generator output may have changed.")
+            continue
+        target.write_text(text.replace(old, new, 1))
+        patched.append(filename)
+
+    if patched:
+        print(f"Patched {len(patched)} files to use Optional[Any]:")
+        for f in patched:
+            print(f"  - {f}")
+    if skipped:
+        print(f"Already patched: {', '.join(skipped)}")
+    if errors:
+        for e in errors:
+            print(e, file=sys.stderr)
         return 1
-    text = TARGET.read_text()
-    if NEW in text:
-        print("Patch already applied.")
-        return 0
-    if OLD not in text:
-        print("Target line not found; generator output may have changed.", file=sys.stderr)
-        return 1
-    TARGET.write_text(text.replace(OLD, NEW, 1))
-    print("Patched meta_value to Optional[Any].")
     return 0
 
 

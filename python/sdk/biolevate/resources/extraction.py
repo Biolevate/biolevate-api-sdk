@@ -8,6 +8,7 @@ from biolevate.exceptions import APIError, AuthenticationError, NotFoundError
 
 if TYPE_CHECKING:
     from biolevate_client import ApiClient
+    from biolevate_client.models import EliseMetaInput
     from biolevate.models import (
         Annotation,
         ExtractionJobInputs,
@@ -79,12 +80,18 @@ class ExtractionResource:
 
     async def create_job(
         self,
+        metas: "list[EliseMetaInput]",
         file_ids: list[str] | None = None,
         collection_ids: list[str] | None = None,
     ) -> Job:
         """Create a new extraction job.
 
         Args:
+            metas: List of metadata fields to extract. Each MetaInput specifies:
+                - meta: Field name (e.g. "title", "authors", "date")
+                - answer_type: Expected data type (ExpectedAnswerTypeDto with
+                  dataType like STRING, INT, FLOAT, BOOL, DATE, ENUM)
+                - description: Description of what to extract
             file_ids: List of file IDs to extract from.
             collection_ids: List of collection IDs to extract from.
 
@@ -112,6 +119,7 @@ class ExtractionResource:
                         fileIds=file_ids,
                         collectionIds=collection_ids,
                     ),
+                    metas=metas,
                 )
             )
         except UnauthorizedException as e:

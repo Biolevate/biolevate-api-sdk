@@ -13,6 +13,7 @@ from biolevate_client.models import (
     EliseOntology as Ontology,
     EliseQAResult as QAResult,
     EliseQuestionInput as QuestionInput,
+    ExpectedAnswerTypeDto as AnswerType,
     ExtractJobInputs as ExtractionJobInputs,
     ExtractJobOutputs as ExtractionJobOutputs,
     FSProviderExternal as Provider,
@@ -29,6 +30,7 @@ from biolevate_client.models import (
 
 __all__ = [
     "Annotation",
+    "AnswerType",
     "Collection",
     "CollectionPage",
     "ExtractionJobInputs",

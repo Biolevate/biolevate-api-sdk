@@ -8,6 +8,7 @@ from biolevate.exceptions import APIError, AuthenticationError, NotFoundError
 
 if TYPE_CHECKING:
     from biolevate_client import ApiClient
+    from biolevate_client.models import EliseQuestionInput
     from biolevate.models import (
         Annotation,
         Job,
@@ -79,14 +80,21 @@ class QuestionAnsweringResource:
 
     async def create_job(
         self,
-        question: str,
+        questions: "list[EliseQuestionInput]",
         file_ids: list[str] | None = None,
         collection_ids: list[str] | None = None,
     ) -> Job:
         """Create a new QA job.
 
         Args:
-            question: The question to answer.
+            questions: List of questions to answer. Each QuestionInput has:
+                - question: The question text (required)
+                - id: Optional question ID
+                - answer_type: Expected answer type (ExpectedAnswerTypeDto with
+                  dataType like STRING, INT, FLOAT, BOOL, DATE, ENUM)
+                - guidelines: Optional guidelines for answering
+                - expected_answer: Optional expected answer for validation
+                - input_question_ids: Optional list of dependent question IDs
             file_ids: List of file IDs to search for answers.
             collection_ids: List of collection IDs to search for answers.
 
@@ -103,11 +111,7 @@ class QuestionAnsweringResource:
             ForbiddenException,
             UnauthorizedException,
         )
-        from biolevate_client.models import (
-            CreateQARequest,
-            EliseQuestionInput,
-            FilesInput,
-        )
+        from biolevate_client.models import CreateQARequest, FilesInput
 
         api = QuestionAnsweringApi(self._client)
 
@@ -118,7 +122,7 @@ class QuestionAnsweringResource:
                         fileIds=file_ids,
                         collectionIds=collection_ids,
                     ),
-                    questions=[EliseQuestionInput(question=question)],
+                    questions=questions,
                 )
             )
         except UnauthorizedException as e:

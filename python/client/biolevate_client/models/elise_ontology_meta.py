@@ -30,7 +30,7 @@ class EliseOntologyMeta(BaseModel):
     explanation: Optional[StrictStr] = None
     annotation_ids: Optional[List[AnnotationId]] = Field(default=None, alias="annotationIds")
     meta_name: Optional[StrictStr] = Field(default=None, alias="metaName")
-    meta_value: Optional[Dict[str, Any]] = Field(default=None, alias="metaValue")
+    meta_value: Optional[Any] = Field(default=None, alias="metaValue")
     __properties: ClassVar[List[str]] = ["explanation", "annotationIds", "metaName", "metaValue"]
 
     model_config = ConfigDict(

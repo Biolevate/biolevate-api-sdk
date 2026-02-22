@@ -1,0 +1,6 @@
+Biolevate SDK Files integration test sample.
+
+This file is used by test_files.py to exercise the Files resource:
+create file, wait for indexation, get ontologies, reindex, recompute ontologies, delete.
+
+You can add a sample.pdf to this folder for PDF-specific testing.

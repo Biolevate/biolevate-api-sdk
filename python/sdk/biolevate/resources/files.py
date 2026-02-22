@@ -198,11 +198,11 @@ class FilesResource:
     async def reindex(self, file_id: str) -> None:
         """Trigger re-indexation of a file.
 
+        Re-indexation runs asynchronously on the server. This method returns
+        when the request is accepted; it does not wait for indexation to finish.
+
         Args:
             file_id: The unique identifier of the file.
-
-        Returns:
-            The updated file info.
 
         Raises:
             NotFoundError: If the file is not found.
@@ -220,8 +220,7 @@ class FilesResource:
         api = FilesApi(self._client)
 
         try:
-            result = await api.reindex_file(id=file_id)
-            return result
+            await api.reindex_file(id=file_id)
         except NotFoundException as e:
             raise NotFoundError(f"File '{file_id}' not found") from e
         except UnauthorizedException as e:
@@ -231,7 +230,7 @@ class FilesResource:
         except ApiException as e:
             raise APIError(e.status or 500, str(e.reason)) from e
 
-    async def get_ontologies(self, file_id: str) -> "list[Ontology]":
+    async def get_ontologies(self, file_id: str) -> "list[Ontology]": # type: ignore[valid-type]
         """Get computed ontologies for a file.
 
         Args:
@@ -269,11 +268,11 @@ class FilesResource:
     async def recompute_ontologies(self, file_id: str) -> None:
         """Trigger re-computation of ontologies for a file.
 
+        Ontology computation runs asynchronously on the server. This method
+        returns when the request is accepted; it does not wait for completion.
+
         Args:
             file_id: The unique identifier of the file.
-
-        Returns:
-            The newly computed ontologies.
 
         Raises:
             NotFoundError: If the file is not found.
@@ -291,8 +290,7 @@ class FilesResource:
         api = FilesApi(self._client)
 
         try:
-            result = await api.recompute_file_ontologies(id=file_id)
-            return result
+            await api.recompute_file_ontologies(id=file_id)
         except NotFoundException as e:
             raise NotFoundError(f"File '{file_id}' not found") from e
         except UnauthorizedException as e:

@@ -19,11 +19,7 @@ classifiers = [
 ]
 dependencies = [
     "biolevate-client",
-    "click>=8.0.0",
 ]
-
-[project.scripts]
-biolevate = "biolevate.cli:cli"
 
 [project.optional-dependencies]
 dev = [

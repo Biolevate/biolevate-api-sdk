@@ -2,31 +2,27 @@
 
 from __future__ import annotations
 
-from http import HTTPStatus
 from typing import TYPE_CHECKING
 
 from biolevate.exceptions import APIError, AuthenticationError, NotFoundError
 
 if TYPE_CHECKING:
-    from biolevate_client import AuthenticatedClient
-    from biolevate_client.models import (
-        EliseFileInfo,
-        EliseOntology,
-        PageDataEliseFileInfo,
-    )
+    from biolevate_client import ApiClient
+    from biolevate.models import File, FilePage, Ontology
 
 
 class FilesResource:
-    """Resource for managing indexed files.
+    """Resource for managing indexed files (EliseFiles).
 
-    Provides methods to list, create, retrieve, delete, and reindex files.
+    Provides methods to list, create, retrieve, and delete files,
+    as well as manage indexation and ontologies.
     """
 
-    def __init__(self, client: AuthenticatedClient) -> None:
+    def __init__(self, client: ApiClient) -> None:
         """Initialize the files resource.
 
         Args:
-            client: The authenticated API client.
+            client: The API client.
         """
         self._client = client
 
@@ -37,11 +33,11 @@ class FilesResource:
         page_size: int = 20,
         sort_property: str | None = None,
         sort_order: str | None = None,
-    ) -> PageDataEliseFileInfo:
-        """List indexed files for a provider.
+    ) -> FilePage:
+        """List indexed files with pagination.
 
         Args:
-            provider_id: The provider UUID.
+            provider_id: The provider ID to list files for.
             page: Page number (0-based).
             page_size: Number of items per page.
             sort_property: Field to sort by.
@@ -51,49 +47,46 @@ class FilesResource:
             Paginated list of files.
 
         Raises:
-            NotFoundError: If the provider is not found.
             AuthenticationError: If authentication fails.
             APIError: If the API returns an unexpected error.
         """
-        from biolevate_client.api.files import list_files
-        from biolevate_client.types import UNSET
-
-        response = await list_files.asyncio_detailed(
-            client=self._client,
-            provider_id=provider_id,
-            page=page,
-            page_size=page_size,
-            sort_property=sort_property if sort_property is not None else UNSET,
-            sort_order=sort_order if sort_order is not None else UNSET,
+        from biolevate_client.api.files_api import FilesApi
+        from biolevate_client.exceptions import (
+            ApiException,
+            ForbiddenException,
+            UnauthorizedException,
         )
 
-        if response.status_code == HTTPStatus.NOT_FOUND:
-            raise NotFoundError(f"Provider not found: {provider_id}")
+        api = FilesApi(self._client)
 
-        if response.status_code == HTTPStatus.UNAUTHORIZED:
-            raise AuthenticationError("Authentication failed")
-
-        if response.status_code == HTTPStatus.FORBIDDEN:
-            raise AuthenticationError("Access denied to provider")
-
-        if response.parsed is None:
-            raise APIError(response.status_code.value, "Failed to list files")
-
-        return response.parsed
+        try:
+            return await api.list_files(
+                provider_id=provider_id,
+                page=page,
+                page_size=page_size,
+                sort_property=sort_property,
+                sort_order=sort_order,
+            )
+        except UnauthorizedException as e:
+            raise AuthenticationError("Authentication failed") from e
+        except ForbiddenException as e:
+            raise AuthenticationError("Access denied") from e
+        except ApiException as e:
+            raise APIError(e.status or 500, str(e.reason)) from e
 
     async def create(
         self,
         provider_id: str,
         path: str,
         name: str,
-    ) -> EliseFileInfo:
-        """Create an indexed file from a provider item.
+    ) -> File:
+        """Create an indexed file from an existing provider item.
 
-        This triggers indexation of the file for use with extraction and QA.
+        This triggers indexation of the file for search and analysis.
 
         Args:
-            provider_id: The provider UUID.
-            path: The path to the file's parent folder.
+            provider_id: The provider ID where the file exists.
+            path: The directory path containing the file.
             name: The file name.
 
         Returns:
@@ -104,39 +97,42 @@ class FilesResource:
             AuthenticationError: If authentication fails.
             APIError: If the API returns an unexpected error.
         """
-        from biolevate_client.api.files import create_file
+        from biolevate_client.api.files_api import FilesApi
+        from biolevate_client.exceptions import (
+            ApiException,
+            BadRequestException,
+            ForbiddenException,
+            NotFoundException,
+            UnauthorizedException,
+        )
         from biolevate_client.models import CreateFileRequest
 
-        request = CreateFileRequest(
-            provider_id=provider_id,
-            path=path,
-            name=name,
-        )
+        api = FilesApi(self._client)
 
-        response = await create_file.asyncio_detailed(
-            client=self._client,
-            body=request,
-        )
+        try:
+            return await api.create_file(
+                create_file_request=CreateFileRequest(
+                    providerId=provider_id,
+                    path=path,
+                    name=name,
+                )
+            )
+        except NotFoundException as e:
+            raise NotFoundError(f"Provider item not found: {path}") from e
+        except BadRequestException as e:
+            raise APIError(400, str(e.body or e.reason)) from e
+        except UnauthorizedException as e:
+            raise AuthenticationError("Authentication failed") from e
+        except ForbiddenException as e:
+            raise AuthenticationError("Access denied") from e
+        except ApiException as e:
+            raise APIError(e.status or 500, str(e.reason)) from e
 
-        if response.status_code == HTTPStatus.NOT_FOUND:
-            raise NotFoundError(f"Provider item not found: {path}/{name}")
-
-        if response.status_code == HTTPStatus.UNAUTHORIZED:
-            raise AuthenticationError("Authentication failed")
-
-        if response.status_code == HTTPStatus.BAD_REQUEST:
-            raise APIError(response.status_code.value, "Invalid request")
-
-        if response.parsed is None:
-            raise APIError(response.status_code.value, "Failed to create file")
-
-        return response.parsed
-
-    async def get(self, file_id: str) -> EliseFileInfo:
-        """Get a file by ID.
+    async def get(self, file_id: str) -> File:
+        """Get an indexed file by ID.
 
         Args:
-            file_id: The file UUID.
+            file_id: The unique identifier of the file.
 
         Returns:
             The file info.
@@ -146,63 +142,64 @@ class FilesResource:
             AuthenticationError: If authentication fails.
             APIError: If the API returns an unexpected error.
         """
-        from biolevate_client.api.files import get_file
-
-        response = await get_file.asyncio_detailed(
-            id=file_id,
-            client=self._client,
+        from biolevate_client.api.files_api import FilesApi
+        from biolevate_client.exceptions import (
+            ApiException,
+            ForbiddenException,
+            NotFoundException,
+            UnauthorizedException,
         )
 
-        if response.status_code == HTTPStatus.NOT_FOUND:
-            raise NotFoundError(f"File not found: {file_id}")
+        api = FilesApi(self._client)
 
-        if response.status_code == HTTPStatus.UNAUTHORIZED:
-            raise AuthenticationError("Authentication failed")
-
-        if response.status_code == HTTPStatus.FORBIDDEN:
-            raise AuthenticationError("Access denied to file")
-
-        if response.parsed is None:
-            raise APIError(response.status_code.value, "Failed to get file")
-
-        return response.parsed
+        try:
+            return await api.get_file(id=file_id)
+        except NotFoundException as e:
+            raise NotFoundError(f"File '{file_id}' not found") from e
+        except UnauthorizedException as e:
+            raise AuthenticationError("Authentication failed") from e
+        except ForbiddenException as e:
+            raise AuthenticationError("Access denied") from e
+        except ApiException as e:
+            raise APIError(e.status or 500, str(e.reason)) from e
 
     async def delete(self, file_id: str) -> None:
-        """Delete a file.
+        """Delete an indexed file.
 
         Args:
-            file_id: The file UUID.
+            file_id: The unique identifier of the file.
 
         Raises:
             NotFoundError: If the file is not found.
             AuthenticationError: If authentication fails.
             APIError: If the API returns an unexpected error.
         """
-        from biolevate_client.api.files import delete_file
-
-        response = await delete_file.asyncio_detailed(
-            id=file_id,
-            client=self._client,
+        from biolevate_client.api.files_api import FilesApi
+        from biolevate_client.exceptions import (
+            ApiException,
+            ForbiddenException,
+            NotFoundException,
+            UnauthorizedException,
         )
 
-        if response.status_code == HTTPStatus.NOT_FOUND:
-            raise NotFoundError(f"File not found: {file_id}")
+        api = FilesApi(self._client)
 
-        if response.status_code == HTTPStatus.UNAUTHORIZED:
-            raise AuthenticationError("Authentication failed")
+        try:
+            await api.delete_file(id=file_id)
+        except NotFoundException as e:
+            raise NotFoundError(f"File '{file_id}' not found") from e
+        except UnauthorizedException as e:
+            raise AuthenticationError("Authentication failed") from e
+        except ForbiddenException as e:
+            raise AuthenticationError("Access denied") from e
+        except ApiException as e:
+            raise APIError(e.status or 500, str(e.reason)) from e
 
-        if response.status_code == HTTPStatus.FORBIDDEN:
-            raise AuthenticationError("Access denied to file")
-
-        if response.status_code not in (HTTPStatus.NO_CONTENT, HTTPStatus.OK):
-            raise APIError(response.status_code.value, "Failed to delete file")
-
-    async def reindex(self, file_id: str, reparse: bool = False) -> EliseFileInfo:
-        """Force reindexation of a file.
+    async def reindex(self, file_id: str) -> None:
+        """Trigger re-indexation of a file.
 
         Args:
-            file_id: The file UUID.
-            reparse: Whether to reparse the file content.
+            file_id: The unique identifier of the file.
 
         Returns:
             The updated file info.
@@ -212,94 +209,95 @@ class FilesResource:
             AuthenticationError: If authentication fails.
             APIError: If the API returns an unexpected error.
         """
-        from biolevate_client.api.files import reindex_file
-
-        response = await reindex_file.asyncio_detailed(
-            id=file_id,
-            client=self._client,
-            reparse=reparse,
+        from biolevate_client.api.files_api import FilesApi
+        from biolevate_client.exceptions import (
+            ApiException,
+            ForbiddenException,
+            NotFoundException,
+            UnauthorizedException,
         )
 
-        if response.status_code == HTTPStatus.NOT_FOUND:
-            raise NotFoundError(f"File not found: {file_id}")
+        api = FilesApi(self._client)
 
-        if response.status_code == HTTPStatus.UNAUTHORIZED:
-            raise AuthenticationError("Authentication failed")
+        try:
+            result = await api.reindex_file(id=file_id)
+            return result
+        except NotFoundException as e:
+            raise NotFoundError(f"File '{file_id}' not found") from e
+        except UnauthorizedException as e:
+            raise AuthenticationError("Authentication failed") from e
+        except ForbiddenException as e:
+            raise AuthenticationError("Access denied") from e
+        except ApiException as e:
+            raise APIError(e.status or 500, str(e.reason)) from e
 
-        if response.status_code == HTTPStatus.FORBIDDEN:
-            raise AuthenticationError("Access denied to file")
-
-        if response.parsed is None:
-            raise APIError(response.status_code.value, "Failed to reindex file")
-
-        return response.parsed
-
-    async def get_ontologies(self, file_id: str) -> "list[EliseOntology]": # type: ignore[valid-type]
+    async def get_ontologies(self, file_id: str) -> "list[Ontology]":
         """Get computed ontologies for a file.
 
         Args:
-            file_id: The file UUID.
+            file_id: The unique identifier of the file.
 
         Returns:
-            List of ontologies computed for the file.
+            List of computed ontologies.
 
         Raises:
             NotFoundError: If the file is not found.
             AuthenticationError: If authentication fails.
             APIError: If the API returns an unexpected error.
         """
-        from biolevate_client.api.files import get_file_ontologies
-
-        response = await get_file_ontologies.asyncio_detailed(
-            id=file_id,
-            client=self._client,
+        from biolevate_client.api.files_api import FilesApi
+        from biolevate_client.exceptions import (
+            ApiException,
+            ForbiddenException,
+            NotFoundException,
+            UnauthorizedException,
         )
 
-        if response.status_code == HTTPStatus.NOT_FOUND:
-            raise NotFoundError(f"File not found: {file_id}")
+        api = FilesApi(self._client)
 
-        if response.status_code == HTTPStatus.UNAUTHORIZED:
-            raise AuthenticationError("Authentication failed")
+        try:
+            return await api.get_file_ontologies(id=file_id)
+        except NotFoundException as e:
+            raise NotFoundError(f"File '{file_id}' not found") from e
+        except UnauthorizedException as e:
+            raise AuthenticationError("Authentication failed") from e
+        except ForbiddenException as e:
+            raise AuthenticationError("Access denied") from e
+        except ApiException as e:
+            raise APIError(e.status or 500, str(e.reason)) from e
 
-        if response.status_code == HTTPStatus.FORBIDDEN:
-            raise AuthenticationError("Access denied to file")
-
-        if response.parsed is None:
-            raise APIError(response.status_code.value, "Failed to get ontologies")
-
-        return response.parsed  # type: ignore[return-value]
-
-    async def recompute_ontologies(self, file_id: str) -> EliseFileInfo:
-        """Force recomputation of ontologies and metadata for a file.
+    async def recompute_ontologies(self, file_id: str) -> None:
+        """Trigger re-computation of ontologies for a file.
 
         Args:
-            file_id: The file UUID.
+            file_id: The unique identifier of the file.
 
         Returns:
-            The updated file info.
+            The newly computed ontologies.
 
         Raises:
             NotFoundError: If the file is not found.
             AuthenticationError: If authentication fails.
             APIError: If the API returns an unexpected error.
         """
-        from biolevate_client.api.files import recompute_file_ontologies
-
-        response = await recompute_file_ontologies.asyncio_detailed(
-            id=file_id,
-            client=self._client,
+        from biolevate_client.api.files_api import FilesApi
+        from biolevate_client.exceptions import (
+            ApiException,
+            ForbiddenException,
+            NotFoundException,
+            UnauthorizedException,
         )
 
-        if response.status_code == HTTPStatus.NOT_FOUND:
-            raise NotFoundError(f"File not found: {file_id}")
+        api = FilesApi(self._client)
 
-        if response.status_code == HTTPStatus.UNAUTHORIZED:
-            raise AuthenticationError("Authentication failed")
-
-        if response.status_code == HTTPStatus.FORBIDDEN:
-            raise AuthenticationError("Access denied to file")
-
-        if response.parsed is None:
-            raise APIError(response.status_code.value, "Failed to recompute ontologies")
-
-        return response.parsed
+        try:
+            result = await api.recompute_file_ontologies(id=file_id)
+            return result
+        except NotFoundException as e:
+            raise NotFoundError(f"File '{file_id}' not found") from e
+        except UnauthorizedException as e:
+            raise AuthenticationError("Authentication failed") from e
+        except ForbiddenException as e:
+            raise AuthenticationError("Access denied") from e
+        except ApiException as e:
+            raise APIError(e.status or 500, str(e.reason)) from e

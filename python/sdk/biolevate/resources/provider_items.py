@@ -1,4 +1,4 @@
-"""Provider items resource for managing files and folders within providers."""
+"""Provider items resource for managing files/folders within providers."""
 
 from __future__ import annotations
 
@@ -8,23 +8,22 @@ from typing import TYPE_CHECKING, BinaryIO
 from biolevate.exceptions import APIError, AuthenticationError, NotFoundError
 
 if TYPE_CHECKING:
-    from biolevate_client import AuthenticatedClient
-    from biolevate_client.models import (
-        DownloadUrlResponse,
-        ListItemsResponse,
-        ProviderItem,
-        UploadUrlResponse,
-    )
+    from biolevate_client import ApiClient
+    from biolevate_client.models import DownloadUrlResponse, UploadUrlResponse
+    from biolevate.models import ListItemsResponse, ProviderItem
 
 
 class ProviderItemsResource:
-    """Resource for managing files and folders within storage providers."""
+    """Resource for managing files and folders within storage providers.
 
-    def __init__(self, client: AuthenticatedClient) -> None:
+    Provides methods to list, upload, download, rename, and delete items.
+    """
+
+    def __init__(self, client: ApiClient) -> None:
         """Initialize the provider items resource.
 
         Args:
-            client: The authenticated API client.
+            client: The API client.
         """
         self._client = client
 
@@ -32,146 +31,41 @@ class ProviderItemsResource:
         self,
         provider_id: str,
         path: str = "/",
-        query: str | None = None,
-        cursor: str | None = None,
-        limit: int = 50,
     ) -> ListItemsResponse:
-        """List files and folders at a path in a provider.
+        """List items in a provider directory.
 
         Args:
-            provider_id: The provider UUID.
-            path: The path to list items from.
-            query: Optional search filter.
-            cursor: Pagination cursor for next page.
-            limit: Maximum number of items to return.
+            provider_id: The provider ID.
+            path: Directory path to list (default: root).
 
         Returns:
-            Paginated list of provider items.
+            List of items in the directory.
 
         Raises:
             NotFoundError: If the provider or path is not found.
             AuthenticationError: If authentication fails.
             APIError: If the API returns an unexpected error.
         """
-        from biolevate_client.api.provider_items import list_items
-        from biolevate_client.types import UNSET
-
-        response = await list_items.asyncio_detailed(
-            provider_id=provider_id,
-            client=self._client,
-            path=path,
-            q=query if query is not None else UNSET,
-            cursor=cursor if cursor is not None else UNSET,
-            limit=limit,
+        from biolevate_client.api.provider_items_api import ProviderItemsApi
+        from biolevate_client.exceptions import (
+            ApiException,
+            ForbiddenException,
+            NotFoundException,
+            UnauthorizedException,
         )
 
-        if response.status_code == HTTPStatus.NOT_FOUND:
-            raise NotFoundError(f"Provider or path not found: {provider_id}{path}")
+        api = ProviderItemsApi(self._client)
 
-        if response.status_code == HTTPStatus.UNAUTHORIZED:
-            raise AuthenticationError("Authentication failed")
-
-        if response.status_code == HTTPStatus.FORBIDDEN:
-            raise AuthenticationError("Access denied to provider")
-
-        if response.parsed is None:
-            raise APIError(response.status_code.value, "Failed to list items")
-
-        return response.parsed
-
-    async def get_download_url(
-        self,
-        provider_id: str,
-        path: str,
-        name: str,
-        expiration_minutes: int = 15,
-    ) -> DownloadUrlResponse:
-        """Get a presigned download URL for a file.
-
-        Args:
-            provider_id: The provider UUID.
-            path: The path to the file's parent folder.
-            name: The file name.
-            expiration_minutes: URL expiration time in minutes.
-
-        Returns:
-            Response containing the download URL.
-
-        Raises:
-            NotFoundError: If the file is not found.
-            AuthenticationError: If authentication fails.
-            APIError: If the API returns an unexpected error.
-        """
-        from biolevate_client.api.provider_items import get_download_url
-
-        response = await get_download_url.asyncio_detailed(
-            provider_id=provider_id,
-            client=self._client,
-            path=path,
-            name=name,
-            expiration_minutes=expiration_minutes,
-        )
-
-        if response.status_code == HTTPStatus.NOT_FOUND:
-            raise NotFoundError(f"File not found: {path}/{name}")
-
-        if response.status_code == HTTPStatus.UNAUTHORIZED:
-            raise AuthenticationError("Authentication failed")
-
-        if response.status_code == HTTPStatus.FORBIDDEN:
-            raise AuthenticationError("Access denied to file")
-
-        if response.parsed is None:
-            raise APIError(response.status_code.value, "Failed to get download URL")
-
-        return response.parsed
-
-    async def create_folder(
-        self,
-        provider_id: str,
-        path: str,
-        name: str,
-    ) -> ProviderItem:
-        """Create a new folder.
-
-        Args:
-            provider_id: The provider UUID.
-            path: The parent directory path.
-            name: The folder name.
-
-        Returns:
-            The created folder item.
-
-        Raises:
-            AuthenticationError: If authentication fails.
-            APIError: If the API returns an unexpected error.
-        """
-        from biolevate_client.api.provider_items import upload_file
-        from biolevate_client.models import CreateItemRequest, CreateItemRequestType
-
-        request = CreateItemRequest(
-            type_=CreateItemRequestType.FOLDER,
-            name=name,
-            path=path,
-        )
-
-        response = await upload_file.asyncio_detailed(
-            provider_id=provider_id,
-            client=self._client,
-            body=request,
-            path=path,
-        )
-
-        if response.status_code == HTTPStatus.UNAUTHORIZED:
-            raise AuthenticationError("Authentication failed")
-
-        if response.status_code == HTTPStatus.FORBIDDEN:
-            raise AuthenticationError("Access denied to provider")
-
-        if response.parsed is None:
-            raise APIError(response.status_code.value, "Failed to create folder")
-
-        return response.parsed
+        try:
+            return await api.list_items(provider_id=provider_id, path=path)
+        except NotFoundException as e:
+            raise NotFoundError(f"Path not found: {path}") from e
+        except UnauthorizedException as e:
+            raise AuthenticationError("Authentication failed") from e
+        except ForbiddenException as e:
+            raise AuthenticationError("Access denied to provider") from e
+        except ApiException as e:
+            raise APIError(e.status or 500, str(e.reason)) from e
 
     async def upload(
         self,
@@ -181,249 +75,365 @@ class ProviderItemsResource:
         file_name: str,
         mime_type: str = "application/octet-stream",
     ) -> ProviderItem:
-        """Upload a file directly via multipart form.
+        """Upload a file to a provider.
 
         Args:
-            provider_id: The provider UUID.
-            path: The destination folder path.
-            file: The file content as a binary stream.
-            file_name: The file name.
-            mime_type: The file MIME type.
-
-        Returns:
-            The created file item.
-
-        Raises:
-            AuthenticationError: If authentication fails.
-            APIError: If the API returns an unexpected error.
-        """
-        from biolevate_client.api.provider_items import upload_file
-        from biolevate_client.models import UploadFileFilesBody
-        from biolevate_client.types import File
-
-        file_obj = File(
-            payload=file,
-            file_name=file_name,
-            mime_type=mime_type,
-        )
-        body = UploadFileFilesBody(file=file_obj)
-
-        response = await upload_file.asyncio_detailed(
-            provider_id=provider_id,
-            client=self._client,
-            body=body,
-            path=path,
-        )
-
-        if response.status_code == HTTPStatus.UNAUTHORIZED:
-            raise AuthenticationError("Authentication failed")
-
-        if response.status_code == HTTPStatus.FORBIDDEN:
-            raise AuthenticationError("Access denied to provider")
-
-        if response.parsed is None:
-            raise APIError(response.status_code.value, "Failed to upload file")
-
-        return response.parsed
-
-    async def get_upload_url(
-        self,
-        provider_id: str,
-        path: str,
-        name: str,
-        size: int,
-        content_type: str = "application/octet-stream",
-    ) -> UploadUrlResponse:
-        """Get a presigned upload URL for direct upload to storage.
-
-        Args:
-            provider_id: The provider UUID.
-            path: The destination folder path.
-            name: The file name.
-            size: The file size in bytes.
-            content_type: The file MIME type.
-
-        Returns:
-            Response containing the upload URL.
-
-        Raises:
-            AuthenticationError: If authentication fails.
-            APIError: If the API returns an unexpected error.
-        """
-        from biolevate_client.api.provider_items import get_upload_url
-        from biolevate_client.models import UploadUrlRequest
-
-        request = UploadUrlRequest(
-            path=path,
-            file_name=name,
-            size=size,
-            media_type=content_type,
-        )
-
-        response = await get_upload_url.asyncio_detailed(
-            provider_id=provider_id,
-            client=self._client,
-            body=request,
-        )
-
-        if response.status_code == HTTPStatus.UNAUTHORIZED:
-            raise AuthenticationError("Authentication failed")
-
-        if response.status_code == HTTPStatus.FORBIDDEN:
-            raise AuthenticationError("Access denied to provider")
-
-        if response.parsed is None:
-            raise APIError(response.status_code.value, "Failed to get upload URL")
-
-        return response.parsed
-
-    async def confirm_upload(
-        self,
-        provider_id: str,
-        path: str,
-        name: str,
-    ) -> ProviderItem:
-        """Confirm a presigned upload has completed.
-
-        Args:
-            provider_id: The provider UUID.
-            path: The folder path where the file was uploaded.
-            name: The uploaded file name.
+            provider_id: The provider ID.
+            path: Destination directory path.
+            file: File-like object to upload.
+            file_name: Name for the uploaded file.
+            mime_type: MIME type of the file.
 
         Returns:
             The created provider item.
 
         Raises:
-            NotFoundError: If the upload is not found.
+            NotFoundError: If the provider or path is not found.
             AuthenticationError: If authentication fails.
             APIError: If the API returns an unexpected error.
         """
-        from biolevate_client.api.provider_items import confirm_upload
-        from biolevate_client.models import ConfirmUploadRequest
+        import httpx
 
-        request = ConfirmUploadRequest(
-            path=path,
-            file_name=name,
-        )
+        from biolevate_client.models import ProviderItem as ProviderItemModel
 
-        response = await confirm_upload.asyncio_detailed(
-            provider_id=provider_id,
-            client=self._client,
-            body=request,
-        )
+        config = self._client.configuration
+        base_url = config.host.rstrip("/")
+        headers = {"Authorization": f"Bearer {config.access_token}"}
 
-        if response.status_code == HTTPStatus.NOT_FOUND:
-            raise NotFoundError(f"Upload not found: {path}/{name}")
+        async with httpx.AsyncClient() as http_client:
+            response = await http_client.post(
+                f"{base_url}/api/core/providers/{provider_id}/items",
+                params={"path": path},
+                files={"file": (file_name, file, mime_type)},
+                headers=headers,
+            )
 
         if response.status_code == HTTPStatus.UNAUTHORIZED:
             raise AuthenticationError("Authentication failed")
 
         if response.status_code == HTTPStatus.FORBIDDEN:
-            raise AuthenticationError("Access denied")
+            raise AuthenticationError("Access denied to provider")
 
-        if response.parsed is None:
-            raise APIError(response.status_code.value, "Failed to confirm upload")
+        if response.status_code == HTTPStatus.NOT_FOUND:
+            raise NotFoundError(f"Path not found: {path}")
 
-        return response.parsed
+        if response.status_code != HTTPStatus.CREATED:
+            raise APIError(response.status_code, f"Failed to upload file: {response.text}")
+
+        result = ProviderItemModel.from_dict(response.json())
+        if result is None:
+            raise APIError(500, "Failed to parse upload response")
+        return result
+
+    async def create_folder(
+        self,
+        provider_id: str,
+        path: str,
+        name: str,
+    ) -> ProviderItem:
+        """Create a folder in a provider.
+
+        Args:
+            provider_id: The provider ID.
+            path: Parent directory path.
+            name: Folder name to create.
+
+        Returns:
+            The created folder item.
+
+        Raises:
+            NotFoundError: If the provider or path is not found.
+            AuthenticationError: If authentication fails.
+            APIError: If the API returns an unexpected error.
+        """
+        import httpx
+
+        from biolevate_client.models import ProviderItem as ProviderItemModel
+
+        config = self._client.configuration
+        base_url = config.host.rstrip("/")
+        headers = {
+            "Authorization": f"Bearer {config.access_token}",
+            "Content-Type": "application/json",
+        }
+
+        async with httpx.AsyncClient() as http_client:
+            response = await http_client.post(
+                f"{base_url}/api/core/providers/{provider_id}/items/folder",
+                params={"path": path, "name": name},
+                headers=headers,
+            )
+
+        if response.status_code == HTTPStatus.UNAUTHORIZED:
+            raise AuthenticationError("Authentication failed")
+
+        if response.status_code == HTTPStatus.FORBIDDEN:
+            raise AuthenticationError("Access denied to provider")
+
+        if response.status_code == HTTPStatus.NOT_FOUND:
+            raise NotFoundError(f"Path not found: {path}")
+
+        if response.status_code not in (HTTPStatus.OK, HTTPStatus.CREATED):
+            raise APIError(response.status_code, f"Failed to create folder: {response.text}")
+
+        result = ProviderItemModel.from_dict(response.json())
+        if result is None:
+            raise APIError(500, "Failed to parse folder response")
+        return result
 
     async def rename(
         self,
         provider_id: str,
         path: str,
-        name: str,
+        old_name: str,
         new_name: str,
-        is_folder: bool = False,
+        item_type: str = "FILE",
     ) -> ProviderItem:
-        """Rename a file or folder.
+        """Rename a file or folder in a provider.
 
         Args:
-            provider_id: The provider UUID.
-            path: The path to the item's parent folder.
-            name: The current item name.
-            new_name: The new name for the item.
-            is_folder: Whether the item is a folder.
+            provider_id: The provider ID.
+            path: Directory path containing the item.
+            old_name: Current item name.
+            new_name: New item name.
+            item_type: Type of item ('FILE' or 'FOLDER').
 
         Returns:
-            The renamed provider item.
+            The renamed item.
 
         Raises:
             NotFoundError: If the item is not found.
             AuthenticationError: If authentication fails.
             APIError: If the API returns an unexpected error.
         """
-        from biolevate_client.api.provider_items import rename_item
-        from biolevate_client.models import ItemReference, ItemReferenceType
-
-        item_ref = ItemReference(
-            path=path,
-            name=name,
-            type_=ItemReferenceType.FOLDER if is_folder else ItemReferenceType.FILE,
+        from biolevate_client.api.provider_items_api import ProviderItemsApi
+        from biolevate_client.exceptions import (
+            ApiException,
+            ForbiddenException,
+            NotFoundException,
+            UnauthorizedException,
         )
+        from biolevate_client.models import ItemReference
 
-        response = await rename_item.asyncio_detailed(
-            provider_id=provider_id,
-            client=self._client,
-            body=item_ref,
-            new_name=new_name,
-        )
+        api = ProviderItemsApi(self._client)
 
-        if response.status_code == HTTPStatus.NOT_FOUND:
-            raise NotFoundError(f"Item not found: {path}/{name}")
-
-        if response.status_code == HTTPStatus.UNAUTHORIZED:
-            raise AuthenticationError("Authentication failed")
-
-        if response.status_code == HTTPStatus.FORBIDDEN:
-            raise AuthenticationError("Access denied")
-
-        if response.parsed is None:
-            raise APIError(response.status_code.value, "Failed to rename item")
-
-        return response.parsed
+        try:
+            return await api.rename_item(
+                provider_id=provider_id,
+                new_name=new_name,
+                item_reference=ItemReference(
+                    path=path,
+                    name=old_name,
+                    type=item_type,
+                ),
+            )
+        except NotFoundException as e:
+            raise NotFoundError(f"Item '{old_name}' not found in {path}") from e
+        except UnauthorizedException as e:
+            raise AuthenticationError("Authentication failed") from e
+        except ForbiddenException as e:
+            raise AuthenticationError("Access denied to provider") from e
+        except ApiException as e:
+            raise APIError(e.status or 500, str(e.reason)) from e
 
     async def delete(
         self,
         provider_id: str,
         path: str,
         name: str,
-        is_folder: bool = False,
+        item_type: str = "FILE",
     ) -> None:
-        """Delete a file or folder.
+        """Delete a file or folder in a provider.
 
         Args:
-            provider_id: The provider UUID.
-            path: The path to the item's parent folder.
-            name: The item name.
-            is_folder: Whether the item is a folder.
+            provider_id: The provider ID.
+            path: Directory path containing the item.
+            name: Item name to delete.
+            item_type: Type of item ('FILE' or 'FOLDER').
 
         Raises:
             NotFoundError: If the item is not found.
             AuthenticationError: If authentication fails.
             APIError: If the API returns an unexpected error.
         """
-        from biolevate_client.api.provider_items import delete_item
-        from biolevate_client.models import ItemReference, ItemReferenceType
+        from biolevate_client.api.provider_items_api import ProviderItemsApi
+        from biolevate_client.exceptions import (
+            ApiException,
+            ForbiddenException,
+            NotFoundException,
+            UnauthorizedException,
+        )
+        from biolevate_client.models import ItemReference
 
-        item_ref = ItemReference(
-            path=path,
-            name=name,
-            type_=ItemReferenceType.FOLDER if is_folder else ItemReferenceType.FILE,
+        api = ProviderItemsApi(self._client)
+
+        try:
+            await api.delete_item(
+                provider_id=provider_id,
+                item_reference=ItemReference(
+                    path=path,
+                    name=name,
+                    type=item_type,
+                ),
+            )
+        except NotFoundException as e:
+            raise NotFoundError(f"Item '{name}' not found in {path}") from e
+        except UnauthorizedException as e:
+            raise AuthenticationError("Authentication failed") from e
+        except ForbiddenException as e:
+            raise AuthenticationError("Access denied to provider") from e
+        except ApiException as e:
+            raise APIError(e.status or 500, str(e.reason)) from e
+
+    async def get_download_url(
+        self,
+        provider_id: str,
+        path: str,
+        name: str,
+        expiration_minutes: int | None = None,
+    ) -> DownloadUrlResponse:
+        """Get a presigned download URL for a file.
+
+        Args:
+            provider_id: The provider ID.
+            path: Directory path containing the file.
+            name: File name.
+            expiration_minutes: Optional URL expiration time in minutes.
+
+        Returns:
+            Download URL response with the presigned URL.
+
+        Raises:
+            NotFoundError: If the file is not found.
+            AuthenticationError: If authentication fails.
+            APIError: If the API returns an unexpected error.
+        """
+        from biolevate_client.api.provider_items_api import ProviderItemsApi
+        from biolevate_client.exceptions import (
+            ApiException,
+            ForbiddenException,
+            NotFoundException,
+            UnauthorizedException,
         )
 
-        response = await delete_item.asyncio_detailed(
-            provider_id=provider_id,
-            client=self._client,
-            body=item_ref,
+        api = ProviderItemsApi(self._client)
+
+        try:
+            return await api.get_download_url(
+                provider_id=provider_id,
+                path=path,
+                name=name,
+                expiration_minutes=expiration_minutes,
+            )
+        except NotFoundException as e:
+            raise NotFoundError(f"File not found: {path}/{name}") from e
+        except UnauthorizedException as e:
+            raise AuthenticationError("Authentication failed") from e
+        except ForbiddenException as e:
+            raise AuthenticationError("Access denied to provider") from e
+        except ApiException as e:
+            raise APIError(e.status or 500, str(e.reason)) from e
+
+    async def get_upload_url(
+        self,
+        provider_id: str,
+        path: str,
+        file_name: str,
+        size: int | None = None,
+        media_type: str | None = None,
+    ) -> UploadUrlResponse:
+        """Get a presigned upload URL for direct upload.
+
+        Args:
+            provider_id: The provider ID.
+            path: Target directory path.
+            file_name: Name for the file to upload.
+            size: File size in bytes (optional).
+            media_type: MIME type of the file (optional).
+
+        Returns:
+            Upload URL response with the presigned URL.
+
+        Raises:
+            NotFoundError: If the provider or path is not found.
+            AuthenticationError: If authentication fails.
+            APIError: If the API returns an unexpected error.
+        """
+        from biolevate_client.api.provider_items_api import ProviderItemsApi
+        from biolevate_client.exceptions import (
+            ApiException,
+            ForbiddenException,
+            NotFoundException,
+            UnauthorizedException,
         )
+        from biolevate_client.models import UploadUrlRequest
 
-        if response.status_code == HTTPStatus.NOT_FOUND:
-            raise NotFoundError(f"Item not found: {path}/{name}")
+        api = ProviderItemsApi(self._client)
 
-        if response.status_code == HTTPStatus.UNAUTHORIZED:
-            raise AuthenticationError("Authentication failed")
+        try:
+            return await api.get_upload_url(
+                provider_id=provider_id,
+                upload_url_request=UploadUrlRequest(
+                    path=path,
+                    fileName=file_name,
+                    size=size,
+                    mediaType=media_type,
+                ),
+            )
+        except NotFoundException as e:
+            raise NotFoundError(f"Path not found: {path}") from e
+        except UnauthorizedException as e:
+            raise AuthenticationError("Authentication failed") from e
+        except ForbiddenException as e:
+            raise AuthenticationError("Access denied to provider") from e
+        except ApiException as e:
+            raise APIError(e.status or 500, str(e.reason)) from e
 
-        if response.status_code == HTTPStatus.FORBIDDEN:
-            raise AuthenticationError("Access denied")
+    async def confirm_upload(
+        self,
+        provider_id: str,
+        path: str,
+        file_name: str,
+    ) -> ProviderItem:
+        """Confirm that a presigned upload has completed.
 
-        if response.status_code not in (HTTPStatus.NO_CONTENT, HTTPStatus.OK):
-            raise APIError(response.status_code.value, "Failed to delete item")
+        Args:
+            provider_id: The provider ID.
+            path: Directory path where the file was uploaded.
+            file_name: Name of the uploaded file.
+
+        Returns:
+            The created provider item.
+
+        Raises:
+            NotFoundError: If the uploaded file is not found.
+            AuthenticationError: If authentication fails.
+            APIError: If the API returns an unexpected error.
+        """
+        from biolevate_client.api.provider_items_api import ProviderItemsApi
+        from biolevate_client.exceptions import (
+            ApiException,
+            ForbiddenException,
+            NotFoundException,
+            UnauthorizedException,
+        )
+        from biolevate_client.models import ConfirmUploadRequest
+
+        api = ProviderItemsApi(self._client)
+
+        try:
+            return await api.confirm_upload(
+                provider_id=provider_id,
+                confirm_upload_request=ConfirmUploadRequest(
+                    path=path,
+                    fileName=file_name,
+                ),
+            )
+        except NotFoundException as e:
+            raise NotFoundError(f"Uploaded file not found: {file_name}") from e
+        except UnauthorizedException as e:
+            raise AuthenticationError("Authentication failed") from e
+        except ForbiddenException as e:
+            raise AuthenticationError("Access denied to provider") from e
+        except ApiException as e:
+            raise APIError(e.status or 500, str(e.reason)) from e

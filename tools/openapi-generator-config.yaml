@@ -1,0 +1,14 @@
+# OpenAPI Generator configuration for Python client
+# https://openapi-generator.tech/docs/generators/python
+
+generatorName: python
+inputSpec: /workspace/openapi/biolevate-api.json
+outputDir: /workspace/python/client
+
+additionalProperties:
+  library: httpx
+  packageName: biolevate_client
+  projectName: biolevate-client
+  packageVersion: 1.0.0
+  generateSourceCodeOnly: false
+  hideGenerationTimestamp: true

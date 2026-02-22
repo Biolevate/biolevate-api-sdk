@@ -1,0 +1,13 @@
+{
+  "venvPath": "./python",
+  "venv": ".venv",
+  "pythonVersion": "3.11",
+  "extraPaths": [
+    "./python/client",
+    "./python/sdk"
+  ],
+  "include": [
+    "python/client",
+    "python/sdk"
+  ]
+}

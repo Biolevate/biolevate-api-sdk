@@ -12,7 +12,7 @@ from biolevate.resources.providers import ProvidersResource
 from biolevate.resources.question_answering import QuestionAnsweringResource
 
 if TYPE_CHECKING:
-    from biolevate_client import AuthenticatedClient
+    from biolevate_client import ApiClient
 
 
 class BiolevateClient:
@@ -39,7 +39,7 @@ class BiolevateClient:
         """
         self._base_url = base_url
         self._token = token
-        self._client: AuthenticatedClient | None = None
+        self._client: ApiClient | None = None
         self._providers: ProvidersResource | None = None
         self._items: ProviderItemsResource | None = None
         self._files: FilesResource | None = None
@@ -47,15 +47,17 @@ class BiolevateClient:
         self._extraction: ExtractionResource | None = None
         self._qa: QuestionAnsweringResource | None = None
 
-    def _get_client(self) -> AuthenticatedClient:
-        """Get or create the underlying authenticated client."""
+    def _get_client(self) -> ApiClient:
+        """Get or create the underlying API client."""
         if self._client is None:
-            from biolevate_client import AuthenticatedClient
+            from biolevate_client import ApiClient
+            from biolevate_client.configuration import Configuration
 
-            self._client = AuthenticatedClient(
-                base_url=self._base_url,
-                token=self._token,
+            config = Configuration(
+                host=self._base_url,
+                access_token=self._token,
             )
+            self._client = ApiClient(config)
         return self._client
 
     @property
@@ -105,6 +107,6 @@ class BiolevateClient:
         return self
 
     async def __aexit__(self, exc_type: type | None, exc_val: Exception | None, exc_tb: object) -> None:
-        """Exit async context."""
+        """Exit async context and close the client."""
         if self._client is not None:
-            await self._client.__aexit__(exc_type, exc_val, exc_tb)
+            await self._client.close()

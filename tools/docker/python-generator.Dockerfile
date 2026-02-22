@@ -1,11 +1,7 @@
-FROM python:3.12-slim
-
-ARG OPENAPI_PYTHON_CLIENT_VERSION=0.28.2
-
-RUN pip install --no-cache-dir \
-    openapi-python-client==${OPENAPI_PYTHON_CLIENT_VERSION} \
-    ruff
+# Official OpenAPI Generator CLI
+# https://github.com/OpenAPITools/openapi-generator
+FROM openapitools/openapi-generator-cli:v7.20.0
 
 WORKDIR /workspace
 
-ENTRYPOINT ["openapi-python-client"]
+ENTRYPOINT ["docker-entrypoint.sh"]

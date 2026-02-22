@@ -8,26 +8,27 @@ from biolevate.exceptions import (
     NotFoundError,
 )
 
-from biolevate_client.models import (
-    EliseAnnotation as Annotation,
-    EliseCollectionInfo as Collection,
-    EliseFileInfo as File,
-    EliseMetaInput as MetaInput,
-    EliseMetaResult as ExtractionResult,
-    EliseOntology as Ontology,
-    EliseQAResult as QAResult,
-    EliseQuestionInput as QuestionInput,
-    FSProviderExternal as Provider,
-    FSProviderExternalType as ProviderType,
+from biolevate.models import (
+    Annotation,
+    Collection,
+    CollectionPage,
+    ExtractionJobInputs,
+    ExtractionJobOutputs,
+    ExtractionResult,
+    File,
+    FilePage,
     Job,
-    JobStatus,
+    JobPage,
     ListItemsResponse,
-    PageDataEliseCollectionInfo as CollectionPage,
-    PageDataEliseFileInfo as FilePage,
-    PageDataFSProviderExternal as ProviderPage,
-    PageDataJob as JobPage,
+    MetaInput,
+    Ontology,
+    Provider,
     ProviderItem,
-    ProviderItemType,
+    ProviderPage,
+    QAJobInputs,
+    QAJobOutputs,
+    QAResult,
+    QuestionInput,
 )
 
 __all__ = [
@@ -40,10 +41,8 @@ __all__ = [
     "NotFoundError",
     # Providers
     "Provider",
-    "ProviderType",
     "ProviderPage",
     "ProviderItem",
-    "ProviderItemType",
     "ListItemsResponse",
     # Files
     "File",
@@ -53,14 +52,17 @@ __all__ = [
     "CollectionPage",
     # Jobs
     "Job",
-    "JobStatus",
     "JobPage",
     # Extraction
     "MetaInput",
     "ExtractionResult",
+    "ExtractionJobInputs",
+    "ExtractionJobOutputs",
     # QA
     "QuestionInput",
     "QAResult",
+    "QAJobInputs",
+    "QAJobOutputs",
     # Shared
     "Annotation",
     "Ontology",

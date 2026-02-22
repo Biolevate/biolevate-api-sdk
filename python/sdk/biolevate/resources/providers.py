@@ -2,14 +2,13 @@
 
 from __future__ import annotations
 
-from http import HTTPStatus
 from typing import TYPE_CHECKING
 
 from biolevate.exceptions import APIError, AuthenticationError, NotFoundError
 
 if TYPE_CHECKING:
-    from biolevate_client import AuthenticatedClient
-    from biolevate_client.models import FSProviderExternal, PageDataFSProviderExternal
+    from biolevate_client import ApiClient
+    from biolevate.models import Provider, ProviderPage
 
 
 class ProvidersResource:
@@ -18,11 +17,11 @@ class ProvidersResource:
     Provides methods to list and retrieve storage providers.
     """
 
-    def __init__(self, client: AuthenticatedClient) -> None:
+    def __init__(self, client: ApiClient) -> None:
         """Initialize the providers resource.
 
         Args:
-            client: The authenticated API client.
+            client: The API client.
         """
         self._client = client
 
@@ -33,7 +32,7 @@ class ProvidersResource:
         sort_by: str | None = None,
         sort_order: str = "asc",
         query: str | None = None,
-    ) -> PageDataFSProviderExternal:
+    ) -> ProviderPage:
         """List all storage providers with pagination.
 
         Args:
@@ -50,27 +49,31 @@ class ProvidersResource:
             AuthenticationError: If authentication fails.
             APIError: If the API returns an unexpected error.
         """
-        from biolevate_client.api.providers import list_providers
-        from biolevate_client.types import UNSET
-
-        response = await list_providers.asyncio_detailed(
-            client=self._client,
-            page=page,
-            page_size=page_size,
-            sort_by=sort_by if sort_by is not None else UNSET,
-            sort_order=sort_order,
-            q=query if query is not None else UNSET,
+        from biolevate_client.api.providers_api import ProvidersApi
+        from biolevate_client.exceptions import (
+            ApiException,
+            ForbiddenException,
+            UnauthorizedException,
         )
 
-        if response.status_code == HTTPStatus.UNAUTHORIZED:
-            raise AuthenticationError("Authentication failed")
+        api = ProvidersApi(self._client)
 
-        if response.parsed is None:
-            raise APIError(response.status_code.value, "Failed to list providers")
+        try:
+            return await api.list_providers(
+                page=page,
+                page_size=page_size,
+                sort_by=sort_by,
+                sort_order=sort_order,
+                q=query,
+            )
+        except UnauthorizedException as e:
+            raise AuthenticationError("Authentication failed") from e
+        except ForbiddenException as e:
+            raise AuthenticationError("Access denied") from e
+        except ApiException as e:
+            raise APIError(e.status or 500, str(e.reason)) from e
 
-        return response.parsed
-
-    async def get(self, provider_id: str) -> FSProviderExternal:
+    async def get(self, provider_id: str) -> Provider:
         """Get a storage provider by ID.
 
         Args:
@@ -84,23 +87,23 @@ class ProvidersResource:
             AuthenticationError: If authentication fails.
             APIError: If the API returns an unexpected error.
         """
-        from biolevate_client.api.providers import get_provider
-
-        response = await get_provider.asyncio_detailed(
-            id=provider_id,
-            client=self._client,
+        from biolevate_client.api.providers_api import ProvidersApi
+        from biolevate_client.exceptions import (
+            ApiException,
+            ForbiddenException,
+            NotFoundException,
+            UnauthorizedException,
         )
 
-        if response.status_code == HTTPStatus.NOT_FOUND:
-            raise NotFoundError(f"Provider '{provider_id}' not found")
+        api = ProvidersApi(self._client)
 
-        if response.status_code == HTTPStatus.UNAUTHORIZED:
-            raise AuthenticationError("Authentication failed")
-
-        if response.status_code == HTTPStatus.FORBIDDEN:
-            raise AuthenticationError("Access denied to provider")
-
-        if response.parsed is None:
-            raise APIError(response.status_code.value, "Failed to get provider")
-
-        return response.parsed
+        try:
+            return await api.get_provider(id=provider_id)
+        except NotFoundException as e:
+            raise NotFoundError(f"Provider '{provider_id}' not found") from e
+        except UnauthorizedException as e:
+            raise AuthenticationError("Authentication failed") from e
+        except ForbiddenException as e:
+            raise AuthenticationError("Access denied to provider") from e
+        except ApiException as e:
+            raise APIError(e.status or 500, str(e.reason)) from e

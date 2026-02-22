@@ -2,33 +2,27 @@
 
 from __future__ import annotations
 
-from http import HTTPStatus
 from typing import TYPE_CHECKING
 
 from biolevate.exceptions import APIError, AuthenticationError, NotFoundError
 
 if TYPE_CHECKING:
-    from biolevate_client import AuthenticatedClient
-    from biolevate_client.models import (
-        EliseCollectionInfo,
-        EliseFileInfo,
-        PageDataEliseCollectionInfo,
-        PageDataEliseFileInfo,
-    )
+    from biolevate_client import ApiClient
+    from biolevate.models import Collection, CollectionPage, FilePage
 
 
 class CollectionsResource:
     """Resource for managing file collections.
 
-    Provides methods to create, list, retrieve, update, and delete collections,
-    as well as manage files within collections.
+    Collections are groups of indexed files that can be used together
+    for extraction or question answering jobs.
     """
 
-    def __init__(self, client: AuthenticatedClient) -> None:
+    def __init__(self, client: ApiClient) -> None:
         """Initialize the collections resource.
 
         Args:
-            client: The authenticated API client.
+            client: The API client.
         """
         self._client = client
 
@@ -39,8 +33,8 @@ class CollectionsResource:
         sort_by: str | None = None,
         sort_order: str = "asc",
         query: str | None = None,
-    ) -> PageDataEliseCollectionInfo:
-        """List collections accessible to the current user.
+    ) -> CollectionPage:
+        """List collections with pagination.
 
         Args:
             page: Page number (0-based).
@@ -56,296 +50,319 @@ class CollectionsResource:
             AuthenticationError: If authentication fails.
             APIError: If the API returns an unexpected error.
         """
-        from biolevate_client.api.collections import list_collections
-        from biolevate_client.types import UNSET
-
-        response = await list_collections.asyncio_detailed(
-            client=self._client,
-            page=page,
-            page_size=page_size,
-            sort_by=sort_by if sort_by is not None else UNSET,
-            sort_order=sort_order,
-            q=query if query is not None else UNSET,
+        from biolevate_client.api.collections_api import CollectionsApi
+        from biolevate_client.exceptions import (
+            ApiException,
+            ForbiddenException,
+            UnauthorizedException,
         )
 
-        if response.status_code == HTTPStatus.UNAUTHORIZED:
-            raise AuthenticationError("Authentication failed")
+        api = CollectionsApi(self._client)
 
-        if response.parsed is None:
-            raise APIError(response.status_code.value, "Failed to list collections")
-
-        return response.parsed
+        try:
+            return await api.list_collections(
+                page=page,
+                page_size=page_size,
+                sort_by=sort_by,
+                sort_order=sort_order,
+                q=query,
+            )
+        except UnauthorizedException as e:
+            raise AuthenticationError("Authentication failed") from e
+        except ForbiddenException as e:
+            raise AuthenticationError("Access denied") from e
+        except ApiException as e:
+            raise APIError(e.status or 500, str(e.reason)) from e
 
     async def create(
         self,
         name: str,
         description: str | None = None,
-    ) -> EliseCollectionInfo:
+    ) -> Collection:
         """Create a new collection.
 
         Args:
-            name: The collection name.
+            name: Collection name.
             description: Optional description.
 
         Returns:
-            The created collection info.
+            The created collection.
 
         Raises:
             AuthenticationError: If authentication fails.
             APIError: If the API returns an unexpected error.
         """
-        from biolevate_client.api.collections import create_collection
+        from biolevate_client.api.collections_api import CollectionsApi
+        from biolevate_client.exceptions import (
+            ApiException,
+            ForbiddenException,
+            UnauthorizedException,
+        )
         from biolevate_client.models import CreateCollectionRequest
-        from biolevate_client.types import UNSET
 
-        request = CreateCollectionRequest(
-            name=name,
-            description=description if description is not None else UNSET,
-        )
+        api = CollectionsApi(self._client)
 
-        response = await create_collection.asyncio_detailed(
-            client=self._client,
-            body=request,
-        )
+        try:
+            return await api.create_collection(
+                create_collection_request=CreateCollectionRequest(
+                    name=name,
+                    description=description,
+                )
+            )
+        except UnauthorizedException as e:
+            raise AuthenticationError("Authentication failed") from e
+        except ForbiddenException as e:
+            raise AuthenticationError("Access denied") from e
+        except ApiException as e:
+            raise APIError(e.status or 500, str(e.reason)) from e
 
-        if response.status_code == HTTPStatus.UNAUTHORIZED:
-            raise AuthenticationError("Authentication failed")
-
-        if response.status_code == HTTPStatus.BAD_REQUEST:
-            raise APIError(response.status_code.value, "Invalid request")
-
-        if response.parsed is None:
-            raise APIError(response.status_code.value, "Failed to create collection")
-
-        return response.parsed
-
-    async def get(self, collection_id: str) -> EliseCollectionInfo:
+    async def get(self, collection_id: str) -> Collection:
         """Get a collection by ID.
 
         Args:
-            collection_id: The collection UUID.
+            collection_id: The unique identifier of the collection.
 
         Returns:
-            The collection info.
+            The collection details.
 
         Raises:
             NotFoundError: If the collection is not found.
             AuthenticationError: If authentication fails.
             APIError: If the API returns an unexpected error.
         """
-        from biolevate_client.api.collections import get_collection
-
-        response = await get_collection.asyncio_detailed(
-            id=collection_id,
-            client=self._client,
+        from biolevate_client.api.collections_api import CollectionsApi
+        from biolevate_client.exceptions import (
+            ApiException,
+            ForbiddenException,
+            NotFoundException,
+            UnauthorizedException,
         )
 
-        if response.status_code == HTTPStatus.NOT_FOUND:
-            raise NotFoundError(f"Collection not found: {collection_id}")
+        api = CollectionsApi(self._client)
 
-        if response.status_code == HTTPStatus.UNAUTHORIZED:
-            raise AuthenticationError("Authentication failed")
-
-        if response.status_code == HTTPStatus.FORBIDDEN:
-            raise AuthenticationError("Access denied to collection")
-
-        if response.parsed is None:
-            raise APIError(response.status_code.value, "Failed to get collection")
-
-        return response.parsed
+        try:
+            return await api.get_collection(id=collection_id)
+        except NotFoundException as e:
+            raise NotFoundError(f"Collection '{collection_id}' not found") from e
+        except UnauthorizedException as e:
+            raise AuthenticationError("Authentication failed") from e
+        except ForbiddenException as e:
+            raise AuthenticationError("Access denied") from e
+        except ApiException as e:
+            raise APIError(e.status or 500, str(e.reason)) from e
 
     async def update(
         self,
         collection_id: str,
         name: str | None = None,
         description: str | None = None,
-    ) -> EliseCollectionInfo:
+    ) -> Collection:
         """Update a collection.
 
         Args:
-            collection_id: The collection UUID.
+            collection_id: The unique identifier of the collection.
             name: New name (optional).
             description: New description (optional).
 
         Returns:
-            The updated collection info.
+            The updated collection.
 
         Raises:
             NotFoundError: If the collection is not found.
             AuthenticationError: If authentication fails.
             APIError: If the API returns an unexpected error.
         """
-        from biolevate_client.api.collections import update_collection
+        from biolevate_client.api.collections_api import CollectionsApi
+        from biolevate_client.exceptions import (
+            ApiException,
+            ForbiddenException,
+            NotFoundException,
+            UnauthorizedException,
+        )
         from biolevate_client.models import UpdateCollectionRequest
-        from biolevate_client.types import UNSET
 
-        request = UpdateCollectionRequest(
-            name=name if name is not None else UNSET,
-            description=description if description is not None else UNSET,
-        )
+        api = CollectionsApi(self._client)
 
-        response = await update_collection.asyncio_detailed(
-            id=collection_id,
-            client=self._client,
-            body=request,
-        )
-
-        if response.status_code == HTTPStatus.NOT_FOUND:
-            raise NotFoundError(f"Collection not found: {collection_id}")
-
-        if response.status_code == HTTPStatus.UNAUTHORIZED:
-            raise AuthenticationError("Authentication failed")
-
-        if response.status_code == HTTPStatus.FORBIDDEN:
-            raise AuthenticationError("Access denied to collection")
-
-        if response.parsed is None:
-            raise APIError(response.status_code.value, "Failed to update collection")
-
-        return response.parsed
+        try:
+            return await api.update_collection(
+                id=collection_id,
+                update_collection_request=UpdateCollectionRequest(
+                    name=name,
+                    description=description,
+                ),
+            )
+        except NotFoundException as e:
+            raise NotFoundError(f"Collection '{collection_id}' not found") from e
+        except UnauthorizedException as e:
+            raise AuthenticationError("Authentication failed") from e
+        except ForbiddenException as e:
+            raise AuthenticationError("Access denied") from e
+        except ApiException as e:
+            raise APIError(e.status or 500, str(e.reason)) from e
 
     async def delete(self, collection_id: str) -> None:
         """Delete a collection.
 
         Args:
-            collection_id: The collection UUID.
+            collection_id: The unique identifier of the collection.
 
         Raises:
             NotFoundError: If the collection is not found.
             AuthenticationError: If authentication fails.
             APIError: If the API returns an unexpected error.
         """
-        from biolevate_client.api.collections import delete_collection
-
-        response = await delete_collection.asyncio_detailed(
-            id=collection_id,
-            client=self._client,
+        from biolevate_client.api.collections_api import CollectionsApi
+        from biolevate_client.exceptions import (
+            ApiException,
+            ForbiddenException,
+            NotFoundException,
+            UnauthorizedException,
         )
 
-        if response.status_code == HTTPStatus.NOT_FOUND:
-            raise NotFoundError(f"Collection not found: {collection_id}")
+        api = CollectionsApi(self._client)
 
-        if response.status_code == HTTPStatus.UNAUTHORIZED:
-            raise AuthenticationError("Authentication failed")
-
-        if response.status_code == HTTPStatus.FORBIDDEN:
-            raise AuthenticationError("Access denied to collection")
-
-        if response.status_code not in (HTTPStatus.NO_CONTENT, HTTPStatus.OK):
-            raise APIError(response.status_code.value, "Failed to delete collection")
+        try:
+            await api.delete_collection(id=collection_id)
+        except NotFoundException as e:
+            raise NotFoundError(f"Collection '{collection_id}' not found") from e
+        except UnauthorizedException as e:
+            raise AuthenticationError("Authentication failed") from e
+        except ForbiddenException as e:
+            raise AuthenticationError("Access denied") from e
+        except ApiException as e:
+            raise APIError(e.status or 500, str(e.reason)) from e
 
     async def list_files(
         self,
         collection_id: str,
         page: int = 0,
         page_size: int = 20,
-    ) -> PageDataEliseFileInfo:
+        sort_by: str | None = None,
+        sort_order: str = "asc",
+    ) -> FilePage:
         """List files in a collection.
 
         Args:
-            collection_id: The collection UUID.
+            collection_id: The unique identifier of the collection.
             page: Page number (0-based).
             page_size: Number of items per page.
+            sort_by: Field to sort by.
+            sort_order: Sort direction ('asc' or 'desc').
 
         Returns:
-            Paginated list of files.
+            Paginated list of files in the collection.
 
         Raises:
             NotFoundError: If the collection is not found.
             AuthenticationError: If authentication fails.
             APIError: If the API returns an unexpected error.
         """
-        from biolevate_client.api.collections import list_collection_files
-
-        response = await list_collection_files.asyncio_detailed(
-            id=collection_id,
-            client=self._client,
-            page=page,
-            page_size=page_size,
+        from biolevate_client.api.collections_api import CollectionsApi
+        from biolevate_client.exceptions import (
+            ApiException,
+            ForbiddenException,
+            NotFoundException,
+            UnauthorizedException,
         )
 
-        if response.status_code == HTTPStatus.NOT_FOUND:
-            raise NotFoundError(f"Collection not found: {collection_id}")
+        api = CollectionsApi(self._client)
 
-        if response.status_code == HTTPStatus.UNAUTHORIZED:
-            raise AuthenticationError("Authentication failed")
+        try:
+            return await api.list_collection_files(
+                id=collection_id,
+                page=page,
+                page_size=page_size,
+                sort_by=sort_by,
+                sort_order=sort_order,
+            )
+        except NotFoundException as e:
+            raise NotFoundError(f"Collection '{collection_id}' not found") from e
+        except UnauthorizedException as e:
+            raise AuthenticationError("Authentication failed") from e
+        except ForbiddenException as e:
+            raise AuthenticationError("Access denied") from e
+        except ApiException as e:
+            raise APIError(e.status or 500, str(e.reason)) from e
 
-        if response.status_code == HTTPStatus.FORBIDDEN:
-            raise AuthenticationError("Access denied to collection")
-
-        if response.parsed is None:
-            raise APIError(response.status_code.value, "Failed to list collection files")
-
-        return response.parsed
-
-    async def add_file(self, collection_id: str, file_id: str) -> EliseFileInfo:
+    async def add_file(
+        self,
+        collection_id: str,
+        file_id: str,
+    ) -> None:
         """Add a file to a collection.
 
         Args:
-            collection_id: The collection UUID.
-            file_id: The file UUID to add.
-
-        Returns:
-            The added file info.
+            collection_id: The unique identifier of the collection.
+            file_id: The unique identifier of the file to add.
 
         Raises:
             NotFoundError: If the collection or file is not found.
             AuthenticationError: If authentication fails.
             APIError: If the API returns an unexpected error.
         """
-        from biolevate_client.api.collections import add_file_to_collection
+        from biolevate_client.api.collections_api import CollectionsApi
+        from biolevate_client.exceptions import (
+            ApiException,
+            ForbiddenException,
+            NotFoundException,
+            UnauthorizedException,
+        )
         from biolevate_client.models import AddFileToCollectionRequest
 
-        request = AddFileToCollectionRequest(file_id=file_id)
+        api = CollectionsApi(self._client)
 
-        response = await add_file_to_collection.asyncio_detailed(
-            id=collection_id,
-            client=self._client,
-            body=request,
-        )
+        try:
+            await api.add_file_to_collection(
+                id=collection_id,
+                add_file_to_collection_request=AddFileToCollectionRequest(
+                    fileId=file_id,
+                ),
+            )
+        except NotFoundException as e:
+            raise NotFoundError(f"Collection or file not found") from e
+        except UnauthorizedException as e:
+            raise AuthenticationError("Authentication failed") from e
+        except ForbiddenException as e:
+            raise AuthenticationError("Access denied") from e
+        except ApiException as e:
+            raise APIError(e.status or 500, str(e.reason)) from e
 
-        if response.status_code == HTTPStatus.NOT_FOUND:
-            raise NotFoundError(f"Collection or file not found")
-
-        if response.status_code == HTTPStatus.UNAUTHORIZED:
-            raise AuthenticationError("Authentication failed")
-
-        if response.status_code == HTTPStatus.FORBIDDEN:
-            raise AuthenticationError("Access denied")
-
-        if response.parsed is None:
-            raise APIError(response.status_code.value, "Failed to add file to collection")
-
-        return response.parsed
-
-    async def remove_file(self, collection_id: str, file_id: str) -> None:
+    async def remove_file(
+        self,
+        collection_id: str,
+        file_id: str,
+    ) -> None:
         """Remove a file from a collection.
 
         Args:
-            collection_id: The collection UUID.
-            file_id: The file UUID to remove.
+            collection_id: The unique identifier of the collection.
+            file_id: The unique identifier of the file to remove.
 
         Raises:
-            NotFoundError: If the collection or file association is not found.
+            NotFoundError: If the collection or file is not found.
             AuthenticationError: If authentication fails.
             APIError: If the API returns an unexpected error.
         """
-        from biolevate_client.api.collections import remove_file_from_collection
-
-        response = await remove_file_from_collection.asyncio_detailed(
-            id=collection_id,
-            file_id=file_id,
-            client=self._client,
+        from biolevate_client.api.collections_api import CollectionsApi
+        from biolevate_client.exceptions import (
+            ApiException,
+            ForbiddenException,
+            NotFoundException,
+            UnauthorizedException,
         )
 
-        if response.status_code == HTTPStatus.NOT_FOUND:
-            raise NotFoundError(f"Collection or file association not found")
+        api = CollectionsApi(self._client)
 
-        if response.status_code == HTTPStatus.UNAUTHORIZED:
-            raise AuthenticationError("Authentication failed")
-
-        if response.status_code == HTTPStatus.FORBIDDEN:
-            raise AuthenticationError("Access denied")
-
-        if response.status_code not in (HTTPStatus.NO_CONTENT, HTTPStatus.OK):
-            raise APIError(response.status_code.value, "Failed to remove file from collection")
+        try:
+            await api.remove_file_from_collection(
+                id=collection_id,
+                file_id=file_id,
+            )
+        except NotFoundException as e:
+            raise NotFoundError(f"Collection or file not found") from e
+        except UnauthorizedException as e:
+            raise AuthenticationError("Authentication failed") from e
+        except ForbiddenException as e:
+            raise AuthenticationError("Access denied") from e
+        except ApiException as e:
+            raise APIError(e.status or 500, str(e.reason)) from e

@@ -179,6 +179,7 @@ Class | Method | HTTP request | Description
  - [FSProviderLeanearConfigExternal](docs/FSProviderLeanearConfigExternal.md)
  - [FSProviderLocalConfigExternal](docs/FSProviderLocalConfigExternal.md)
  - [FSProviderS3ConfigExternal](docs/FSProviderS3ConfigExternal.md)
+ - [FSProviderSFTPConfigExternal](docs/FSProviderSFTPConfigExternal.md)
  - [FSProviderSharepointOnlineConfigExternal](docs/FSProviderSharepointOnlineConfigExternal.md)
  - [FileId](docs/FileId.md)
  - [FilesInput](docs/FilesInput.md)

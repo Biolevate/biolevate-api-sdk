@@ -1,14 +1,12 @@
 # CreateItemRequest
 
-Create folder request (for JSON body). For file upload, use multipart form.
+Create folder request. Key must end with '/' to indicate a folder.
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**type** | **str** | Item type | 
-**path** | **str** | Parent directory path | [optional] 
-**name** | **str** | Item name | 
+**key** | **str** | Full folder key ending with &#39;/&#39; | 
 
 ## Example
 

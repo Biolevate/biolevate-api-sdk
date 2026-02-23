@@ -13,6 +13,12 @@ from scripts.test_utils import TestRunner
 
 async def main() -> None:
     parser = get_base_parser("Test Collections resource")
+    parser.add_argument(
+        "--provider-id",
+        type=str,
+        default=None,
+        help="ID of the provider to use (default: first available)",
+    )
     args = parser.parse_args()
 
     client = create_client(args)
@@ -26,10 +32,14 @@ async def main() -> None:
     async with client:
         async def test_setup_file_for_collection() -> dict[str, Any]:
             nonlocal file_id_for_collection
-            providers = await client.providers.list(page=0, page_size=1)
-            if not providers.data or len(providers.data) == 0:
-                return {"provider_id": None, "file_id": None}
-            provider_id = str(providers.data[0].id.id) if providers.data[0].id else None
+            provider_id: str | None = None
+            if args.provider_id:
+                provider_id = args.provider_id
+            else:
+                providers = await client.providers.list(page=0, page_size=1)
+                if not providers.data or len(providers.data) == 0:
+                    return {"provider_id": None, "file_id": None}
+                provider_id = str(providers.data[0].id.id) if providers.data[0].id else None
             if not provider_id:
                 return {"provider_id": None, "file_id": None}
             files_page = await client.files.list(provider_id, page=0, page_size=1)

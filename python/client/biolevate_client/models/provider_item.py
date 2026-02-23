@@ -27,14 +27,13 @@ class ProviderItem(BaseModel):
     Provider item (file or folder)
     """ # noqa: E501
     provider_id: Optional[StrictStr] = Field(default=None, description="Provider ID", alias="providerId")
-    name: Optional[StrictStr] = Field(default=None, description="Item name")
-    path: Optional[StrictStr] = Field(default=None, description="Directory path")
+    key: Optional[StrictStr] = Field(default=None, description="Full item key. Files: 'path/to/file.pdf', Folders: 'path/to/folder/'")
     type: Optional[StrictStr] = Field(default=None, description="Item type")
     size: Optional[StrictInt] = Field(default=None, description="File size in bytes (null for folders)")
     extension: Optional[StrictStr] = Field(default=None, description="File extension (null for folders)")
     media_type: Optional[StrictStr] = Field(default=None, description="Media type (null for folders)", alias="mediaType")
     last_modified: Optional[StrictInt] = Field(default=None, description="Last modified timestamp in milliseconds", alias="lastModified")
-    __properties: ClassVar[List[str]] = ["providerId", "name", "path", "type", "size", "extension", "mediaType", "lastModified"]
+    __properties: ClassVar[List[str]] = ["providerId", "key", "type", "size", "extension", "mediaType", "lastModified"]
 
     @field_validator('type')
     def type_validate_enum(cls, value):
@@ -98,8 +97,7 @@ class ProviderItem(BaseModel):
 
         _obj = cls.model_validate({
             "providerId": obj.get("providerId"),
-            "name": obj.get("name"),
-            "path": obj.get("path"),
+            "key": obj.get("key"),
             "type": obj.get("type"),
             "size": obj.get("size"),
             "extension": obj.get("extension"),

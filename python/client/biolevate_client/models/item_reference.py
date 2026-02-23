@@ -17,26 +17,17 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
 class ItemReference(BaseModel):
     """
-    Reference to an item for delete operations
+    Reference to an item. Use trailing slash for folders (e.g., 'folder/' or 'path/to/folder/')
     """ # noqa: E501
-    path: Optional[StrictStr] = Field(default=None, description="Directory path containing the item")
-    name: StrictStr = Field(description="Item name")
-    type: StrictStr = Field(description="Item type")
-    __properties: ClassVar[List[str]] = ["path", "name", "type"]
-
-    @field_validator('type')
-    def type_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['FILE', 'FOLDER']):
-            raise ValueError("must be one of enum values ('FILE', 'FOLDER')")
-        return value
+    key: StrictStr = Field(description="Full item key. Files: 'path/to/file.pdf', Folders: 'path/to/folder/'")
+    __properties: ClassVar[List[str]] = ["key"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -89,9 +80,7 @@ class ItemReference(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "path": obj.get("path"),
-            "name": obj.get("name"),
-            "type": obj.get("type")
+            "key": obj.get("key")
         })
         return _obj
 

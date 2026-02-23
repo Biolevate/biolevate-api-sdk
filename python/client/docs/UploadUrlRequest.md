@@ -6,8 +6,7 @@ Request for presigned upload URL
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**path** | **str** | Target directory path | 
-**file_name** | **str** | File name | 
+**key** | **str** | Full file key (must not end with &#39;/&#39;) | 
 **size** | **int** | File size in bytes | [optional] 
 **media_type** | **str** | Media type | [optional] 
 

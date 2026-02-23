@@ -1,14 +1,12 @@
 # ItemReference
 
-Reference to an item for delete operations
+Reference to an item. Use trailing slash for folders (e.g., 'folder/' or 'path/to/folder/')
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**path** | **str** | Directory path containing the item | [optional] 
-**name** | **str** | Item name | 
-**type** | **str** | Item type | 
+**key** | **str** | Full item key. Files: &#39;path/to/file.pdf&#39;, Folders: &#39;path/to/folder/&#39; | 
 
 ## Example
 

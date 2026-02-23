@@ -35,13 +35,11 @@ class TestConfirmUploadRequest(unittest.TestCase):
         model = ConfirmUploadRequest()
         if include_optional:
             return ConfirmUploadRequest(
-                path = '/reports/',
-                file_name = 'document.pdf'
+                key = 'reports/document.pdf'
             )
         else:
             return ConfirmUploadRequest(
-                path = '/reports/',
-                file_name = 'document.pdf',
+                key = 'reports/document.pdf',
         )
         """
 

@@ -77,8 +77,7 @@ class FilesResource:
     async def create(
         self,
         provider_id: str,
-        path: str,
-        name: str,
+        key: str,
     ) -> File:
         """Create an indexed file from an existing provider item.
 
@@ -113,12 +112,11 @@ class FilesResource:
             return await api.create_file(
                 create_file_request=CreateFileRequest(
                     providerId=provider_id,
-                    path=path,
-                    name=name,
+                    key=key,
                 )
             )
         except NotFoundException as e:
-            raise NotFoundError(f"Provider item not found: {path}") from e
+            raise NotFoundError(f"Provider item not found: {key}") from e
         except BadRequestException as e:
             raise APIError(400, str(e.body or e.reason)) from e
         except UnauthorizedException as e:

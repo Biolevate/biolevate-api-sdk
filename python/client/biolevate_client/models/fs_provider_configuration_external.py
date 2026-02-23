@@ -30,6 +30,7 @@ if TYPE_CHECKING:
     from biolevate_client.models.fs_provider_leanear_config_external import FSProviderLeanearConfigExternal
     from biolevate_client.models.fs_provider_local_config_external import FSProviderLocalConfigExternal
     from biolevate_client.models.fs_provider_s3_config_external import FSProviderS3ConfigExternal
+    from biolevate_client.models.fs_provider_sftp_config_external import FSProviderSFTPConfigExternal
     from biolevate_client.models.fs_provider_sharepoint_online_config_external import FSProviderSharepointOnlineConfigExternal
 
 class FSProviderConfigurationExternal(BaseModel):
@@ -45,8 +46,8 @@ class FSProviderConfigurationExternal(BaseModel):
         if value is None:
             return value
 
-        if value not in set(['LOCAL', 'SHAREPOINT_ONLINE', 'S3', 'LEANEAR', 'AZURE', 'GCS']):
-            raise ValueError("must be one of enum values ('LOCAL', 'SHAREPOINT_ONLINE', 'S3', 'LEANEAR', 'AZURE', 'GCS')")
+        if value not in set(['LOCAL', 'SHAREPOINT_ONLINE', 'S3', 'LEANEAR', 'AZURE', 'GCS', 'SFTP']):
+            raise ValueError("must be one of enum values ('LOCAL', 'SHAREPOINT_ONLINE', 'S3', 'LEANEAR', 'AZURE', 'GCS', 'SFTP')")
         return value
 
     model_config = ConfigDict(
@@ -61,7 +62,7 @@ class FSProviderConfigurationExternal(BaseModel):
 
     # discriminator mappings
     __discriminator_value_class_map: ClassVar[Dict[str, str]] = {
-        'AZURE': 'FSProviderAzureConfigExternal','GCS': 'FSProviderGCSConfigExternal','LEANEAR': 'FSProviderLeanearConfigExternal','LOCAL': 'FSProviderLocalConfigExternal','S3': 'FSProviderS3ConfigExternal','SHAREPOINT_ONLINE': 'FSProviderSharepointOnlineConfigExternal'
+        'AZURE': 'FSProviderAzureConfigExternal','GCS': 'FSProviderGCSConfigExternal','LEANEAR': 'FSProviderLeanearConfigExternal','LOCAL': 'FSProviderLocalConfigExternal','S3': 'FSProviderS3ConfigExternal','SFTP': 'FSProviderSFTPConfigExternal','SHAREPOINT_ONLINE': 'FSProviderSharepointOnlineConfigExternal'
     }
 
     @classmethod
@@ -83,7 +84,7 @@ class FSProviderConfigurationExternal(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> Optional[Union[FSProviderAzureConfigExternal, FSProviderGCSConfigExternal, FSProviderLeanearConfigExternal, FSProviderLocalConfigExternal, FSProviderS3ConfigExternal, FSProviderSharepointOnlineConfigExternal]]:
+    def from_json(cls, json_str: str) -> Optional[Union[FSProviderAzureConfigExternal, FSProviderGCSConfigExternal, FSProviderLeanearConfigExternal, FSProviderLocalConfigExternal, FSProviderS3ConfigExternal, FSProviderSFTPConfigExternal, FSProviderSharepointOnlineConfigExternal]]:
         """Create an instance of FSProviderConfigurationExternal from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
@@ -108,7 +109,7 @@ class FSProviderConfigurationExternal(BaseModel):
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: Dict[str, Any]) -> Optional[Union[FSProviderAzureConfigExternal, FSProviderGCSConfigExternal, FSProviderLeanearConfigExternal, FSProviderLocalConfigExternal, FSProviderS3ConfigExternal, FSProviderSharepointOnlineConfigExternal]]:
+    def from_dict(cls, obj: Dict[str, Any]) -> Optional[Union[FSProviderAzureConfigExternal, FSProviderGCSConfigExternal, FSProviderLeanearConfigExternal, FSProviderLocalConfigExternal, FSProviderS3ConfigExternal, FSProviderSFTPConfigExternal, FSProviderSharepointOnlineConfigExternal]]:
         """Create an instance of FSProviderConfigurationExternal from a dict"""
         # look up the object type based on discriminator mapping
         object_type = cls.get_discriminator_value(obj)
@@ -122,6 +123,8 @@ class FSProviderConfigurationExternal(BaseModel):
             return import_module("biolevate_client.models.fs_provider_local_config_external").FSProviderLocalConfigExternal.from_dict(obj)
         if object_type ==  'FSProviderS3ConfigExternal':
             return import_module("biolevate_client.models.fs_provider_s3_config_external").FSProviderS3ConfigExternal.from_dict(obj)
+        if object_type ==  'FSProviderSFTPConfigExternal':
+            return import_module("biolevate_client.models.fs_provider_sftp_config_external").FSProviderSFTPConfigExternal.from_dict(obj)
         if object_type ==  'FSProviderSharepointOnlineConfigExternal':
             return import_module("biolevate_client.models.fs_provider_sharepoint_online_config_external").FSProviderSharepointOnlineConfigExternal.from_dict(obj)
 

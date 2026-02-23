@@ -634,8 +634,7 @@ class ProviderItemsApi:
     async def get_download_url(
         self,
         provider_id: Annotated[StrictStr, Field(description="Provider ID")],
-        path: Annotated[StrictStr, Field(description="File path")],
-        name: Annotated[StrictStr, Field(description="File name")],
+        key: Annotated[StrictStr, Field(description="File key (must not end with '/')")],
         expiration_minutes: Annotated[Optional[StrictInt], Field(description="URL expiration in minutes")] = None,
         _request_timeout: Union[
             None,
@@ -656,10 +655,8 @@ class ProviderItemsApi:
 
         :param provider_id: Provider ID (required)
         :type provider_id: str
-        :param path: File path (required)
-        :type path: str
-        :param name: File name (required)
-        :type name: str
+        :param key: File key (must not end with '/') (required)
+        :type key: str
         :param expiration_minutes: URL expiration in minutes
         :type expiration_minutes: int
         :param _request_timeout: timeout setting for this request. If one
@@ -686,8 +683,7 @@ class ProviderItemsApi:
 
         _param = self._get_download_url_serialize(
             provider_id=provider_id,
-            path=path,
-            name=name,
+            key=key,
             expiration_minutes=expiration_minutes,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -716,8 +712,7 @@ class ProviderItemsApi:
     async def get_download_url_with_http_info(
         self,
         provider_id: Annotated[StrictStr, Field(description="Provider ID")],
-        path: Annotated[StrictStr, Field(description="File path")],
-        name: Annotated[StrictStr, Field(description="File name")],
+        key: Annotated[StrictStr, Field(description="File key (must not end with '/')")],
         expiration_minutes: Annotated[Optional[StrictInt], Field(description="URL expiration in minutes")] = None,
         _request_timeout: Union[
             None,
@@ -738,10 +733,8 @@ class ProviderItemsApi:
 
         :param provider_id: Provider ID (required)
         :type provider_id: str
-        :param path: File path (required)
-        :type path: str
-        :param name: File name (required)
-        :type name: str
+        :param key: File key (must not end with '/') (required)
+        :type key: str
         :param expiration_minutes: URL expiration in minutes
         :type expiration_minutes: int
         :param _request_timeout: timeout setting for this request. If one
@@ -768,8 +761,7 @@ class ProviderItemsApi:
 
         _param = self._get_download_url_serialize(
             provider_id=provider_id,
-            path=path,
-            name=name,
+            key=key,
             expiration_minutes=expiration_minutes,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -798,8 +790,7 @@ class ProviderItemsApi:
     async def get_download_url_without_preload_content(
         self,
         provider_id: Annotated[StrictStr, Field(description="Provider ID")],
-        path: Annotated[StrictStr, Field(description="File path")],
-        name: Annotated[StrictStr, Field(description="File name")],
+        key: Annotated[StrictStr, Field(description="File key (must not end with '/')")],
         expiration_minutes: Annotated[Optional[StrictInt], Field(description="URL expiration in minutes")] = None,
         _request_timeout: Union[
             None,
@@ -820,10 +811,8 @@ class ProviderItemsApi:
 
         :param provider_id: Provider ID (required)
         :type provider_id: str
-        :param path: File path (required)
-        :type path: str
-        :param name: File name (required)
-        :type name: str
+        :param key: File key (must not end with '/') (required)
+        :type key: str
         :param expiration_minutes: URL expiration in minutes
         :type expiration_minutes: int
         :param _request_timeout: timeout setting for this request. If one
@@ -850,8 +839,7 @@ class ProviderItemsApi:
 
         _param = self._get_download_url_serialize(
             provider_id=provider_id,
-            path=path,
-            name=name,
+            key=key,
             expiration_minutes=expiration_minutes,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -875,8 +863,7 @@ class ProviderItemsApi:
     def _get_download_url_serialize(
         self,
         provider_id,
-        path,
-        name,
+        key,
         expiration_minutes,
         _request_auth,
         _content_type,
@@ -902,13 +889,9 @@ class ProviderItemsApi:
         if provider_id is not None:
             _path_params['providerId'] = provider_id
         # process the query parameters
-        if path is not None:
+        if key is not None:
             
-            _query_params.append(('path', path))
-            
-        if name is not None:
-            
-            _query_params.append(('name', name))
+            _query_params.append(('key', key))
             
         if expiration_minutes is not None:
             
@@ -955,8 +938,7 @@ class ProviderItemsApi:
     async def get_file_content(
         self,
         provider_id: Annotated[StrictStr, Field(description="Provider ID")],
-        path: Annotated[StrictStr, Field(description="File path")],
-        name: Annotated[StrictStr, Field(description="File name")],
+        key: Annotated[StrictStr, Field(description="File key (must not end with '/')")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -976,10 +958,8 @@ class ProviderItemsApi:
 
         :param provider_id: Provider ID (required)
         :type provider_id: str
-        :param path: File path (required)
-        :type path: str
-        :param name: File name (required)
-        :type name: str
+        :param key: File key (must not end with '/') (required)
+        :type key: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1004,8 +984,7 @@ class ProviderItemsApi:
 
         _param = self._get_file_content_serialize(
             provider_id=provider_id,
-            path=path,
-            name=name,
+            key=key,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1033,8 +1012,7 @@ class ProviderItemsApi:
     async def get_file_content_with_http_info(
         self,
         provider_id: Annotated[StrictStr, Field(description="Provider ID")],
-        path: Annotated[StrictStr, Field(description="File path")],
-        name: Annotated[StrictStr, Field(description="File name")],
+        key: Annotated[StrictStr, Field(description="File key (must not end with '/')")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1054,10 +1032,8 @@ class ProviderItemsApi:
 
         :param provider_id: Provider ID (required)
         :type provider_id: str
-        :param path: File path (required)
-        :type path: str
-        :param name: File name (required)
-        :type name: str
+        :param key: File key (must not end with '/') (required)
+        :type key: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1082,8 +1058,7 @@ class ProviderItemsApi:
 
         _param = self._get_file_content_serialize(
             provider_id=provider_id,
-            path=path,
-            name=name,
+            key=key,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1111,8 +1086,7 @@ class ProviderItemsApi:
     async def get_file_content_without_preload_content(
         self,
         provider_id: Annotated[StrictStr, Field(description="Provider ID")],
-        path: Annotated[StrictStr, Field(description="File path")],
-        name: Annotated[StrictStr, Field(description="File name")],
+        key: Annotated[StrictStr, Field(description="File key (must not end with '/')")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1132,10 +1106,8 @@ class ProviderItemsApi:
 
         :param provider_id: Provider ID (required)
         :type provider_id: str
-        :param path: File path (required)
-        :type path: str
-        :param name: File name (required)
-        :type name: str
+        :param key: File key (must not end with '/') (required)
+        :type key: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1160,8 +1132,7 @@ class ProviderItemsApi:
 
         _param = self._get_file_content_serialize(
             provider_id=provider_id,
-            path=path,
-            name=name,
+            key=key,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1184,8 +1155,7 @@ class ProviderItemsApi:
     def _get_file_content_serialize(
         self,
         provider_id,
-        path,
-        name,
+        key,
         _request_auth,
         _content_type,
         _headers,
@@ -1210,13 +1180,9 @@ class ProviderItemsApi:
         if provider_id is not None:
             _path_params['providerId'] = provider_id
         # process the query parameters
-        if path is not None:
+        if key is not None:
             
-            _query_params.append(('path', path))
-            
-        if name is not None:
-            
-            _query_params.append(('name', name))
+            _query_params.append(('key', key))
             
         # process the header parameters
         # process the form parameters
@@ -1554,7 +1520,7 @@ class ProviderItemsApi:
     async def list_items(
         self,
         provider_id: Annotated[StrictStr, Field(description="Provider ID")],
-        path: Annotated[Optional[StrictStr], Field(description="Directory path")] = None,
+        key: Annotated[Optional[StrictStr], Field(description="Directory key (must end with '/' or be empty for root)")] = None,
         q: Annotated[Optional[StrictStr], Field(description="Name filter")] = None,
         cursor: Annotated[Optional[StrictStr], Field(description="Pagination cursor")] = None,
         limit: Annotated[Optional[StrictInt], Field(description="Max items to return")] = None,
@@ -1573,12 +1539,12 @@ class ProviderItemsApi:
     ) -> ListItemsResponse:
         """List items
 
-        Returns a paginated list of files and folders in the specified path
+        Returns a paginated list of files and folders in the specified directory
 
         :param provider_id: Provider ID (required)
         :type provider_id: str
-        :param path: Directory path
-        :type path: str
+        :param key: Directory key (must end with '/' or be empty for root)
+        :type key: str
         :param q: Name filter
         :type q: str
         :param cursor: Pagination cursor
@@ -1609,7 +1575,7 @@ class ProviderItemsApi:
 
         _param = self._list_items_serialize(
             provider_id=provider_id,
-            path=path,
+            key=key,
             q=q,
             cursor=cursor,
             limit=limit,
@@ -1640,7 +1606,7 @@ class ProviderItemsApi:
     async def list_items_with_http_info(
         self,
         provider_id: Annotated[StrictStr, Field(description="Provider ID")],
-        path: Annotated[Optional[StrictStr], Field(description="Directory path")] = None,
+        key: Annotated[Optional[StrictStr], Field(description="Directory key (must end with '/' or be empty for root)")] = None,
         q: Annotated[Optional[StrictStr], Field(description="Name filter")] = None,
         cursor: Annotated[Optional[StrictStr], Field(description="Pagination cursor")] = None,
         limit: Annotated[Optional[StrictInt], Field(description="Max items to return")] = None,
@@ -1659,12 +1625,12 @@ class ProviderItemsApi:
     ) -> ApiResponse[ListItemsResponse]:
         """List items
 
-        Returns a paginated list of files and folders in the specified path
+        Returns a paginated list of files and folders in the specified directory
 
         :param provider_id: Provider ID (required)
         :type provider_id: str
-        :param path: Directory path
-        :type path: str
+        :param key: Directory key (must end with '/' or be empty for root)
+        :type key: str
         :param q: Name filter
         :type q: str
         :param cursor: Pagination cursor
@@ -1695,7 +1661,7 @@ class ProviderItemsApi:
 
         _param = self._list_items_serialize(
             provider_id=provider_id,
-            path=path,
+            key=key,
             q=q,
             cursor=cursor,
             limit=limit,
@@ -1726,7 +1692,7 @@ class ProviderItemsApi:
     async def list_items_without_preload_content(
         self,
         provider_id: Annotated[StrictStr, Field(description="Provider ID")],
-        path: Annotated[Optional[StrictStr], Field(description="Directory path")] = None,
+        key: Annotated[Optional[StrictStr], Field(description="Directory key (must end with '/' or be empty for root)")] = None,
         q: Annotated[Optional[StrictStr], Field(description="Name filter")] = None,
         cursor: Annotated[Optional[StrictStr], Field(description="Pagination cursor")] = None,
         limit: Annotated[Optional[StrictInt], Field(description="Max items to return")] = None,
@@ -1745,12 +1711,12 @@ class ProviderItemsApi:
     ) -> RESTResponseType:
         """List items
 
-        Returns a paginated list of files and folders in the specified path
+        Returns a paginated list of files and folders in the specified directory
 
         :param provider_id: Provider ID (required)
         :type provider_id: str
-        :param path: Directory path
-        :type path: str
+        :param key: Directory key (must end with '/' or be empty for root)
+        :type key: str
         :param q: Name filter
         :type q: str
         :param cursor: Pagination cursor
@@ -1781,7 +1747,7 @@ class ProviderItemsApi:
 
         _param = self._list_items_serialize(
             provider_id=provider_id,
-            path=path,
+            key=key,
             q=q,
             cursor=cursor,
             limit=limit,
@@ -1807,7 +1773,7 @@ class ProviderItemsApi:
     def _list_items_serialize(
         self,
         provider_id,
-        path,
+        key,
         q,
         cursor,
         limit,
@@ -1835,9 +1801,9 @@ class ProviderItemsApi:
         if provider_id is not None:
             _path_params['providerId'] = provider_id
         # process the query parameters
-        if path is not None:
+        if key is not None:
             
-            _query_params.append(('path', path))
+            _query_params.append(('key', key))
             
         if q is not None:
             
@@ -2211,7 +2177,7 @@ class ProviderItemsApi:
         self,
         provider_id: Annotated[StrictStr, Field(description="Provider ID")],
         file: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="File to upload")],
-        path: Annotated[Optional[StrictStr], Field(description="Target directory path")] = None,
+        key: Annotated[Optional[StrictStr], Field(description="Target directory key (must end with '/' or be empty for root)")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2227,14 +2193,14 @@ class ProviderItemsApi:
     ) -> ProviderItem:
         """Create folder
 
-        Creates a new folder in the provider
+        Creates a new folder in the provider. Key must end with '/'.
 
         :param provider_id: Provider ID (required)
         :type provider_id: str
         :param file: File to upload (required)
         :type file: bytearray
-        :param path: Target directory path
-        :type path: str
+        :param key: Target directory key (must end with '/' or be empty for root)
+        :type key: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2260,7 +2226,7 @@ class ProviderItemsApi:
         _param = self._upload_file_serialize(
             provider_id=provider_id,
             file=file,
-            path=path,
+            key=key,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2288,7 +2254,7 @@ class ProviderItemsApi:
         self,
         provider_id: Annotated[StrictStr, Field(description="Provider ID")],
         file: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="File to upload")],
-        path: Annotated[Optional[StrictStr], Field(description="Target directory path")] = None,
+        key: Annotated[Optional[StrictStr], Field(description="Target directory key (must end with '/' or be empty for root)")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2304,14 +2270,14 @@ class ProviderItemsApi:
     ) -> ApiResponse[ProviderItem]:
         """Create folder
 
-        Creates a new folder in the provider
+        Creates a new folder in the provider. Key must end with '/'.
 
         :param provider_id: Provider ID (required)
         :type provider_id: str
         :param file: File to upload (required)
         :type file: bytearray
-        :param path: Target directory path
-        :type path: str
+        :param key: Target directory key (must end with '/' or be empty for root)
+        :type key: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2337,7 +2303,7 @@ class ProviderItemsApi:
         _param = self._upload_file_serialize(
             provider_id=provider_id,
             file=file,
-            path=path,
+            key=key,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2365,7 +2331,7 @@ class ProviderItemsApi:
         self,
         provider_id: Annotated[StrictStr, Field(description="Provider ID")],
         file: Annotated[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]], Field(description="File to upload")],
-        path: Annotated[Optional[StrictStr], Field(description="Target directory path")] = None,
+        key: Annotated[Optional[StrictStr], Field(description="Target directory key (must end with '/' or be empty for root)")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2381,14 +2347,14 @@ class ProviderItemsApi:
     ) -> RESTResponseType:
         """Create folder
 
-        Creates a new folder in the provider
+        Creates a new folder in the provider. Key must end with '/'.
 
         :param provider_id: Provider ID (required)
         :type provider_id: str
         :param file: File to upload (required)
         :type file: bytearray
-        :param path: Target directory path
-        :type path: str
+        :param key: Target directory key (must end with '/' or be empty for root)
+        :type key: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2414,7 +2380,7 @@ class ProviderItemsApi:
         _param = self._upload_file_serialize(
             provider_id=provider_id,
             file=file,
-            path=path,
+            key=key,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2437,7 +2403,7 @@ class ProviderItemsApi:
         self,
         provider_id,
         file,
-        path,
+        key,
         _request_auth,
         _content_type,
         _headers,
@@ -2462,9 +2428,9 @@ class ProviderItemsApi:
         if provider_id is not None:
             _path_params['providerId'] = provider_id
         # process the query parameters
-        if path is not None:
+        if key is not None:
             
-            _query_params.append(('path', path))
+            _query_params.append(('key', key))
             
         # process the header parameters
         # process the form parameters

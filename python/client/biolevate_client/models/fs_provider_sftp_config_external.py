@@ -17,19 +17,23 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from pydantic import ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from biolevate_client.models.fs_provider_configuration_external import FSProviderConfigurationExternal
 from typing import Optional, Set
 from typing_extensions import Self
 
-class UploadUrlRequest(BaseModel):
+class FSProviderSFTPConfigExternal(FSProviderConfigurationExternal):
     """
-    Request for presigned upload URL
+    FSProviderSFTPConfigExternal
     """ # noqa: E501
-    key: StrictStr = Field(description="Full file key (must not end with '/')")
-    size: Optional[StrictInt] = Field(default=None, description="File size in bytes")
-    media_type: Optional[StrictStr] = Field(default=None, description="Media type", alias="mediaType")
-    __properties: ClassVar[List[str]] = ["key", "size", "mediaType"]
+    host: StrictStr
+    port: StrictInt
+    username: StrictStr
+    root_path: Optional[StrictStr] = Field(default=None, alias="rootPath")
+    allow_unknown_hosts: Optional[StrictBool] = Field(default=None, alias="allowUnknownHosts")
+    timeout_ms: Optional[StrictInt] = Field(default=None, alias="timeoutMs")
+    __properties: ClassVar[List[str]] = ["type", "host", "port", "username", "rootPath", "allowUnknownHosts", "timeoutMs"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -49,7 +53,7 @@ class UploadUrlRequest(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of UploadUrlRequest from a JSON string"""
+        """Create an instance of FSProviderSFTPConfigExternal from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -74,7 +78,7 @@ class UploadUrlRequest(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of UploadUrlRequest from a dict"""
+        """Create an instance of FSProviderSFTPConfigExternal from a dict"""
         if obj is None:
             return None
 
@@ -82,9 +86,13 @@ class UploadUrlRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "key": obj.get("key"),
-            "size": obj.get("size"),
-            "mediaType": obj.get("mediaType")
+            "type": obj.get("type"),
+            "host": obj.get("host"),
+            "port": obj.get("port"),
+            "username": obj.get("username"),
+            "rootPath": obj.get("rootPath"),
+            "allowUnknownHosts": obj.get("allowUnknownHosts"),
+            "timeoutMs": obj.get("timeoutMs")
         })
         return _obj
 

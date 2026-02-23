@@ -48,8 +48,7 @@ async def main() -> int:
 
     provider_id = state.get("provider_id")
     file_id = state.get("file_id")
-    path = state.get("path")
-    name = state.get("name")
+    key = state.get("key")
     folder_name = state.get("folder_name")
 
     if not file_id or not provider_id:
@@ -58,22 +57,20 @@ async def main() -> int:
 
     client = create_client(args)
     async with client:
-        if path and name:
+        if file_id:
             try:
                 await client.files.delete(file_id)
                 print(f"Deleted indexed file: {file_id}")
             except Exception as e:
                 print(f"Warning: files.delete failed: {e}", file=sys.stderr)
 
-        if path and name:
+        if key:
             try:
                 await client.items.delete(
                     provider_id,
-                    path=path,
-                    name=name,
-                    item_type="FILE",
+                    key=key,
                 )
-                print(f"Deleted provider file: {path}/{name}")
+                print(f"Deleted provider file: {key}")
             except Exception as e:
                 print(f"Warning: items.delete file failed: {e}", file=sys.stderr)
 
@@ -81,11 +78,9 @@ async def main() -> int:
             try:
                 await client.items.delete(
                     provider_id,
-                    path="/",
-                    name=folder_name,
-                    item_type="FOLDER",
+                    key=f"{folder_name}/",
                 )
-                print(f"Deleted provider folder: /{folder_name}")
+                print(f"Deleted provider folder: {folder_name}/")
             except Exception as e:
                 print(f"Warning: items.delete folder failed: {e}", file=sys.stderr)
 

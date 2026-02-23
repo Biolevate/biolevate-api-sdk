@@ -26,9 +26,8 @@ class ConfirmUploadRequest(BaseModel):
     """
     Confirm presigned upload request
     """ # noqa: E501
-    path: StrictStr = Field(description="Directory path where file was uploaded")
-    file_name: StrictStr = Field(description="File name", alias="fileName")
-    __properties: ClassVar[List[str]] = ["path", "fileName"]
+    key: StrictStr = Field(description="Full file key (must not end with '/')")
+    __properties: ClassVar[List[str]] = ["key"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -81,8 +80,7 @@ class ConfirmUploadRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "path": obj.get("path"),
-            "fileName": obj.get("fileName")
+            "key": obj.get("key")
         })
         return _obj
 

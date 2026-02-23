@@ -179,7 +179,7 @@ void (empty response body)
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_download_url**
-> DownloadUrlResponse get_download_url(provider_id, path, name, expiration_minutes=expiration_minutes)
+> DownloadUrlResponse get_download_url(provider_id, key, expiration_minutes=expiration_minutes)
 
 Get download URL
 
@@ -216,13 +216,12 @@ async with biolevate_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = biolevate_client.ProviderItemsApi(api_client)
     provider_id = 'provider_id_example' # str | Provider ID
-    path = 'path_example' # str | File path
-    name = 'name_example' # str | File name
+    key = 'key_example' # str | File key (must not end with '/')
     expiration_minutes = 15 # int | URL expiration in minutes (optional) (default to 15)
 
     try:
         # Get download URL
-        api_response = await api_instance.get_download_url(provider_id, path, name, expiration_minutes=expiration_minutes)
+        api_response = await api_instance.get_download_url(provider_id, key, expiration_minutes=expiration_minutes)
         print("The response of ProviderItemsApi->get_download_url:\n")
         pprint(api_response)
     except Exception as e:
@@ -237,8 +236,7 @@ async with biolevate_client.ApiClient(configuration) as api_client:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **provider_id** | **str**| Provider ID | 
- **path** | **str**| File path | 
- **name** | **str**| File name | 
+ **key** | **str**| File key (must not end with &#39;/&#39;) | 
  **expiration_minutes** | **int**| URL expiration in minutes | [optional] [default to 15]
 
 ### Return type
@@ -266,7 +264,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_file_content**
-> bytearray get_file_content(provider_id, path, name)
+> bytearray get_file_content(provider_id, key)
 
 Get file content
 
@@ -302,12 +300,11 @@ async with biolevate_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = biolevate_client.ProviderItemsApi(api_client)
     provider_id = 'provider_id_example' # str | Provider ID
-    path = 'path_example' # str | File path
-    name = 'name_example' # str | File name
+    key = 'key_example' # str | File key (must not end with '/')
 
     try:
         # Get file content
-        api_response = await api_instance.get_file_content(provider_id, path, name)
+        api_response = await api_instance.get_file_content(provider_id, key)
         print("The response of ProviderItemsApi->get_file_content:\n")
         pprint(api_response)
     except Exception as e:
@@ -322,8 +319,7 @@ async with biolevate_client.ApiClient(configuration) as api_client:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **provider_id** | **str**| Provider ID | 
- **path** | **str**| File path | 
- **name** | **str**| File name | 
+ **key** | **str**| File key (must not end with &#39;/&#39;) | 
 
 ### Return type
 
@@ -433,11 +429,11 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **list_items**
-> ListItemsResponse list_items(provider_id, path=path, q=q, cursor=cursor, limit=limit)
+> ListItemsResponse list_items(provider_id, key=key, q=q, cursor=cursor, limit=limit)
 
 List items
 
-Returns a paginated list of files and folders in the specified path
+Returns a paginated list of files and folders in the specified directory
 
 ### Example
 
@@ -470,14 +466,14 @@ async with biolevate_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = biolevate_client.ProviderItemsApi(api_client)
     provider_id = 'provider_id_example' # str | Provider ID
-    path = '/' # str | Directory path (optional) (default to '/')
+    key = '' # str | Directory key (must end with '/' or be empty for root) (optional) (default to '')
     q = 'q_example' # str | Name filter (optional)
     cursor = 'cursor_example' # str | Pagination cursor (optional)
     limit = 50 # int | Max items to return (optional) (default to 50)
 
     try:
         # List items
-        api_response = await api_instance.list_items(provider_id, path=path, q=q, cursor=cursor, limit=limit)
+        api_response = await api_instance.list_items(provider_id, key=key, q=q, cursor=cursor, limit=limit)
         print("The response of ProviderItemsApi->list_items:\n")
         pprint(api_response)
     except Exception as e:
@@ -492,7 +488,7 @@ async with biolevate_client.ApiClient(configuration) as api_client:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **provider_id** | **str**| Provider ID | 
- **path** | **str**| Directory path | [optional] [default to &#39;/&#39;]
+ **key** | **str**| Directory key (must end with &#39;/&#39; or be empty for root) | [optional] [default to &#39;&#39;]
  **q** | **str**| Name filter | [optional] 
  **cursor** | **str**| Pagination cursor | [optional] 
  **limit** | **int**| Max items to return | [optional] [default to 50]
@@ -609,11 +605,11 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **upload_file**
-> ProviderItem upload_file(provider_id, file, path=path)
+> ProviderItem upload_file(provider_id, file, key=key)
 
 Create folder
 
-Creates a new folder in the provider
+Creates a new folder in the provider. Key must end with '/'.
 
 ### Example
 
@@ -647,11 +643,11 @@ async with biolevate_client.ApiClient(configuration) as api_client:
     api_instance = biolevate_client.ProviderItemsApi(api_client)
     provider_id = 'provider_id_example' # str | Provider ID
     file = None # bytearray | File to upload
-    path = '/' # str | Target directory path (optional) (default to '/')
+    key = '' # str | Target directory key (must end with '/' or be empty for root) (optional) (default to '')
 
     try:
         # Create folder
-        api_response = await api_instance.upload_file(provider_id, file, path=path)
+        api_response = await api_instance.upload_file(provider_id, file, key=key)
         print("The response of ProviderItemsApi->upload_file:\n")
         pprint(api_response)
     except Exception as e:
@@ -667,7 +663,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **provider_id** | **str**| Provider ID | 
  **file** | **bytearray**| File to upload | 
- **path** | **str**| Target directory path | [optional] [default to &#39;/&#39;]
+ **key** | **str**| Target directory key (must end with &#39;/&#39; or be empty for root) | [optional] [default to &#39;&#39;]
 
 ### Return type
 

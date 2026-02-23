@@ -36,8 +36,7 @@ class TestProviderItem(unittest.TestCase):
         if include_optional:
             return ProviderItem(
                 provider_id = '550e8400-e29b-41d4-a716-446655440000',
-                name = 'document.pdf',
-                path = '/reports/',
+                key = 'reports/document.pdf',
                 type = 'FILE',
                 size = 1048576,
                 extension = 'pdf',

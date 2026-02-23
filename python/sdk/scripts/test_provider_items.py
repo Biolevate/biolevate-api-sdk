@@ -14,8 +14,30 @@ from scripts.common import create_client, get_base_parser
 from scripts.test_utils import TestRunner
 
 
+def resolve_url(url: str, base_url: str) -> str:
+    """Resolve URL by prepending base URL if it's a relative path (proxy URL)."""
+    if not url:
+        return url
+    if url.startswith("http://") or url.startswith("https://"):
+        return url
+    base = base_url.rstrip("/")
+    path = url if url.startswith("/") else f"/{url}"
+    return f"{base}{path}"
+
+
+def get_name_from_key(key: str) -> str:
+    """Extract the item name from a key path."""
+    return key.rstrip("/").split("/")[-1]
+
+
 async def main() -> None:
     parser = get_base_parser("Test Provider Items resource")
+    parser.add_argument(
+        "--provider-id",
+        type=str,
+        default=None,
+        help="ID of the provider to use (default: first available)",
+    )
     args = parser.parse_args()
 
     client = create_client(args)
@@ -33,12 +55,19 @@ async def main() -> None:
     file_uploaded = False
     renamed_file_name: str | None = None
     renamed_folder_name: str | None = None
+    actual_file_key: str | None = None
+    actual_folder_key: str | None = None
+    folder_rename_succeeded = False
     presigned_file_uploaded = False
+    presigned_upload_supported = True
 
     async with client:
-        # Setup: Get first provider ID
+        # Setup: Get provider ID (from CLI or first available)
         async def test_setup() -> dict[str, Any]:
             nonlocal provider_id
+            if args.provider_id:
+                provider_id = args.provider_id
+                return {"provider_id": provider_id, "source": "cli"}
             result = await client.providers.list(page=0, page_size=1)
             if result.data and len(result.data) > 0:
                 provider = result.data[0]
@@ -59,7 +88,7 @@ async def main() -> None:
                   
         # Test 1: List items at root
         async def test_list_root() -> dict[str, Any]:
-            result = await client.items.list(provider_id, path="/")  # type: ignore[arg-type]
+            result = await client.items.list(provider_id, key="")  # type: ignore[arg-type]
             return {
                 "items_count": len(result.items) if result.items else 0,
                 "has_next": result.next_cursor is not None,
@@ -71,42 +100,31 @@ async def main() -> None:
             expected_message="Listed items at root",
         )
 
-        # Test 2: Create folder (upload creates parent folders, so we use upload)
-        async def test_create_folder_via_upload() -> dict[str, Any]:
+        # Test 2: Create folder
+        async def test_create_folder() -> dict[str, Any]:
             nonlocal folder_created
-            file_obj = io.BytesIO(b"temp")
-            temp_file = ".sdk-test-temp"
-            result = await client.items.upload(
+            result = await client.items.create_folder(
                 provider_id,  # type: ignore[arg-type]
-                path=f"/{test_folder_name}",
-                file=file_obj,
-                file_name=temp_file,
-                mime_type="text/plain",
-            )
-            await client.items.delete(
-                provider_id,  # type: ignore[arg-type]
-                path=f"/{test_folder_name}",
-                name=temp_file,
-                item_type="FILE",
+                key=f"{test_folder_name}/",
             )
             folder_created = True
             return {
                 "folder_created": test_folder_name,
-                "method": "upload then delete temp file",
+                "folder_key": result.key,
             }
 
         await runner.run_test(
-            name="create_folder_via_upload",
-            test_fn=test_create_folder_via_upload,
+            name="create_folder",
+            test_fn=test_create_folder,
             expected_message=f"Created folder {test_folder_name}",
         )
 
         # Test 3: Verify folder can be listed (go into the folder)
         async def test_verify_folder_accessible() -> dict[str, Any]:
-            result = await client.items.list(provider_id, path=f"/{test_folder_name}")  # type: ignore[arg-type]
+            result = await client.items.list(provider_id, key=f"{test_folder_name}/")  # type: ignore[arg-type]
             return {
                 "folder_accessible": True,
-                "folder_path": f"/{test_folder_name}",
+                "folder_path": f"{test_folder_name}/",
                 "items_in_folder": len(result.items) if result.items else 0,
             }
 
@@ -122,16 +140,15 @@ async def main() -> None:
             file_obj = io.BytesIO(test_file_content)
             result = await client.items.upload(
                 provider_id,  # type: ignore[arg-type]
-                path=f"/{test_folder_name}",
+                key=f"{test_folder_name}/",
                 file=file_obj,
                 file_name=test_file_name,
                 mime_type="text/plain",
             )
             file_uploaded = True
             return {
-                "file_name": result.name,
+                "file_key": result.key,
                 "file_type": result.type,
-                "file_path": result.path,
             }
 
         await runner.run_test(
@@ -142,11 +159,11 @@ async def main() -> None:
 
         # Test 5: Verify file exists in listing
         async def test_verify_file_exists() -> dict[str, Any]:
-            result = await client.items.list(provider_id, path=f"/{test_folder_name}")  # type: ignore[arg-type]
+            result = await client.items.list(provider_id, key=f"{test_folder_name}/")  # type: ignore[arg-type]
             file_found = False
             if result.items:
                 for item in result.items:
-                    if item.name == test_file_name and item.type == "FILE":
+                    if item.key and item.key.endswith(test_file_name) and item.type == "FILE":
                         file_found = True
                         break
             assert file_found, f"File {test_file_name} not found in listing"
@@ -160,18 +177,18 @@ async def main() -> None:
 
         # Test 6: Rename file
         async def test_rename_file() -> dict[str, Any]:
-            nonlocal renamed_file_name
+            nonlocal renamed_file_name, actual_file_key
             renamed_file_name = f"renamed-{test_file_name}"
             result = await client.items.rename(
                 provider_id,  # type: ignore[arg-type]
-                path=f"/{test_folder_name}",
-                old_name=test_file_name,
+                key=f"{test_folder_name}/{test_file_name}",
                 new_name=renamed_file_name,
-                item_type="FILE",
             )
+            actual_file_key = result.key
             return {
                 "old_name": test_file_name,
-                "new_name": result.name,
+                "new_name": get_name_from_key(result.key) if result.key else None,
+                "actual_key": result.key,
                 "type": result.type,
             }
 
@@ -183,18 +200,23 @@ async def main() -> None:
 
         # Test 7: Rename folder
         async def test_rename_folder() -> dict[str, Any]:
-            nonlocal renamed_folder_name
+            nonlocal renamed_folder_name, folder_rename_succeeded, actual_folder_key
             renamed_folder_name = f"{test_folder_name}-RENAMED"
             result = await client.items.rename(
                 provider_id,  # type: ignore[arg-type]
-                path="/",
-                old_name=test_folder_name,
+                key=f"{test_folder_name}/",
                 new_name=renamed_folder_name,
-                item_type="FOLDER",
             )
+            folder_rename_succeeded = True
+            actual_folder_key = result.key
+            expected_key = f"{renamed_folder_name}/"
+            if result.key != expected_key:
+                print(f"Warning: Expected key '{expected_key}', got '{result.key}'")
             return {
                 "old_name": test_folder_name,
-                "new_name": result.name,
+                "new_name": get_name_from_key(result.key) if result.key else None,
+                "actual_key": result.key,
+                "expected_key": expected_key,
                 "type": result.type,
             }
 
@@ -204,24 +226,31 @@ async def main() -> None:
             expected_message="Folder renamed successfully",
         )
 
+        # Use actual folder key from rename result, falling back to expected path
+        if folder_rename_succeeded and actual_folder_key:
+            current_folder_key = actual_folder_key.rstrip("/")
+        else:
+            current_folder_key = test_folder_name
+
         # Test 8: Get download URL
         download_url: str | None = None
 
         async def test_get_download_url() -> dict[str, Any]:
             nonlocal download_url
-            folder_path = f"/{renamed_folder_name}"
+            file_key = f"{current_folder_key}/{renamed_file_name}"
             result = await client.items.get_download_url(
                 provider_id,  # type: ignore[arg-type]
-                path=folder_path,
-                name=renamed_file_name,  # type: ignore[arg-type]
+                key=file_key,
             )
-            download_url = result.url
-            assert download_url, "Download URL should not be empty"
+            raw_url = result.url
+            assert raw_url, "Download URL should not be empty"
+            download_url = resolve_url(raw_url, args.api_url)
+            is_proxy = raw_url != download_url
             return {
-                "folder_path": folder_path,
-                "file_name": renamed_file_name,
+                "file_key": file_key,
                 "url_present": bool(download_url),
-                "url_length": len(download_url) if download_url else 0,
+                "is_proxy_url": is_proxy,
+                "resolved_url": download_url[:80] + "..." if len(download_url) > 80 else download_url,
             }
 
         await runner.run_test(
@@ -233,8 +262,10 @@ async def main() -> None:
         # Test 9: Actually download file via presigned URL
         async def test_download_via_url() -> dict[str, Any]:
             assert download_url, "Download URL not available"
+            is_direct_url = download_url.startswith(("http://", "https://")) and args.api_url not in download_url
+            headers = {} if is_direct_url else {"Authorization": f"Bearer {args.token}"}
             async with httpx.AsyncClient() as http:
-                resp = await http.get(download_url)
+                resp = await http.get(download_url, headers=headers)
                 assert resp.status_code == 200, f"Download failed: {resp.status_code}"
                 content = resp.content
                 assert content == test_file_content, "Downloaded content doesn't match"
@@ -250,24 +281,33 @@ async def main() -> None:
             expected_message="Downloaded file via presigned URL",
         )
 
-        # Test 10: Get upload URL for presigned upload
+        # Test 10: Get upload URL for presigned upload (may not be supported by all providers)
         upload_url: str | None = None
 
         async def test_get_upload_url() -> dict[str, Any]:
-            nonlocal upload_url
+            nonlocal upload_url, presigned_upload_supported
+            file_key = f"{current_folder_key}/{presigned_file_name}"
             result = await client.items.get_upload_url(
                 provider_id,  # type: ignore[arg-type]
-                path=f"/{renamed_folder_name}",
-                file_name=presigned_file_name,
+                key=file_key,
                 size=len(presigned_file_content),
                 media_type="text/plain",
             )
-            upload_url = result.url
-            assert upload_url, "Upload URL should not be empty"
+            raw_url = result.url
+            if not raw_url:
+                presigned_upload_supported = False
+                return {
+                    "file_key": file_key,
+                    "presigned_supported": False,
+                    "note": "Provider does not support presigned uploads",
+                }
+            upload_url = resolve_url(raw_url, args.api_url)
+            is_proxy = raw_url != upload_url
             return {
-                "file_name": presigned_file_name,
-                "url_present": bool(upload_url),
-                "url_length": len(upload_url) if upload_url else 0,
+                "file_key": file_key,
+                "presigned_supported": True,
+                "is_proxy_url": is_proxy,
+                "resolved_url": upload_url[:80] + "..." if len(upload_url) > 80 else upload_url,
             }
 
         await runner.run_test(
@@ -276,95 +316,101 @@ async def main() -> None:
             expected_message="Got presigned upload URL",
         )
 
-        # Test 11: Upload via presigned URL
-        async def test_upload_via_presigned() -> dict[str, Any]:
-            nonlocal presigned_file_uploaded
-            assert upload_url, "Upload URL not available"
-            async with httpx.AsyncClient() as http:
-                resp = await http.put(
-                    upload_url,
-                    content=presigned_file_content,
-                    headers={"Content-Type": "text/plain"},
+        # Test 11-14: Presigned upload flow (skip if not supported)
+        if presigned_upload_supported and upload_url:
+            async def test_upload_via_presigned() -> dict[str, Any]:
+                nonlocal presigned_file_uploaded
+                is_direct_url = upload_url.startswith(("http://", "https://"))  # type: ignore[union-attr]
+                headers: dict[str, str] = {"Content-Type": "text/plain"}
+                if is_direct_url:
+                    headers["x-ms-blob-type"] = "BlockBlob"
+                else:
+                    headers["Authorization"] = f"Bearer {args.token}"
+                async with httpx.AsyncClient() as http:
+                    resp = await http.put(
+                        upload_url,  # type: ignore[arg-type]
+                        content=presigned_file_content,
+                        headers=headers,
+                    )
+                    assert resp.status_code in (200, 201), f"Upload failed: {resp.status_code}"
+                presigned_file_uploaded = True
+                return {
+                    "status_code": resp.status_code,
+                    "bytes_uploaded": len(presigned_file_content),
+                }
+
+            await runner.run_test(
+                name="upload_via_presigned",
+                test_fn=test_upload_via_presigned,
+                expected_message="Uploaded file via presigned URL",
+            )
+
+            async def test_confirm_upload() -> dict[str, Any]:
+                file_key = f"{current_folder_key}/{presigned_file_name}"
+                result = await client.items.confirm_upload(
+                    provider_id,  # type: ignore[arg-type]
+                    key=file_key,
                 )
-                assert resp.status_code in (200, 201), f"Upload failed: {resp.status_code}"
-            presigned_file_uploaded = True
-            return {
-                "status_code": resp.status_code,
-                "bytes_uploaded": len(presigned_file_content),
-            }
+                assert result.key and result.key.endswith(presigned_file_name), "Confirmed file key mismatch"
+                return {
+                    "file_key": result.key,
+                    "file_type": result.type,
+                }
 
-        await runner.run_test(
-            name="upload_via_presigned",
-            test_fn=test_upload_via_presigned,
-            expected_message="Uploaded file via presigned URL",
-        )
-
-        # Test 12: Confirm upload
-        async def test_confirm_upload() -> dict[str, Any]:
-            result = await client.items.confirm_upload(
-                provider_id,  # type: ignore[arg-type]
-                path=f"/{renamed_folder_name}",
-                file_name=presigned_file_name,
+            await runner.run_test(
+                name="confirm_upload",
+                test_fn=test_confirm_upload,
+                expected_message="Confirmed presigned upload",
             )
-            assert result.name == presigned_file_name, "Confirmed file name mismatch"
-            return {
-                "file_name": result.name,
-                "file_type": result.type,
-                "file_path": result.path,
-            }
 
-        await runner.run_test(
-            name="confirm_upload",
-            test_fn=test_confirm_upload,
-            expected_message="Confirmed presigned upload",
-        )
+            async def test_verify_presigned_upload() -> dict[str, Any]:
+                file_key = f"{current_folder_key}/{presigned_file_name}"
+                result = await client.items.get_download_url(
+                    provider_id,  # type: ignore[arg-type]
+                    key=file_key,
+                )
+                assert result.url, "Download URL should not be empty"
+                resolved = resolve_url(result.url, args.api_url)
+                is_direct_url = resolved.startswith(("http://", "https://")) and args.api_url not in resolved
+                dl_headers = {} if is_direct_url else {"Authorization": f"Bearer {args.token}"}
+                async with httpx.AsyncClient() as http:
+                    resp = await http.get(resolved, headers=dl_headers)
+                    assert resp.status_code == 200, f"Download failed: {resp.status_code}"
+                    assert resp.content == presigned_file_content, "Content mismatch"
+                return {
+                    "content_matches": resp.content == presigned_file_content,
+                    "content_length": len(resp.content),
+                }
 
-        # Test 13: Verify presigned upload file can be downloaded
-        async def test_verify_presigned_upload() -> dict[str, Any]:
-            folder_path = f"/{renamed_folder_name}"
-            result = await client.items.get_download_url(
-                provider_id,  # type: ignore[arg-type]
-                path=folder_path,
-                name=presigned_file_name,
+            await runner.run_test(
+                name="verify_presigned_upload",
+                test_fn=test_verify_presigned_upload,
+                expected_message="Verified presigned upload content",
             )
-            async with httpx.AsyncClient() as http:
-                resp = await http.get(result.url)
-                assert resp.status_code == 200, f"Download failed: {resp.status_code}"
-                assert resp.content == presigned_file_content, "Content mismatch"
-            return {
-                "content_matches": resp.content == presigned_file_content,
-                "content_length": len(resp.content),
-            }
 
-        await runner.run_test(
-            name="verify_presigned_upload",
-            test_fn=test_verify_presigned_upload,
-            expected_message="Verified presigned upload content",
-        )
+            async def test_delete_presigned_file() -> dict[str, Any]:
+                await client.items.delete(
+                    provider_id,  # type: ignore[arg-type]
+                    key=f"{current_folder_key}/{presigned_file_name}",
+                )
+                return {"deleted_file": presigned_file_name}
 
-        # Test 14: Delete presigned uploaded file
-        async def test_delete_presigned_file() -> dict[str, Any]:
-            await client.items.delete(
-                provider_id,  # type: ignore[arg-type]
-                path=f"/{renamed_folder_name}",
-                name=presigned_file_name,
-                item_type="FILE",
+            await runner.run_test(
+                name="delete_presigned_file",
+                test_fn=test_delete_presigned_file,
+                expected_message="Deleted presigned uploaded file",
             )
-            return {"deleted_file": presigned_file_name}
-
-        await runner.run_test(
-            name="delete_presigned_file",
-            test_fn=test_delete_presigned_file,
-            expected_message="Deleted presigned uploaded file",
-        )
+        else:
+            runner.skip_test("upload_via_presigned", "Presigned uploads not supported by this provider")
+            runner.skip_test("confirm_upload", "Presigned uploads not supported by this provider")
+            runner.skip_test("verify_presigned_upload", "Presigned uploads not supported by this provider")
+            runner.skip_test("delete_presigned_file", "Presigned uploads not supported by this provider")
 
         # Test 15: Delete renamed file
         async def test_delete_file() -> dict[str, Any]:
             await client.items.delete(
                 provider_id,  # type: ignore[arg-type]
-                path=f"/{renamed_folder_name}",
-                name=renamed_file_name,  # type: ignore[arg-type]
-                item_type="FILE",
+                key=f"{current_folder_key}/{renamed_file_name}",
             )
             return {"deleted_file": renamed_file_name}
 
@@ -374,15 +420,13 @@ async def main() -> None:
             expected_message="Deleted test file",
         )
 
-        # Test 16: Delete renamed folder
+        # Test 16: Delete folder
         async def test_delete_folder() -> dict[str, Any]:
             await client.items.delete(
                 provider_id,  # type: ignore[arg-type]
-                path="/",
-                name=renamed_folder_name,  # type: ignore[arg-type]
-                item_type="FOLDER",
+                key=f"{current_folder_key}/",
             )
-            return {"deleted_folder": renamed_folder_name}
+            return {"deleted_folder": current_folder_key}
 
         await runner.run_test(
             name="delete_folder",
@@ -392,15 +436,15 @@ async def main() -> None:
 
         # Test 17: Verify folder is deleted
         async def test_verify_folder_deleted() -> dict[str, Any]:
-            result = await client.items.list(provider_id, path="/")  # type: ignore[arg-type]
+            result = await client.items.list(provider_id, key="")  # type: ignore[arg-type]
             folder_found = False
             if result.items:
                 for item in result.items:
-                    if item.name == renamed_folder_name:
+                    if item.key and current_folder_key in item.key:
                         folder_found = True
                         break
-            assert not folder_found, f"Folder {renamed_folder_name} still exists"
-            return {"folder_deleted": True, "folder_name": renamed_folder_name}
+            assert not folder_found, f"Folder {current_folder_key} still exists"
+            return {"folder_deleted": True, "folder_name": current_folder_key}
 
         await runner.run_test(
             name="verify_folder_deleted",
@@ -415,10 +459,8 @@ async def main() -> None:
             try:
                 await client.items.rename(
                     provider_id,  # type: ignore[arg-type]
-                    path="/",
-                    old_name="non-existent-file-xyz.txt",
+                    key="non-existent-file-xyz.txt",
                     new_name="new-name.txt",
-                    item_type="FILE",
                 )
                 raise AssertionError("Expected error was not raised")
             except NotFoundError:
@@ -439,7 +481,7 @@ async def main() -> None:
             try:
                 await client.items.list(
                     "00000000-0000-0000-0000-000000000000",
-                    path="/",
+                    key="",
                 )
                 raise AssertionError("Expected NotFoundError was not raised")
             except NotFoundError:

@@ -89,6 +89,12 @@ async def wait_until_ontologies_ready(
 async def main() -> None:
     parser = get_base_parser("Test Files resource")
     parser.add_argument(
+        "--provider-id",
+        type=str,
+        default=None,
+        help="ID of the provider to use (default: first available)",
+    )
+    parser.add_argument(
         "--test-files-dir",
         type=Path,
         default=None,
@@ -122,13 +128,15 @@ async def main() -> None:
 
     provider_id: str | None = None
     test_folder_name = f"SDK-TEST-FILES-{int(time.time())}"
-    uploaded_path: str | None = None
-    uploaded_name: str | None = None
+    uploaded_key: str | None = None
     file_id: str | None = None
 
     async with client:
         async def test_setup() -> dict[str, Any]:
             nonlocal provider_id
+            if args.provider_id:
+                provider_id = args.provider_id
+                return {"provider_id": provider_id, "source": "cli"}
             result = await client.providers.list(page=0, page_size=1)
             if result.data and len(result.data) > 0:
                 provider = result.data[0]
@@ -190,20 +198,18 @@ async def main() -> None:
             )
 
             async def test_upload_test_file() -> dict[str, Any]:
-                nonlocal uploaded_path, uploaded_name
+                nonlocal uploaded_key
                 with open(test_file_path, "rb") as f:
                     await client.items.upload(
                         provider_id,  # type: ignore[arg-type]
-                        path=f"/{test_folder_name}",
+                        key=f"{test_folder_name}/",
                         file=f,
                         file_name=test_file_path.name,
                         mime_type=_mime_type_for_path(test_file_path),
                     )
-                uploaded_path = f"/{test_folder_name}"
-                uploaded_name = test_file_path.name
+                uploaded_key = f"{test_folder_name}/{test_file_path.name}"
                 return {
-                    "path": uploaded_path,
-                    "name": uploaded_name,
+                    "key": uploaded_key,
                     "folder": test_folder_name,
                 }
 
@@ -215,9 +221,9 @@ async def main() -> None:
 
             async def test_create_file() -> dict[str, Any]:
                 nonlocal file_id
-                assert uploaded_path is not None and uploaded_name is not None
+                assert uploaded_key is not None
                 file_info = await client.files.create(
-                    provider_id, uploaded_path, uploaded_name  # type: ignore[arg-type]
+                    provider_id, key=uploaded_key  # type: ignore[arg-type]
                 )
                 file_id = str(file_info.id.id) if file_info.id else None
                 assert file_id, "File ID should be set"
@@ -324,8 +330,7 @@ async def main() -> None:
                         {
                             "provider_id": provider_id,
                             "file_id": fid,
-                            "path": uploaded_path,
-                            "name": uploaded_name,
+                            "key": uploaded_key,
                             "folder_name": test_folder_name,
                         },
                         indent=2,

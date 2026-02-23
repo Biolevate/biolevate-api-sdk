@@ -93,6 +93,12 @@ async def wait_until_job_terminal(
 async def main() -> None:
     parser = get_base_parser("Test Extraction resource")
     parser.add_argument(
+        "--provider-id",
+        type=str,
+        default=None,
+        help="ID of the provider to use (default: first available)",
+    )
+    parser.add_argument(
         "--file-id",
         type=str,
         default=None,
@@ -131,13 +137,12 @@ async def main() -> None:
     provider_id: str | None = None
     file_id: str | None = args.file_id
     test_folder_name = f"SDK-TEST-EXTRACTION-{int(time.time())}"
-    uploaded_path: str | None = None
-    uploaded_name: str | None = None
+    uploaded_key: str | None = None
     job_id: str | None = None
 
     async with client:
         async def test_setup_provider_and_file() -> dict[str, Any]:
-            nonlocal provider_id, file_id, uploaded_path, uploaded_name
+            nonlocal provider_id, file_id, uploaded_key
 
             sample_path = _get_extraction_sample(test_files_dir, args.test_file)
             if not sample_path:
@@ -154,27 +159,29 @@ async def main() -> None:
                     "sample_file": sample_path.name,
                 }
 
-            providers = await client.providers.list(page=0, page_size=1)
-            if not providers.data or len(providers.data) == 0:
-                raise AssertionError("No provider available. Cannot run extraction tests.")
+            if args.provider_id:
+                provider_id = args.provider_id
+            else:
+                providers = await client.providers.list(page=0, page_size=1)
+                if not providers.data or len(providers.data) == 0:
+                    raise AssertionError("No provider available. Cannot run extraction tests.")
+                provider_id = str(providers.data[0].id.id) if providers.data[0].id else None
 
-            provider_id = str(providers.data[0].id.id) if providers.data[0].id else None
             if not provider_id:
                 raise AssertionError("Provider ID is missing.")
 
             with open(sample_path, "rb") as f:
                 await client.items.upload(
                     provider_id,
-                    path=f"/{test_folder_name}",
+                    key=f"{test_folder_name}/",
                     file=f,
                     file_name=sample_path.name,
                     mime_type=_mime_type_for_path(sample_path),
                 )
-            uploaded_path = f"/{test_folder_name}"
-            uploaded_name = sample_path.name
+            uploaded_key = f"{test_folder_name}/{sample_path.name}"
 
             file_info = await client.files.create(
-                provider_id, uploaded_path, uploaded_name
+                provider_id, key=uploaded_key
             )
             file_id = str(file_info.id.id) if file_info.id else None
             if not file_id:
@@ -195,8 +202,7 @@ async def main() -> None:
                     {
                         "provider_id": provider_id,
                         "file_id": file_id,
-                        "path": uploaded_path,
-                        "name": uploaded_name,
+                        "key": uploaded_key,
                         "folder_name": test_folder_name,
                     },
                     indent=2,

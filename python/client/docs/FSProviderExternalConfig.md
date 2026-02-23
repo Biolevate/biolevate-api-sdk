@@ -17,6 +17,12 @@ Name | Type | Description | Notes
 **project_id** | **str** |  | 
 **default_policy** | **str** |  | 
 **name** | **str** |  | 
+**host** | **str** |  | 
+**port** | **int** |  | 
+**username** | **str** |  | 
+**root_path** | **str** |  | [optional] 
+**allow_unknown_hosts** | **bool** |  | [optional] 
+**timeout_ms** | **int** |  | [optional] 
 **site_url** | **str** |  | 
 **document_library** | **str** |  | 
 **tenant_id** | **str** |  | 

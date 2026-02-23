@@ -22,12 +22,13 @@ from biolevate_client.models.fs_provider_gcs_config_external import FSProviderGC
 from biolevate_client.models.fs_provider_leanear_config_external import FSProviderLeanearConfigExternal
 from biolevate_client.models.fs_provider_local_config_external import FSProviderLocalConfigExternal
 from biolevate_client.models.fs_provider_s3_config_external import FSProviderS3ConfigExternal
+from biolevate_client.models.fs_provider_sftp_config_external import FSProviderSFTPConfigExternal
 from biolevate_client.models.fs_provider_sharepoint_online_config_external import FSProviderSharepointOnlineConfigExternal
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-FSPROVIDEREXTERNALCONFIG_ONE_OF_SCHEMAS = ["FSProviderAzureConfigExternal", "FSProviderGCSConfigExternal", "FSProviderLeanearConfigExternal", "FSProviderLocalConfigExternal", "FSProviderS3ConfigExternal", "FSProviderSharepointOnlineConfigExternal"]
+FSPROVIDEREXTERNALCONFIG_ONE_OF_SCHEMAS = ["FSProviderAzureConfigExternal", "FSProviderGCSConfigExternal", "FSProviderLeanearConfigExternal", "FSProviderLocalConfigExternal", "FSProviderS3ConfigExternal", "FSProviderSFTPConfigExternal", "FSProviderSharepointOnlineConfigExternal"]
 
 class FSProviderExternalConfig(BaseModel):
     """
@@ -43,10 +44,12 @@ class FSProviderExternalConfig(BaseModel):
     oneof_schema_4_validator: Optional[FSProviderLocalConfigExternal] = None
     # data type: FSProviderS3ConfigExternal
     oneof_schema_5_validator: Optional[FSProviderS3ConfigExternal] = None
+    # data type: FSProviderSFTPConfigExternal
+    oneof_schema_6_validator: Optional[FSProviderSFTPConfigExternal] = None
     # data type: FSProviderSharepointOnlineConfigExternal
-    oneof_schema_6_validator: Optional[FSProviderSharepointOnlineConfigExternal] = None
-    actual_instance: Optional[Union[FSProviderAzureConfigExternal, FSProviderGCSConfigExternal, FSProviderLeanearConfigExternal, FSProviderLocalConfigExternal, FSProviderS3ConfigExternal, FSProviderSharepointOnlineConfigExternal]] = None
-    one_of_schemas: Set[str] = { "FSProviderAzureConfigExternal", "FSProviderGCSConfigExternal", "FSProviderLeanearConfigExternal", "FSProviderLocalConfigExternal", "FSProviderS3ConfigExternal", "FSProviderSharepointOnlineConfigExternal" }
+    oneof_schema_7_validator: Optional[FSProviderSharepointOnlineConfigExternal] = None
+    actual_instance: Optional[Union[FSProviderAzureConfigExternal, FSProviderGCSConfigExternal, FSProviderLeanearConfigExternal, FSProviderLocalConfigExternal, FSProviderS3ConfigExternal, FSProviderSFTPConfigExternal, FSProviderSharepointOnlineConfigExternal]] = None
+    one_of_schemas: Set[str] = { "FSProviderAzureConfigExternal", "FSProviderGCSConfigExternal", "FSProviderLeanearConfigExternal", "FSProviderLocalConfigExternal", "FSProviderS3ConfigExternal", "FSProviderSFTPConfigExternal", "FSProviderSharepointOnlineConfigExternal" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -97,6 +100,11 @@ class FSProviderExternalConfig(BaseModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `FSProviderS3ConfigExternal`")
         else:
             match += 1
+        # validate data type: FSProviderSFTPConfigExternal
+        if not isinstance(v, FSProviderSFTPConfigExternal):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `FSProviderSFTPConfigExternal`")
+        else:
+            match += 1
         # validate data type: FSProviderSharepointOnlineConfigExternal
         if not isinstance(v, FSProviderSharepointOnlineConfigExternal):
             error_messages.append(f"Error! Input type `{type(v)}` is not `FSProviderSharepointOnlineConfigExternal`")
@@ -104,10 +112,10 @@ class FSProviderExternalConfig(BaseModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in FSProviderExternalConfig with oneOf schemas: FSProviderAzureConfigExternal, FSProviderGCSConfigExternal, FSProviderLeanearConfigExternal, FSProviderLocalConfigExternal, FSProviderS3ConfigExternal, FSProviderSharepointOnlineConfigExternal. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in FSProviderExternalConfig with oneOf schemas: FSProviderAzureConfigExternal, FSProviderGCSConfigExternal, FSProviderLeanearConfigExternal, FSProviderLocalConfigExternal, FSProviderS3ConfigExternal, FSProviderSFTPConfigExternal, FSProviderSharepointOnlineConfigExternal. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in FSProviderExternalConfig with oneOf schemas: FSProviderAzureConfigExternal, FSProviderGCSConfigExternal, FSProviderLeanearConfigExternal, FSProviderLocalConfigExternal, FSProviderS3ConfigExternal, FSProviderSharepointOnlineConfigExternal. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in FSProviderExternalConfig with oneOf schemas: FSProviderAzureConfigExternal, FSProviderGCSConfigExternal, FSProviderLeanearConfigExternal, FSProviderLocalConfigExternal, FSProviderS3ConfigExternal, FSProviderSFTPConfigExternal, FSProviderSharepointOnlineConfigExternal. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -152,6 +160,12 @@ class FSProviderExternalConfig(BaseModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
+        # deserialize data into FSProviderSFTPConfigExternal
+        try:
+            instance.actual_instance = FSProviderSFTPConfigExternal.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         # deserialize data into FSProviderSharepointOnlineConfigExternal
         try:
             instance.actual_instance = FSProviderSharepointOnlineConfigExternal.from_json(json_str)
@@ -161,10 +175,10 @@ class FSProviderExternalConfig(BaseModel):
 
         if match > 1:
             # More than 1 match - use first successful parse (patched behavior)
-            pass  # raise ValueError("Multiple matches found when deserializing the JSON string into FSProviderExternalConfig with oneOf schemas: FSProviderAzureConfigExternal, FSProviderGCSConfigExternal, FSProviderLeanearConfigExternal, FSProviderLocalConfigExternal, FSProviderS3ConfigExternal, FSProviderSharepointOnlineConfigExternal. Details: " + ", ".join(error_messages))
+            pass  # raise ValueError("Multiple matches found when deserializing the JSON string into FSProviderExternalConfig with oneOf schemas: FSProviderAzureConfigExternal, FSProviderGCSConfigExternal, FSProviderLeanearConfigExternal, FSProviderLocalConfigExternal, FSProviderS3ConfigExternal, FSProviderSFTPConfigExternal, FSProviderSharepointOnlineConfigExternal. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into FSProviderExternalConfig with oneOf schemas: FSProviderAzureConfigExternal, FSProviderGCSConfigExternal, FSProviderLeanearConfigExternal, FSProviderLocalConfigExternal, FSProviderS3ConfigExternal, FSProviderSharepointOnlineConfigExternal. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into FSProviderExternalConfig with oneOf schemas: FSProviderAzureConfigExternal, FSProviderGCSConfigExternal, FSProviderLeanearConfigExternal, FSProviderLocalConfigExternal, FSProviderS3ConfigExternal, FSProviderSFTPConfigExternal, FSProviderSharepointOnlineConfigExternal. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -178,7 +192,7 @@ class FSProviderExternalConfig(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], FSProviderAzureConfigExternal, FSProviderGCSConfigExternal, FSProviderLeanearConfigExternal, FSProviderLocalConfigExternal, FSProviderS3ConfigExternal, FSProviderSharepointOnlineConfigExternal]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], FSProviderAzureConfigExternal, FSProviderGCSConfigExternal, FSProviderLeanearConfigExternal, FSProviderLocalConfigExternal, FSProviderS3ConfigExternal, FSProviderSFTPConfigExternal, FSProviderSharepointOnlineConfigExternal]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

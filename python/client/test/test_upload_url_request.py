@@ -35,15 +35,13 @@ class TestUploadUrlRequest(unittest.TestCase):
         model = UploadUrlRequest()
         if include_optional:
             return UploadUrlRequest(
-                path = '/reports/',
-                file_name = 'document.pdf',
+                key = 'reports/document.pdf',
                 size = 1048576,
                 media_type = 'application/pdf'
             )
         else:
             return UploadUrlRequest(
-                path = '/reports/',
-                file_name = 'document.pdf',
+                key = 'reports/document.pdf',
         )
         """
 

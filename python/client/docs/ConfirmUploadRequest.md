@@ -6,8 +6,7 @@ Confirm presigned upload request
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**path** | **str** | Directory path where file was uploaded | 
-**file_name** | **str** | File name | 
+**key** | **str** | Full file key (must not end with &#39;/&#39;) | 
 
 ## Example
 

@@ -47,8 +47,8 @@ class FSProviderExternal(BaseModel):
         if value is None:
             return value
 
-        if value not in set(['LOCAL', 'SHAREPOINT_ONLINE', 'S3', 'LEANEAR', 'AZURE', 'GCS']):
-            raise ValueError("must be one of enum values ('LOCAL', 'SHAREPOINT_ONLINE', 'S3', 'LEANEAR', 'AZURE', 'GCS')")
+        if value not in set(['LOCAL', 'SHAREPOINT_ONLINE', 'S3', 'LEANEAR', 'AZURE', 'GCS', 'SFTP']):
+            raise ValueError("must be one of enum values ('LOCAL', 'SHAREPOINT_ONLINE', 'S3', 'LEANEAR', 'AZURE', 'GCS', 'SFTP')")
         return value
 
     model_config = ConfigDict(

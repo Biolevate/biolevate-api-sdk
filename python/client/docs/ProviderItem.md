@@ -7,8 +7,7 @@ Provider item (file or folder)
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **provider_id** | **str** | Provider ID | [optional] 
-**name** | **str** | Item name | [optional] 
-**path** | **str** | Directory path | [optional] 
+**key** | **str** | Full item key. Files: &#39;path/to/file.pdf&#39;, Folders: &#39;path/to/folder/&#39; | [optional] 
 **type** | **str** | Item type | [optional] 
 **size** | **int** | File size in bytes (null for folders) | [optional] 
 **extension** | **str** | File extension (null for folders) | [optional] 

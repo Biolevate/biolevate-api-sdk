@@ -27,9 +27,8 @@ class CreateFileRequest(BaseModel):
     Request to create EliseFile from provider item
     """ # noqa: E501
     provider_id: StrictStr = Field(description="Source provider ID", alias="providerId")
-    path: StrictStr = Field(description="File path in provider")
-    name: StrictStr = Field(description="File name")
-    __properties: ClassVar[List[str]] = ["providerId", "path", "name"]
+    key: StrictStr = Field(description="Full file key (must not end with '/')")
+    __properties: ClassVar[List[str]] = ["providerId", "key"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -83,8 +82,7 @@ class CreateFileRequest(BaseModel):
 
         _obj = cls.model_validate({
             "providerId": obj.get("providerId"),
-            "path": obj.get("path"),
-            "name": obj.get("name")
+            "key": obj.get("key")
         })
         return _obj
 

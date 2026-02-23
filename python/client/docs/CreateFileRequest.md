@@ -7,8 +7,7 @@ Request to create EliseFile from provider item
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **provider_id** | **str** | Source provider ID | 
-**path** | **str** | File path in provider | 
-**name** | **str** | File name | 
+**key** | **str** | Full file key (must not end with &#39;/&#39;) | 
 
 ## Example
 

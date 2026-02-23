@@ -17,26 +17,17 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
 class CreateItemRequest(BaseModel):
     """
-    Create folder request (for JSON body). For file upload, use multipart form.
+    Create folder request. Key must end with '/' to indicate a folder.
     """ # noqa: E501
-    type: StrictStr = Field(description="Item type")
-    path: Optional[StrictStr] = Field(default=None, description="Parent directory path")
-    name: StrictStr = Field(description="Item name")
-    __properties: ClassVar[List[str]] = ["type", "path", "name"]
-
-    @field_validator('type')
-    def type_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['FOLDER']):
-            raise ValueError("must be one of enum values ('FOLDER')")
-        return value
+    key: StrictStr = Field(description="Full folder key ending with '/'")
+    __properties: ClassVar[List[str]] = ["key"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -89,9 +80,7 @@ class CreateItemRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "type": obj.get("type"),
-            "path": obj.get("path"),
-            "name": obj.get("name")
+            "key": obj.get("key")
         })
         return _obj
 

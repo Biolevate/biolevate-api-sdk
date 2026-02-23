@@ -30,7 +30,7 @@ class ProviderItemsResource:
     async def list(
         self,
         provider_id: str,
-        path: str = "/",
+        key: str = "/",
     ) -> ListItemsResponse:
         """List items in a provider directory.
 
@@ -57,9 +57,9 @@ class ProviderItemsResource:
         api = ProviderItemsApi(self._client)
 
         try:
-            return await api.list_items(provider_id=provider_id, path=path)
+            return await api.list_items(provider_id=provider_id, key=key)
         except NotFoundException as e:
-            raise NotFoundError(f"Path not found: {path}") from e
+            raise NotFoundError(f"Key not found: {key}") from e
         except UnauthorizedException as e:
             raise AuthenticationError("Authentication failed") from e
         except ForbiddenException as e:
@@ -70,7 +70,7 @@ class ProviderItemsResource:
     async def upload(
         self,
         provider_id: str,
-        path: str,
+        key: str,
         file: BinaryIO,
         file_name: str,
         mime_type: str = "application/octet-stream",
@@ -79,7 +79,7 @@ class ProviderItemsResource:
 
         Args:
             provider_id: The provider ID.
-            path: Destination directory path.
+            key: Destination directory path.
             file: File-like object to upload.
             file_name: Name for the uploaded file.
             mime_type: MIME type of the file.
@@ -103,7 +103,7 @@ class ProviderItemsResource:
         async with httpx.AsyncClient() as http_client:
             response = await http_client.post(
                 f"{base_url}/api/core/providers/{provider_id}/items",
-                params={"path": path},
+                params={"key": key},
                 files={"file": (file_name, file, mime_type)},
                 headers=headers,
             )
@@ -115,7 +115,7 @@ class ProviderItemsResource:
             raise AuthenticationError("Access denied to provider")
 
         if response.status_code == HTTPStatus.NOT_FOUND:
-            raise NotFoundError(f"Path not found: {path}")
+            raise NotFoundError(f"Key not found: {key}")
 
         if response.status_code != HTTPStatus.CREATED:
             raise APIError(response.status_code, f"Failed to upload file: {response.text}")
@@ -128,15 +128,13 @@ class ProviderItemsResource:
     async def create_folder(
         self,
         provider_id: str,
-        path: str,
-        name: str,
+        key: str,
     ) -> ProviderItem:
         """Create a folder in a provider.
 
         Args:
             provider_id: The provider ID.
-            path: Parent directory path.
-            name: Folder name to create.
+            key: Directory path.
 
         Returns:
             The created folder item.
@@ -152,15 +150,12 @@ class ProviderItemsResource:
 
         config = self._client.configuration
         base_url = config.host.rstrip("/")
-        headers = {
-            "Authorization": f"Bearer {config.access_token}",
-            "Content-Type": "application/json",
-        }
+        headers = {"Authorization": f"Bearer {config.access_token}"}
 
         async with httpx.AsyncClient() as http_client:
             response = await http_client.post(
-                f"{base_url}/api/core/providers/{provider_id}/items/folder",
-                params={"path": path, "name": name},
+                f"{base_url}/api/core/providers/{provider_id}/items",
+                json={"key": key},
                 headers=headers,
             )
 
@@ -171,7 +166,7 @@ class ProviderItemsResource:
             raise AuthenticationError("Access denied to provider")
 
         if response.status_code == HTTPStatus.NOT_FOUND:
-            raise NotFoundError(f"Path not found: {path}")
+            raise NotFoundError(f"Key not found: {key}")
 
         if response.status_code not in (HTTPStatus.OK, HTTPStatus.CREATED):
             raise APIError(response.status_code, f"Failed to create folder: {response.text}")
@@ -184,8 +179,7 @@ class ProviderItemsResource:
     async def rename(
         self,
         provider_id: str,
-        path: str,
-        old_name: str,
+        key: str,
         new_name: str,
         item_type: str = "FILE",
     ) -> ProviderItem:
@@ -222,13 +216,11 @@ class ProviderItemsResource:
                 provider_id=provider_id,
                 new_name=new_name,
                 item_reference=ItemReference(
-                    path=path,
-                    name=old_name,
-                    type=item_type,
+                    key=key,
                 ),
             )
         except NotFoundException as e:
-            raise NotFoundError(f"Item '{old_name}' not found in {path}") from e
+            raise NotFoundError(f"Item '{key}' not found") from e
         except UnauthorizedException as e:
             raise AuthenticationError("Authentication failed") from e
         except ForbiddenException as e:
@@ -239,9 +231,7 @@ class ProviderItemsResource:
     async def delete(
         self,
         provider_id: str,
-        path: str,
-        name: str,
-        item_type: str = "FILE",
+        key: str,
     ) -> None:
         """Delete a file or folder in a provider.
 
@@ -271,13 +261,11 @@ class ProviderItemsResource:
             await api.delete_item(
                 provider_id=provider_id,
                 item_reference=ItemReference(
-                    path=path,
-                    name=name,
-                    type=item_type,
+                    key=key,
                 ),
             )
         except NotFoundException as e:
-            raise NotFoundError(f"Item '{name}' not found in {path}") from e
+            raise NotFoundError(f"Item '{key}' not found") from e
         except UnauthorizedException as e:
             raise AuthenticationError("Authentication failed") from e
         except ForbiddenException as e:
@@ -288,8 +276,7 @@ class ProviderItemsResource:
     async def get_download_url(
         self,
         provider_id: str,
-        path: str,
-        name: str,
+        key: str,
         expiration_minutes: int | None = None,
     ) -> DownloadUrlResponse:
         """Get a presigned download URL for a file.
@@ -321,12 +308,11 @@ class ProviderItemsResource:
         try:
             return await api.get_download_url(
                 provider_id=provider_id,
-                path=path,
-                name=name,
+                key=key,
                 expiration_minutes=expiration_minutes,
             )
         except NotFoundException as e:
-            raise NotFoundError(f"File not found: {path}/{name}") from e
+            raise NotFoundError(f"File not found: {key}") from e
         except UnauthorizedException as e:
             raise AuthenticationError("Authentication failed") from e
         except ForbiddenException as e:
@@ -337,8 +323,7 @@ class ProviderItemsResource:
     async def get_upload_url(
         self,
         provider_id: str,
-        path: str,
-        file_name: str,
+        key: str,
         size: int | None = None,
         media_type: str | None = None,
     ) -> UploadUrlResponse:
@@ -374,14 +359,13 @@ class ProviderItemsResource:
             return await api.get_upload_url(
                 provider_id=provider_id,
                 upload_url_request=UploadUrlRequest(
-                    path=path,
-                    fileName=file_name,
+                    key=key,
                     size=size,
                     mediaType=media_type,
                 ),
             )
         except NotFoundException as e:
-            raise NotFoundError(f"Path not found: {path}") from e
+            raise NotFoundError(f"Key not found: {key}") from e
         except UnauthorizedException as e:
             raise AuthenticationError("Authentication failed") from e
         except ForbiddenException as e:
@@ -392,8 +376,7 @@ class ProviderItemsResource:
     async def confirm_upload(
         self,
         provider_id: str,
-        path: str,
-        file_name: str,
+        key: str,
     ) -> ProviderItem:
         """Confirm that a presigned upload has completed.
 
@@ -425,12 +408,11 @@ class ProviderItemsResource:
             return await api.confirm_upload(
                 provider_id=provider_id,
                 confirm_upload_request=ConfirmUploadRequest(
-                    path=path,
-                    fileName=file_name,
+                    key=key,
                 ),
             )
         except NotFoundException as e:
-            raise NotFoundError(f"Uploaded file not found: {file_name}") from e
+            raise NotFoundError(f"Uploaded file not found: {key}") from e
         except UnauthorizedException as e:
             raise AuthenticationError("Authentication failed") from e
         except ForbiddenException as e:

@@ -76,6 +76,7 @@ __all__ = [
     "FSProviderLeanearConfigExternal",
     "FSProviderLocalConfigExternal",
     "FSProviderS3ConfigExternal",
+    "FSProviderSFTPConfigExternal",
     "FSProviderSharepointOnlineConfigExternal",
     "FileId",
     "FilesInput",
@@ -168,6 +169,7 @@ from biolevate_client.models.fs_provider_gcs_config_external import FSProviderGC
 from biolevate_client.models.fs_provider_leanear_config_external import FSProviderLeanearConfigExternal as FSProviderLeanearConfigExternal
 from biolevate_client.models.fs_provider_local_config_external import FSProviderLocalConfigExternal as FSProviderLocalConfigExternal
 from biolevate_client.models.fs_provider_s3_config_external import FSProviderS3ConfigExternal as FSProviderS3ConfigExternal
+from biolevate_client.models.fs_provider_sftp_config_external import FSProviderSFTPConfigExternal as FSProviderSFTPConfigExternal
 from biolevate_client.models.fs_provider_sharepoint_online_config_external import FSProviderSharepointOnlineConfigExternal as FSProviderSharepointOnlineConfigExternal
 from biolevate_client.models.file_id import FileId as FileId
 from biolevate_client.models.files_input import FilesInput as FilesInput

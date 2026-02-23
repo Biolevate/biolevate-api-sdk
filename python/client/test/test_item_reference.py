@@ -35,14 +35,11 @@ class TestItemReference(unittest.TestCase):
         model = ItemReference()
         if include_optional:
             return ItemReference(
-                path = '/reports/',
-                name = 'document.pdf',
-                type = 'FILE'
+                key = 'reports/document.pdf'
             )
         else:
             return ItemReference(
-                name = 'document.pdf',
-                type = 'FILE',
+                key = 'reports/document.pdf',
         )
         """
 

@@ -62,6 +62,7 @@ biolevate_client/models/fs_provider_gcs_config_external.py
 biolevate_client/models/fs_provider_leanear_config_external.py
 biolevate_client/models/fs_provider_local_config_external.py
 biolevate_client/models/fs_provider_s3_config_external.py
+biolevate_client/models/fs_provider_sftp_config_external.py
 biolevate_client/models/fs_provider_sharepoint_online_config_external.py
 biolevate_client/models/item_reference.py
 biolevate_client/models/job.py
@@ -134,6 +135,7 @@ docs/FSProviderGCSConfigExternal.md
 docs/FSProviderLeanearConfigExternal.md
 docs/FSProviderLocalConfigExternal.md
 docs/FSProviderS3ConfigExternal.md
+docs/FSProviderSFTPConfigExternal.md
 docs/FSProviderSharepointOnlineConfigExternal.md
 docs/FileId.md
 docs/FilesApi.md
@@ -220,6 +222,7 @@ test/test_fs_provider_gcs_config_external.py
 test/test_fs_provider_leanear_config_external.py
 test/test_fs_provider_local_config_external.py
 test/test_fs_provider_s3_config_external.py
+test/test_fs_provider_sftp_config_external.py
 test/test_fs_provider_sharepoint_online_config_external.py
 test/test_item_reference.py
 test/test_job.py

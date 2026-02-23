@@ -36,14 +36,12 @@ class TestCreateFileRequest(unittest.TestCase):
         if include_optional:
             return CreateFileRequest(
                 provider_id = '01a91a21-3136-4094-96da-ded4dce3824f',
-                path = 'documents/',
-                name = 'report.pdf'
+                key = 'documents/report.pdf'
             )
         else:
             return CreateFileRequest(
                 provider_id = '01a91a21-3136-4094-96da-ded4dce3824f',
-                path = 'documents/',
-                name = 'report.pdf',
+                key = 'documents/report.pdf',
         )
         """
 

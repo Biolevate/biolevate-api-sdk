@@ -35,14 +35,11 @@ class TestCreateItemRequest(unittest.TestCase):
         model = CreateItemRequest()
         if include_optional:
             return CreateItemRequest(
-                type = 'FOLDER',
-                path = '/reports/',
-                name = 'new-folder'
+                key = 'reports/archive/'
             )
         else:
             return CreateItemRequest(
-                type = 'FOLDER',
-                name = 'new-folder',
+                key = 'reports/archive/',
         )
         """
 

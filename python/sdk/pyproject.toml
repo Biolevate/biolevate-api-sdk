@@ -4,7 +4,7 @@ version = "0.3.2"
 description = "Biolevate SDK - High-level Python SDK for the Biolevate API"
 requires-python = ">=3.11"
 readme = "README.md"
-license = { text = "MIT" }
+license = { text = "Apache-2.0" }
 authors = [
     { name = "Biolevate" }
 ]

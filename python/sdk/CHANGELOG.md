@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.5.0](https://github.com/Biolevate/biolevate-api-sdk/compare/biolevate-v0.4.0...biolevate-v0.5.0) (2026-02-24)
+
+
+### Features
+
+* update PyPI badge links and improve documentation clarity ([0238664](https://github.com/Biolevate/biolevate-api-sdk/commit/0238664223cb239369b8dcf445a26cda666bb8d3))
+
+
+### Bug Fixes
+
+* update package names and build process in CI workflow ([1ee0ab4](https://github.com/Biolevate/biolevate-api-sdk/commit/1ee0ab4a8318c69392f03c12a1ffebccd5656403))
+
 ## [0.4.0](https://github.com/Biolevate/biolevate-api-sdk/compare/biolevate-v0.3.2...biolevate-v0.4.0) (2026-02-24)
 
 

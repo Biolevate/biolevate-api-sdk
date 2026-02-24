@@ -1,6 +1,6 @@
 [project]
 name = "biolevate"
-version = "0.4.0"
+version = "0.5.0"
 description = "Biolevate SDK - High-level Python SDK for the Biolevate API"
 requires-python = ">=3.11"
 readme = "README.md"

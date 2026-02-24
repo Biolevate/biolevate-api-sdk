@@ -359,9 +359,7 @@ class TestExtractionGetJobAnnotations:
         client: BiolevateClient,
         base_url: str,
     ) -> None:
-        respx.get(f"{base_url}/api/core/extraction/jobs/{JOB_ID}/annotations").mock(
-            return_value=Response(200, json=[])
-        )
+        respx.get(f"{base_url}/api/core/extraction/jobs/{JOB_ID}/annotations").mock(return_value=Response(200, json=[]))
 
         annotations = await client.extraction.get_job_annotations(JOB_ID)
 

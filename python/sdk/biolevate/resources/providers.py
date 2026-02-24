@@ -7,8 +7,8 @@ from typing import TYPE_CHECKING
 from biolevate.exceptions import APIError, AuthenticationError, NotFoundError
 
 if TYPE_CHECKING:
-    from biolevate_client import ApiClient
     from biolevate.models import Provider, ProviderPage
+    from biolevate_client import ApiClient
 
 
 class ProvidersResource:

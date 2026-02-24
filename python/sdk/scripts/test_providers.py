@@ -69,6 +69,7 @@ async def main() -> None:
         )
 
         if first_provider_id:
+
             async def test_get_provider():
                 result = await client.providers.get(first_provider_id)  # type: ignore[arg-type]
                 assert result is not None, "Provider should not be None"

@@ -68,7 +68,7 @@ jobs:
 
       - name: Generate coverage badge
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: uv run coverage-badge -o sdk/.coverage-badge.svg -f
+        run: uv run python -m coverage_badge -o sdk/.coverage-badge.svg -f
 
       - name: Commit coverage badge
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'

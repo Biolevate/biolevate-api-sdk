@@ -8,9 +8,9 @@ from typing import TYPE_CHECKING, BinaryIO
 from biolevate.exceptions import APIError, AuthenticationError, NotFoundError
 
 if TYPE_CHECKING:
+    from biolevate.models import ListItemsResponse, ProviderItem
     from biolevate_client import ApiClient
     from biolevate_client.models import DownloadUrlResponse, UploadUrlResponse
-    from biolevate.models import ListItemsResponse, ProviderItem
 
 
 class ProviderItemsResource:
@@ -181,16 +181,13 @@ class ProviderItemsResource:
         provider_id: str,
         key: str,
         new_name: str,
-        item_type: str = "FILE",
     ) -> ProviderItem:
         """Rename a file or folder in a provider.
 
         Args:
             provider_id: The provider ID.
-            path: Directory path containing the item.
-            old_name: Current item name.
+            key: Current item key (path).
             new_name: New item name.
-            item_type: Type of item ('FILE' or 'FOLDER').
 
         Returns:
             The renamed item.

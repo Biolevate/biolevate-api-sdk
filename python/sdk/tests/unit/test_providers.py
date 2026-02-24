@@ -16,9 +16,7 @@ class TestProvidersList:
         base_url: str,
         provider_page_payload: dict,
     ) -> None:
-        respx.get(f"{base_url}/api/core/providers").mock(
-            return_value=Response(200, json=provider_page_payload)
-        )
+        respx.get(f"{base_url}/api/core/providers").mock(return_value=Response(200, json=provider_page_payload))
 
         page = await client.providers.list()
 
@@ -48,9 +46,7 @@ class TestProvidersList:
         base_url: str,
         provider_page_payload: dict,
     ) -> None:
-        route = respx.get(f"{base_url}/api/core/providers").mock(
-            return_value=Response(200, json=provider_page_payload)
-        )
+        route = respx.get(f"{base_url}/api/core/providers").mock(return_value=Response(200, json=provider_page_payload))
 
         await client.providers.list(page=2, page_size=5, sort_order="desc")
 
@@ -66,9 +62,7 @@ class TestProvidersList:
         base_url: str,
         provider_page_payload: dict,
     ) -> None:
-        route = respx.get(f"{base_url}/api/core/providers").mock(
-            return_value=Response(200, json=provider_page_payload)
-        )
+        route = respx.get(f"{base_url}/api/core/providers").mock(return_value=Response(200, json=provider_page_payload))
 
         await client.providers.list(sort_by="name")
 
@@ -81,9 +75,7 @@ class TestProvidersList:
         base_url: str,
         provider_page_payload: dict,
     ) -> None:
-        route = respx.get(f"{base_url}/api/core/providers").mock(
-            return_value=Response(200, json=provider_page_payload)
-        )
+        route = respx.get(f"{base_url}/api/core/providers").mock(return_value=Response(200, json=provider_page_payload))
 
         await client.providers.list(query="s3")
 
@@ -95,9 +87,7 @@ class TestProvidersList:
         client: BiolevateClient,
         base_url: str,
     ) -> None:
-        respx.get(f"{base_url}/api/core/providers").mock(
-            return_value=Response(401, json={"error": "Unauthorized"})
-        )
+        respx.get(f"{base_url}/api/core/providers").mock(return_value=Response(401, json={"error": "Unauthorized"}))
 
         with pytest.raises(AuthenticationError, match="Authentication failed"):
             await client.providers.list()
@@ -108,9 +98,7 @@ class TestProvidersList:
         client: BiolevateClient,
         base_url: str,
     ) -> None:
-        respx.get(f"{base_url}/api/core/providers").mock(
-            return_value=Response(403, json={"error": "Forbidden"})
-        )
+        respx.get(f"{base_url}/api/core/providers").mock(return_value=Response(403, json={"error": "Forbidden"}))
 
         with pytest.raises(AuthenticationError, match="Access denied"):
             await client.providers.list()

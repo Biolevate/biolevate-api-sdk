@@ -18,6 +18,7 @@ Skip integration tests (default):
 from __future__ import annotations
 
 import asyncio
+import contextlib
 import io
 import os
 import time
@@ -35,6 +36,7 @@ _REQUIRES_SERVER = pytest.mark.skipif(
     not _BASE_URL or not _TOKEN,
     reason="BIOLEVATE_API_URL and BIOLEVATE_TOKEN must be set to run integration tests",
 )
+
 
 # Apply the skip marker to every test in this directory automatically.
 def pytest_collection_modifyitems(items: list[pytest.Item]) -> None:
@@ -78,10 +80,8 @@ async def test_folder_key(provider_id: str, live_client: BiolevateClient) -> Asy
     folder_key = f"sdk-integration-tests-{_TEST_RUN_ID}/"
     await live_client.items.create_folder(provider_id, key=folder_key)
     yield folder_key
-    try:
+    with contextlib.suppress(Exception):
         await live_client.items.delete(provider_id, key=folder_key)
-    except Exception:
-        pass
 
 
 @pytest_asyncio.fixture(scope="session", loop_scope="session")
@@ -93,10 +93,10 @@ async def uploaded_item_key(
     """Upload a small text file used by the files and AI job tests."""
     file_name = "sdk-test-sample.txt"
     content = (
-        "Biolevate is a document intelligence company founded in 2021. "
-        "The CEO is John Smith. The company has 42 employees and offers "
-        "products including Elise, a platform for AI-powered document analysis."
-    ).encode()
+        b"Biolevate is a document intelligence company founded in 2021. "
+        b"The CEO is John Smith. The company has 42 employees and offers "
+        b"products including Elise, a platform for AI-powered document analysis."
+    )
 
     await live_client.items.upload(
         provider_id,
@@ -133,10 +133,8 @@ async def indexed_file_id(
 
     yield file_id
 
-    try:
+    with contextlib.suppress(Exception):
         await live_client.files.delete(file_id)
-    except Exception:
-        pass
 
 
 @pytest_asyncio.fixture(scope="session", loop_scope="session")
@@ -148,7 +146,5 @@ async def collection_id(live_client: BiolevateClient) -> AsyncGenerator[str, Non
     )
     collection_id = str(collection.id.id)
     yield collection_id
-    try:
+    with contextlib.suppress(Exception):
         await live_client.collections.delete(collection_id)
-    except Exception:
-        pass

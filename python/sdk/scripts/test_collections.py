@@ -30,6 +30,7 @@ async def main() -> None:
     file_id_for_collection: str | None = None
 
     async with client:
+
         async def test_setup_file_for_collection() -> dict[str, Any]:
             nonlocal file_id_for_collection
             provider_id: str | None = None
@@ -170,6 +171,7 @@ async def main() -> None:
 
             if file_id_for_collection:
                 fid_file: str = file_id_for_collection
+
                 async def test_add_file_to_collection() -> dict[str, Any]:
                     await client.collections.add_file(cid, fid_file)
                     return {"file_id": fid_file}

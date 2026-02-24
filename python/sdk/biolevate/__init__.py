@@ -7,7 +7,6 @@ from biolevate.exceptions import (
     BiolevateError,
     NotFoundError,
 )
-
 from biolevate.models import (
     Annotation,
     Collection,

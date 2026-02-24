@@ -12,7 +12,7 @@ import asyncio
 import json
 import time
 from pathlib import Path
-from typing import Any, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from scripts.common import create_client, get_base_parser
 from scripts.test_utils import TestRunner
@@ -132,6 +132,7 @@ async def main() -> None:
     file_id: str | None = None
 
     async with client:
+
         async def test_setup() -> dict[str, Any]:
             nonlocal provider_id
             if args.provider_id:
@@ -158,7 +159,9 @@ async def main() -> None:
 
         async def test_list_files() -> dict[str, Any]:
             result = await client.files.list(
-                provider_id, page=0, page_size=10  # type: ignore[arg-type]
+                provider_id,
+                page=0,
+                page_size=10,  # type: ignore[arg-type]
             )
             assert result.data is not None, "data should not be None"
             assert isinstance(result.data, list), "data should be a list"
@@ -188,6 +191,7 @@ async def main() -> None:
             ):
                 runner.skip_test(name, "No test file available")
         else:
+
             async def test_pick_test_file() -> dict[str, Any]:
                 return {"test_file": str(test_file_path), "name": test_file_path.name}
 
@@ -223,7 +227,8 @@ async def main() -> None:
                 nonlocal file_id
                 assert uploaded_key is not None
                 file_info = await client.files.create(
-                    provider_id, key=uploaded_key  # type: ignore[arg-type]
+                    provider_id,
+                    key=uploaded_key,  # type: ignore[arg-type]
                 )
                 file_id = str(file_info.id.id) if file_info.id else None
                 assert file_id, "File ID should be set"
@@ -240,6 +245,7 @@ async def main() -> None:
 
             if file_id:
                 fid: str = file_id
+
                 async def test_wait_until_indexed() -> dict[str, Any]:
                     indexed, waited = await wait_until_indexed(
                         client.files,
@@ -247,9 +253,7 @@ async def main() -> None:
                         timeout_seconds=args.index_timeout,
                     )
                     if not indexed:
-                        raise AssertionError(
-                            f"File not indexed within {args.index_timeout}s (waited {waited:.1f}s)"
-                        )
+                        raise AssertionError(f"File not indexed within {args.index_timeout}s (waited {waited:.1f}s)")
                     return {"indexed": True, "waited_seconds": round(waited, 1)}
 
                 await runner.run_test(

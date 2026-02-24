@@ -19,9 +19,7 @@ class TestCollectionsList:
         base_url: str,
         collection_page_payload: dict,
     ) -> None:
-        respx.get(f"{base_url}/api/core/collections").mock(
-            return_value=Response(200, json=collection_page_payload)
-        )
+        respx.get(f"{base_url}/api/core/collections").mock(return_value=Response(200, json=collection_page_payload))
 
         page = await client.collections.list()
 
@@ -94,9 +92,7 @@ class TestCollectionsCreate:
         base_url: str,
         collection_payload: dict,
     ) -> None:
-        respx.post(f"{base_url}/api/core/collections").mock(
-            return_value=Response(201, json=collection_payload)
-        )
+        respx.post(f"{base_url}/api/core/collections").mock(return_value=Response(201, json=collection_payload))
 
         collection = await client.collections.create(name="Quarterly Reports", description="All quarterly reports")
 
@@ -109,9 +105,7 @@ class TestCollectionsCreate:
         base_url: str,
         collection_payload: dict,
     ) -> None:
-        respx.post(f"{base_url}/api/core/collections").mock(
-            return_value=Response(201, json=collection_payload)
-        )
+        respx.post(f"{base_url}/api/core/collections").mock(return_value=Response(201, json=collection_payload))
 
         collection = await client.collections.create(name="Quarterly Reports")
 
@@ -218,9 +212,7 @@ class TestCollectionsUpdate:
         collection_payload: dict,
     ) -> None:
         updated = {**collection_payload, "name": "Updated Reports"}
-        respx.patch(f"{base_url}/api/core/collections/{COLLECTION_ID}").mock(
-            return_value=Response(200, json=updated)
-        )
+        respx.patch(f"{base_url}/api/core/collections/{COLLECTION_ID}").mock(return_value=Response(200, json=updated))
 
         collection = await client.collections.update(COLLECTION_ID, name="Updated Reports")
 
@@ -283,9 +275,7 @@ class TestCollectionsDelete:
         client: BiolevateClient,
         base_url: str,
     ) -> None:
-        route = respx.delete(f"{base_url}/api/core/collections/{COLLECTION_ID}").mock(
-            return_value=Response(204)
-        )
+        route = respx.delete(f"{base_url}/api/core/collections/{COLLECTION_ID}").mock(return_value=Response(204))
 
         await client.collections.delete(COLLECTION_ID)
 
@@ -415,9 +405,7 @@ class TestCollectionsAddFile:
         client: BiolevateClient,
         base_url: str,
     ) -> None:
-        route = respx.post(f"{base_url}/api/core/collections/{COLLECTION_ID}/files").mock(
-            return_value=Response(204)
-        )
+        route = respx.post(f"{base_url}/api/core/collections/{COLLECTION_ID}/files").mock(return_value=Response(204))
 
         await client.collections.add_file(COLLECTION_ID, FILE_ID)
 

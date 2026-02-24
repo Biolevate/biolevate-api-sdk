@@ -7,8 +7,8 @@ from typing import TYPE_CHECKING
 from biolevate.exceptions import APIError, AuthenticationError, NotFoundError
 
 if TYPE_CHECKING:
-    from biolevate_client import ApiClient
     from biolevate.models import Collection, CollectionPage, FilePage
+    from biolevate_client import ApiClient
 
 
 class CollectionsResource:
@@ -319,7 +319,7 @@ class CollectionsResource:
                 ),
             )
         except NotFoundException as e:
-            raise NotFoundError(f"Collection or file not found") from e
+            raise NotFoundError("Collection or file not found") from e
         except UnauthorizedException as e:
             raise AuthenticationError("Authentication failed") from e
         except ForbiddenException as e:
@@ -359,7 +359,7 @@ class CollectionsResource:
                 file_id=file_id,
             )
         except NotFoundException as e:
-            raise NotFoundError(f"Collection or file not found") from e
+            raise NotFoundError("Collection or file not found") from e
         except UnauthorizedException as e:
             raise AuthenticationError("Authentication failed") from e
         except ForbiddenException as e:

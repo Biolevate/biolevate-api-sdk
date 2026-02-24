@@ -109,9 +109,7 @@ class TestProviderItemsUpload:
         client: BiolevateClient,
         base_url: str,
     ) -> None:
-        respx.post(f"{base_url}/api/core/providers/{PROVIDER_ID}/items").mock(
-            return_value=Response(401)
-        )
+        respx.post(f"{base_url}/api/core/providers/{PROVIDER_ID}/items").mock(return_value=Response(401))
 
         with pytest.raises(AuthenticationError):
             await client.items.upload(PROVIDER_ID, key="/", file=io.BytesIO(b"x"), file_name="f.txt")
@@ -122,9 +120,7 @@ class TestProviderItemsUpload:
         client: BiolevateClient,
         base_url: str,
     ) -> None:
-        respx.post(f"{base_url}/api/core/providers/{PROVIDER_ID}/items").mock(
-            return_value=Response(403)
-        )
+        respx.post(f"{base_url}/api/core/providers/{PROVIDER_ID}/items").mock(return_value=Response(403))
 
         with pytest.raises(AuthenticationError):
             await client.items.upload(PROVIDER_ID, key="/", file=io.BytesIO(b"x"), file_name="f.txt")
@@ -254,9 +250,7 @@ class TestProviderItemsDelete:
         client: BiolevateClient,
         base_url: str,
     ) -> None:
-        respx.delete(f"{base_url}/api/core/providers/{PROVIDER_ID}/items").mock(
-            return_value=Response(204)
-        )
+        respx.delete(f"{base_url}/api/core/providers/{PROVIDER_ID}/items").mock(return_value=Response(204))
 
         await client.items.delete(PROVIDER_ID, key="documents/report.pdf")
 

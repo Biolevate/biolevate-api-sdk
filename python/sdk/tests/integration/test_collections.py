@@ -1,5 +1,7 @@
 """Integration tests for CollectionsResource."""
 
+import contextlib
+
 import pytest
 
 from biolevate import BiolevateClient, NotFoundError
@@ -87,10 +89,8 @@ class TestCollectionsFiles:
         indexed_file_id: str,
     ) -> None:
         # Ensure the file is in the collection before removing it.
-        try:
+        with contextlib.suppress(Exception):
             await live_client.collections.add_file(collection_id, indexed_file_id)
-        except Exception:
-            pass
 
         await live_client.collections.remove_file(collection_id, indexed_file_id)
 

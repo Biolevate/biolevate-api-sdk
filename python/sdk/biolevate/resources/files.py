@@ -7,8 +7,8 @@ from typing import TYPE_CHECKING
 from biolevate.exceptions import APIError, AuthenticationError, NotFoundError
 
 if TYPE_CHECKING:
-    from biolevate_client import ApiClient
     from biolevate.models import File, FilePage, Ontology
+    from biolevate_client import ApiClient
 
 
 class FilesResource:
@@ -228,7 +228,7 @@ class FilesResource:
         except ApiException as e:
             raise APIError(e.status or 500, str(e.reason)) from e
 
-    async def get_ontologies(self, file_id: str) -> "list[Ontology]": # type: ignore[valid-type]
+    async def get_ontologies(self, file_id: str) -> list[Ontology]:  # type: ignore[valid-type]
         """Get computed ontologies for a file.
 
         Args:

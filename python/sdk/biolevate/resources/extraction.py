@@ -7,8 +7,6 @@ from typing import TYPE_CHECKING
 from biolevate.exceptions import APIError, AuthenticationError, NotFoundError
 
 if TYPE_CHECKING:
-    from biolevate_client import ApiClient
-    from biolevate_client.models import EliseMetaInput
     from biolevate.models import (
         Annotation,
         ExtractionJobInputs,
@@ -16,6 +14,8 @@ if TYPE_CHECKING:
         Job,
         JobPage,
     )
+    from biolevate_client import ApiClient
+    from biolevate_client.models import EliseMetaInput
 
 
 class ExtractionResource:
@@ -80,7 +80,7 @@ class ExtractionResource:
 
     async def create_job(
         self,
-        metas: "list[EliseMetaInput]",
+        metas: list[EliseMetaInput],
         file_ids: list[str] | None = None,
         collection_ids: list[str] | None = None,
     ) -> Job:
@@ -234,7 +234,7 @@ class ExtractionResource:
         except ApiException as e:
             raise APIError(e.status or 500, str(e.reason)) from e
 
-    async def get_job_annotations(self, job_id: str) -> "list[Annotation]":
+    async def get_job_annotations(self, job_id: str) -> list[Annotation]:
         """Get the annotations for an extraction job.
 
         Args:

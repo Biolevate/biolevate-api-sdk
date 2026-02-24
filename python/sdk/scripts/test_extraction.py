@@ -12,12 +12,11 @@ import asyncio
 import json
 import time
 from pathlib import Path
-from typing import Any, TYPE_CHECKING
-
-from scripts.common import create_client, get_base_parser
-from scripts.test_utils import TestRunner
+from typing import TYPE_CHECKING, Any
 
 from biolevate_client.models import EliseMetaInput
+from scripts.common import create_client, get_base_parser
+from scripts.test_utils import TestRunner
 
 if TYPE_CHECKING:
     from biolevate.resources.extraction import ExtractionResource
@@ -141,14 +140,14 @@ async def main() -> None:
     job_id: str | None = None
 
     async with client:
+
         async def test_setup_provider_and_file() -> dict[str, Any]:
             nonlocal provider_id, file_id, uploaded_key
 
             sample_path = _get_extraction_sample(test_files_dir, args.test_file)
             if not sample_path:
                 raise AssertionError(
-                    f"extraction_sample.txt not found in {test_files_dir}. "
-                    "This file is required for extraction tests."
+                    f"extraction_sample.txt not found in {test_files_dir}. This file is required for extraction tests."
                 )
 
             if args.file_id:
@@ -180,20 +179,14 @@ async def main() -> None:
                 )
             uploaded_key = f"{test_folder_name}/{sample_path.name}"
 
-            file_info = await client.files.create(
-                provider_id, key=uploaded_key
-            )
+            file_info = await client.files.create(provider_id, key=uploaded_key)
             file_id = str(file_info.id.id) if file_info.id else None
             if not file_id:
                 raise AssertionError("Failed to create indexed file.")
 
-            indexed, waited = await wait_until_indexed(
-                client.files, file_id, timeout_seconds=args.index_timeout
-            )
+            indexed, waited = await wait_until_indexed(client.files, file_id, timeout_seconds=args.index_timeout)
             if not indexed:
-                raise AssertionError(
-                    f"File indexation timed out after {waited:.1f}s"
-                )
+                raise AssertionError(f"File indexation timed out after {waited:.1f}s")
 
             state_path = Path("test-reports/extraction-test-state.json")
             state_path.parent.mkdir(parents=True, exist_ok=True)
@@ -270,21 +263,27 @@ async def main() -> None:
             async def test_create_job() -> dict[str, Any]:
                 nonlocal job_id
                 metas = [
-                    EliseMetaInput.model_validate({
-                        "meta": "title",
-                        "description": "The title of the document",
-                        "answerType": {"dataType": "STRING"},
-                    }),
-                    EliseMetaInput.model_validate({
-                        "meta": "authors",
-                        "description": "The authors of the document",
-                        "answerType": {"dataType": "STRING", "multiValued": True},
-                    }),
-                    EliseMetaInput.model_validate({
-                        "meta": "date",
-                        "description": "The publication date",
-                        "answerType": {"dataType": "DATE", "dateFormat": "ISO"},
-                    }),
+                    EliseMetaInput.model_validate(
+                        {
+                            "meta": "title",
+                            "description": "The title of the document",
+                            "answerType": {"dataType": "STRING"},
+                        }
+                    ),
+                    EliseMetaInput.model_validate(
+                        {
+                            "meta": "authors",
+                            "description": "The authors of the document",
+                            "answerType": {"dataType": "STRING", "multiValued": True},
+                        }
+                    ),
+                    EliseMetaInput.model_validate(
+                        {
+                            "meta": "date",
+                            "description": "The publication date",
+                            "answerType": {"dataType": "DATE", "dateFormat": "ISO"},
+                        }
+                    ),
                 ]
                 job = await client.extraction.create_job(
                     metas=metas,
@@ -377,19 +376,25 @@ async def main() -> None:
                         answer_value: Any = None
                         if answer:
                             for field in (
-                                "str_value", "str_list_value", "bool_value",
-                                "long_value", "double_value", "date_value",
+                                "str_value",
+                                "str_list_value",
+                                "bool_value",
+                                "long_value",
+                                "double_value",
+                                "date_value",
                             ):
                                 val = getattr(answer, field, None)
                                 if val is not None:
                                     answer_value = val
                                     break
-                        extracted_data.append({
-                            "meta": meta_name,
-                            "answer": answer_value,
-                            "raw_value": raw_value,
-                            "explanation": explanation[:100] if explanation else None,
-                        })
+                        extracted_data.append(
+                            {
+                                "meta": meta_name,
+                                "answer": answer_value,
+                                "raw_value": raw_value,
+                                "explanation": explanation[:100] if explanation else None,
+                            }
+                        )
                     return {
                         "results_count": len(results),
                         "extracted": extracted_data,
@@ -408,10 +413,12 @@ async def main() -> None:
                     for a in annotations[:5]:
                         ann_type = getattr(a, "type", None)
                         ann_status = getattr(a, "status", None)
-                        annotation_summaries.append({
-                            "type": ann_type,
-                            "status": ann_status,
-                        })
+                        annotation_summaries.append(
+                            {
+                                "type": ann_type,
+                                "status": ann_status,
+                            }
+                        )
                     return {
                         "annotations_count": len(annotations),
                         "sample_annotations": annotation_summaries,
@@ -426,11 +433,7 @@ async def main() -> None:
                 async def test_list_jobs_after_create() -> dict[str, Any]:
                     result = await client.extraction.list_jobs(page=0, page_size=50)
                     assert result.data is not None, "data should not be None"
-                    job_ids = [
-                        getattr(j, "job_id", None)
-                        for j in (result.data or [])
-                        if getattr(j, "job_id", None)
-                    ]
+                    job_ids = [getattr(j, "job_id", None) for j in (result.data or []) if getattr(j, "job_id", None)]
                     assert jid in job_ids, f"Created job {jid} should appear in list"
                     return {"job_found": True, "total": len(result.data or [])}
 

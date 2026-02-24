@@ -84,8 +84,8 @@ async def main() -> None:
         if not provider_id:
             runner.skip_test("all_remaining", "No provider available")
             runner.print_and_save()
-            return  
-                  
+            return
+
         # Test 1: List items at root
         async def test_list_root() -> dict[str, Any]:
             result = await client.items.list(provider_id, key="")  # type: ignore[arg-type]
@@ -318,6 +318,7 @@ async def main() -> None:
 
         # Test 11-14: Presigned upload flow (skip if not supported)
         if presigned_upload_supported and upload_url:
+
             async def test_upload_via_presigned() -> dict[str, Any]:
                 nonlocal presigned_file_uploaded
                 is_direct_url = upload_url.startswith(("http://", "https://"))  # type: ignore[union-attr]

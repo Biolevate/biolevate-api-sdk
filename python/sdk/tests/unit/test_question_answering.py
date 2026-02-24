@@ -155,9 +155,7 @@ class TestQAGetJob:
         client: BiolevateClient,
         base_url: str,
     ) -> None:
-        respx.get(f"{base_url}/api/core/qa/jobs/{JOB_ID}").mock(
-            return_value=Response(404, json={"error": "Not found"})
-        )
+        respx.get(f"{base_url}/api/core/qa/jobs/{JOB_ID}").mock(return_value=Response(404, json={"error": "Not found"}))
 
         with pytest.raises(NotFoundError, match="not found"):
             await client.qa.get_job(JOB_ID)
@@ -357,9 +355,7 @@ class TestQAGetJobAnnotations:
         client: BiolevateClient,
         base_url: str,
     ) -> None:
-        respx.get(f"{base_url}/api/core/qa/jobs/{JOB_ID}/annotations").mock(
-            return_value=Response(200, json=[])
-        )
+        respx.get(f"{base_url}/api/core/qa/jobs/{JOB_ID}/annotations").mock(return_value=Response(200, json=[]))
 
         annotations = await client.qa.get_job_annotations(JOB_ID)
 

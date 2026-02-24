@@ -33,9 +33,7 @@ class TestFilesList:
         base_url: str,
         file_page_payload: dict,
     ) -> None:
-        route = respx.get(f"{base_url}/api/core/files").mock(
-            return_value=Response(200, json=file_page_payload)
-        )
+        route = respx.get(f"{base_url}/api/core/files").mock(return_value=Response(200, json=file_page_payload))
 
         await client.files.list(PROVIDER_ID)
 
@@ -48,9 +46,7 @@ class TestFilesList:
         base_url: str,
         file_page_payload: dict,
     ) -> None:
-        route = respx.get(f"{base_url}/api/core/files").mock(
-            return_value=Response(200, json=file_page_payload)
-        )
+        route = respx.get(f"{base_url}/api/core/files").mock(return_value=Response(200, json=file_page_payload))
 
         await client.files.list(PROVIDER_ID, page=1, page_size=5)
 
@@ -112,9 +108,7 @@ class TestFilesCreate:
         client: BiolevateClient,
         base_url: str,
     ) -> None:
-        respx.post(f"{base_url}/api/core/files").mock(
-            return_value=Response(400, json={"error": "Bad Request"})
-        )
+        respx.post(f"{base_url}/api/core/files").mock(return_value=Response(400, json={"error": "Bad Request"}))
 
         with pytest.raises(APIError) as exc_info:
             await client.files.create(PROVIDER_ID, key="bad-request.pdf")
@@ -179,9 +173,7 @@ class TestFilesGet:
         client: BiolevateClient,
         base_url: str,
     ) -> None:
-        respx.get(f"{base_url}/api/core/files/{FILE_ID}").mock(
-            return_value=Response(404, json={"error": "Not found"})
-        )
+        respx.get(f"{base_url}/api/core/files/{FILE_ID}").mock(return_value=Response(404, json={"error": "Not found"}))
 
         with pytest.raises(NotFoundError, match="not found"):
             await client.files.get(FILE_ID)
@@ -363,9 +355,7 @@ class TestFilesGetOntologies:
                 "metas": {},
             },
         ]
-        respx.get(f"{base_url}/api/core/files/{FILE_ID}/ontologies").mock(
-            return_value=Response(200, json=payload)
-        )
+        respx.get(f"{base_url}/api/core/files/{FILE_ID}/ontologies").mock(return_value=Response(200, json=payload))
 
         result = await client.files.get_ontologies(FILE_ID)
 
@@ -429,9 +419,7 @@ class TestFilesRecomputeOntologies:
         client: BiolevateClient,
         base_url: str,
     ) -> None:
-        route = respx.post(f"{base_url}/api/core/files/{FILE_ID}/recompute-ontologies").mock(
-            return_value=Response(202)
-        )
+        route = respx.post(f"{base_url}/api/core/files/{FILE_ID}/recompute-ontologies").mock(return_value=Response(202))
 
         await client.files.recompute_ontologies(FILE_ID)
 

@@ -15,7 +15,7 @@ class CollectionsResource:
     """Resource for managing file collections.
 
     Collections are groups of indexed files that can be used together
-    for extraction or question answering jobs..
+    for extraction or question answering jobs.
     """
 
     def __init__(self, client: ApiClient) -> None:

@@ -7,8 +7,9 @@
       "changelog-path": "CHANGELOG.md",
       "extra-files": [
         {
-          "type": "python-file",
-          "path": "biolevate/__init__.py"
+          "type": "generic",
+          "path": "biolevate/__init__.py",
+          "search-by-line": true
         }
       ]
     }

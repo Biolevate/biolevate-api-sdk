@@ -68,10 +68,13 @@ jobs:
 
       - name: Generate coverage badge
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: uv run --directory sdk coverage-badge -o .coverage-badge.svg -f
+        run: |
+          .venv/bin/pip install coverage-badge --quiet
+          .venv/bin/coverage-badge -o sdk/.coverage-badge.svg -f
 
       - name: Commit coverage badge
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        working-directory: ${{ github.workspace }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"

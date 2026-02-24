@@ -2,7 +2,7 @@
 
 [![PyPI](https://img.shields.io/pypi/v/biolevate)](https://pypi.org/project/biolevate/)
 [![Python](https://img.shields.io/pypi/pyversions/biolevate)](https://pypi.org/project/biolevate/)
-[![Coverage](https://raw.githubusercontent.com/Biolevate/biolevate-api-sdk/main/python/sdk/.coverage-badge.svg)](https://github.com/Biolevate/biolevate-api-sdk/actions/workflows/ci.yml)
+[![Coverage](https://raw.githubusercontent.com/Biolevate/biolevate-api-sdk/main/python/sdk/coverage-badge.svg)](https://github.com/Biolevate/biolevate-api-sdk/actions/workflows/ci.yml)
 [![CI](https://github.com/Biolevate/biolevate-api-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/Biolevate/biolevate-api-sdk/actions/workflows/ci.yml)
 
 Python SDK for the [Biolevate API](https://api-docs.biolevatecloud.com/biolevateapi/intro) — the core REST API for the Elise platform. Connect to your storage backends, index documents with AI, organise collections, and run Question Answering or Extraction jobs.

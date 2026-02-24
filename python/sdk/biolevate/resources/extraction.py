@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 
 
 class ExtractionResource:
-    """Resource for managing metadata extraction jobs.
+    """Resource for managing metadata extraction jobs. Extraction is used to extract structured metadata from indexed files.
 
     Provides methods to create and manage extraction jobs that
     extract structured metadata from indexed files.

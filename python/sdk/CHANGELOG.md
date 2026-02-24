@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.2.2](https://github.com/Biolevate/biolevate-api-sdk/compare/biolevate-v0.2.1...biolevate-v0.2.2) (2026-02-24)
+
+
+### Bug Fixes
+
+* badge ([b0eb786](https://github.com/Biolevate/biolevate-api-sdk/commit/b0eb786210c54e93f3ec3d20bb8994214601dce1))
+* badge ([b27d40f](https://github.com/Biolevate/biolevate-api-sdk/commit/b27d40fef0e0ac34ae2c2d90f4c42d06ae7e9a1c))
+* trigger initial release pipeline ([3309669](https://github.com/Biolevate/biolevate-api-sdk/commit/330966996350a0ae84fc48ef024d8623c96eea8b))
+
 ## [0.2.1](https://github.com/Biolevate/biolevate-api-sdk/compare/biolevate-v0.2.0...biolevate-v0.2.1) (2026-02-24)
 
 

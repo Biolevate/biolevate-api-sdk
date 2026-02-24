@@ -3,7 +3,8 @@ name: Publish to PyPI
 on:
   push:
     tags:
-      - "python/sdk-v*"
+      - "biolevate-v*"
+  workflow_dispatch:
 
 permissions:
   contents: read

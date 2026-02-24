@@ -34,7 +34,7 @@ class CollectionsResource:
         sort_order: str = "asc",
         query: str | None = None,
     ) -> CollectionPage:
-        """List collections with pagination.
+        """List collections with pagination.  Pagination is 0-based.
 
         Args:
             page: Page number (0-based).

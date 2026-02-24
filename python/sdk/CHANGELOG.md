@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/Biolevate/biolevate-api-sdk/compare/biolevate-v0.3.0...biolevate-v0.3.1) (2026-02-24)
+
+
+### Bug Fixes
+
+* sdk python comment ([7b195b8](https://github.com/Biolevate/biolevate-api-sdk/commit/7b195b82518163d49c76f8801226d171aabf7673))
+
 ## [0.3.0](https://github.com/Biolevate/biolevate-api-sdk/compare/biolevate-v0.2.2...biolevate-v0.3.0) (2026-02-24)
 
 

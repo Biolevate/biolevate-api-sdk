@@ -2,8 +2,8 @@
 
 [![PyPI](https://img.shields.io/pypi/v/biolevate)](https://pypi.org/project/biolevate/)
 [![Python](https://img.shields.io/pypi/pyversions/biolevate)](https://pypi.org/project/biolevate/)
-[![Coverage](https://raw.githubusercontent.com/Biolevate/biolevate-api-references/main/biolevate-api-sdk/python/sdk/.coverage-badge.svg)](https://github.com/Biolevate/biolevate-api-references/actions/workflows/sdk-ci.yml)
-[![CI](https://github.com/Biolevate/biolevate-api-references/actions/workflows/sdk-ci.yml/badge.svg)](https://github.com/Biolevate/biolevate-api-references/actions/workflows/sdk-ci.yml)
+[![Coverage](https://raw.githubusercontent.com/Biolevate/biolevate-api-sdk/main/python/sdk/.coverage-badge.svg)](https://github.com/Biolevate/biolevate-api-sdk/actions/workflows/ci.yml)
+[![CI](https://github.com/Biolevate/biolevate-api-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/Biolevate/biolevate-api-sdk/actions/workflows/ci.yml)
 
 High-level Python SDK for the Biolevate API.
 

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "packages": {
+    "python/sdk": {
+      "release-type": "python",
+      "package-name": "biolevate",
+      "changelog-path": "CHANGELOG.md",
+      "extra-files": [
+        {
+          "type": "python-file",
+          "path": "biolevate/__init__.py"
+        }
+      ]
+    }
+  }
+}

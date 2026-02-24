@@ -1,0 +1,112 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "python/**"
+  pull_request:
+    paths:
+      - "python/**"
+
+defaults:
+  run:
+    working-directory: python
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: uv sync --all-extras
+
+      - name: Check formatting
+        run: uv run ruff format --check sdk/
+
+      - name: Check linting
+        run: uv run ruff check sdk/
+
+  test-unit:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: uv sync --all-extras
+
+      - name: Run unit tests
+        run: uv run pytest sdk/tests/unit -v --tb=short
+
+      - name: Generate coverage badge
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: uv run coverage-badge -o sdk/.coverage-badge.svg -f
+
+      - name: Commit coverage badge
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add sdk/.coverage-badge.svg
+          if git diff --staged --quiet; then
+            echo "Badge unchanged, skipping commit"
+          else
+            git commit -m "chore: update coverage badge [skip ci]"
+            git push
+          fi
+
+  test-integration:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    if: >-
+      vars.BIOLEVATE_API_URL != '' &&
+      secrets.BIOLEVATE_TOKEN != ''
+    env:
+      BIOLEVATE_API_URL: ${{ vars.BIOLEVATE_API_URL }}
+      BIOLEVATE_TOKEN: ${{ secrets.BIOLEVATE_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: uv sync --all-extras
+
+      - name: Run integration tests
+        run: uv run pytest sdk/tests/integration -v --tb=short --no-cov

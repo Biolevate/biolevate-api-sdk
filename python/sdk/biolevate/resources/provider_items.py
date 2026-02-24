@@ -20,7 +20,7 @@ class ProviderItemsResource:
     """
 
     def __init__(self, client: ApiClient) -> None:
-        """Initialize the provider items resource.
+        """Initialize the provider items resource.  Paths are relative to the provider root.
 
         Args:
             client: The API client.

@@ -86,9 +86,7 @@ jobs:
   test-integration:
     name: Integration Tests
     runs-on: ubuntu-latest
-    if: >-
-      vars.BIOLEVATE_API_URL != '' &&
-      secrets.BIOLEVATE_TOKEN != ''
+    if: vars.BIOLEVATE_API_URL != ''
     env:
       BIOLEVATE_API_URL: ${{ vars.BIOLEVATE_API_URL }}
       BIOLEVATE_TOKEN: ${{ secrets.BIOLEVATE_TOKEN }}

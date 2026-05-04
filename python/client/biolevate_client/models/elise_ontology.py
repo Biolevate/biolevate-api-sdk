@@ -28,7 +28,7 @@ class EliseOntology(BaseModel):
     """
     EliseOntology
     """ # noqa: E501
-    concept_id: EntityId = Field(alias="conceptId")
+    concept_id: EntityId | None = Field(default=None, alias="conceptId")
     name: StrictStr
     metas: Optional[Dict[str, EliseOntologyMeta]] = None
     __properties: ClassVar[List[str]] = ["conceptId", "name", "metas"]

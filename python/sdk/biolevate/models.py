@@ -11,6 +11,21 @@ from biolevate_client.models import (
     EliseCollectionInfo as Collection,
 )
 from biolevate_client.models import (
+    EliseEntityCellResult as EntityCellResult,
+)
+from biolevate_client.models import (
+    EliseEntityColumnInput as EntityColumnInput,
+)
+from biolevate_client.models import (
+    EliseEntityExtractionResult as EntityExtractionResult,
+)
+from biolevate_client.models import (
+    EliseEntityRowResult as EntityRowResult,
+)
+from biolevate_client.models import (
+    EliseEntitySchemaInput as EntitySchemaInput,
+)
+from biolevate_client.models import (
     EliseFileInfo as File,
 )
 from biolevate_client.models import (
@@ -38,20 +53,35 @@ from biolevate_client.models import (
     ExtractJobOutputs as ExtractionJobOutputs,
 )
 from biolevate_client.models import (
-    FSProviderExternal as Provider,
-)
-from biolevate_client.models import (
+    FileMatch,
     Job,
+    JobStatistics,
+    KnowledgeSource,
     ListItemsResponse,
+    MDEJobInputs,
+    MDEJobOutputs,
+    MetadataOnlyMatch,
     ProviderItem,
     QAJobInputs,
     QAJobOutputs,
+    SearchSources,
+    SourceIdentifiers,
+    SourceMatches,
+)
+from biolevate_client.models import (
+    FindSimilarApiJobDto as FindSimilarJob,
+)
+from biolevate_client.models import (
+    FSProviderExternal as Provider,
 )
 from biolevate_client.models import (
     PageDataEliseCollectionInfo as CollectionPage,
 )
 from biolevate_client.models import (
     PageDataEliseFileInfo as FilePage,
+)
+from biolevate_client.models import (
+    PageDataFindSimilarApiJobDto as FindSimilarJobPage,
 )
 from biolevate_client.models import (
     PageDataFSProviderExternal as ProviderPage,
@@ -65,15 +95,28 @@ __all__ = [
     "AnswerType",
     "Collection",
     "CollectionPage",
+    "EntityCellResult",
+    "EntityColumnInput",
+    "EntityExtractionResult",
+    "EntityRowResult",
+    "EntitySchemaInput",
     "ExtractionJobInputs",
     "ExtractionJobOutputs",
     "ExtractionResult",
     "File",
+    "FileMatch",
     "FilePage",
+    "FindSimilarJob",
+    "FindSimilarJobPage",
     "Job",
     "JobPage",
+    "JobStatistics",
+    "KnowledgeSource",
     "ListItemsResponse",
+    "MDEJobInputs",
+    "MDEJobOutputs",
     "MetaInput",
+    "MetadataOnlyMatch",
     "Ontology",
     "Provider",
     "ProviderItem",
@@ -82,4 +125,7 @@ __all__ = [
     "QAJobOutputs",
     "QAResult",
     "QuestionInput",
+    "SearchSources",
+    "SourceIdentifiers",
+    "SourceMatches",
 ]

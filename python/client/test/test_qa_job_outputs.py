@@ -40,7 +40,7 @@ class TestQAJobOutputs(unittest.TestCase):
                         explanation = '', 
                         sourced_content = '', 
                         reference_ids = [
-                            biolevate_client.models.file_id.FileId(
+                            biolevate_client.models.entity_id.EntityId(
                                 id = '', 
                                 entity_type = 'POLICY', )
                             ], 

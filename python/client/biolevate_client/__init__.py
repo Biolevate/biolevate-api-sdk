@@ -21,6 +21,8 @@ __all__ = [
     "CollectionsApi",
     "ExtractionApi",
     "FilesApi",
+    "FindSimilarFilesApi",
+    "MultiDimensionalExtractionApi",
     "ProviderItemsApi",
     "ProvidersApi",
     "QuestionAnsweringApi",
@@ -43,6 +45,7 @@ __all__ = [
     "CreateExtractRequest",
     "CreateFileRequest",
     "CreateItemRequest",
+    "CreateMDERequest",
     "CreateQARequest",
     "DataValue",
     "DownloadUrlResponse",
@@ -52,6 +55,11 @@ __all__ = [
     "EliseCollectionInfo",
     "EliseDocumentStatement",
     "EliseDocumentStatementAllOfPositions",
+    "EliseEntityCellResult",
+    "EliseEntityColumnInput",
+    "EliseEntityExtractionResult",
+    "EliseEntityRowResult",
+    "EliseEntitySchemaInput",
     "EliseExternalDocumentStatement",
     "EliseFileInfo",
     "EliseFullDocumentStatement",
@@ -79,14 +87,22 @@ __all__ = [
     "FSProviderSFTPConfigExternal",
     "FSProviderSharepointOnlineConfigExternal",
     "FileId",
+    "FileMatch",
     "FilesInput",
+    "FindSimilarApiJobDto",
     "ItemReference",
     "Job",
+    "JobStatistics",
+    "KnowledgeSource",
     "LibItemIndexationInfos",
     "ListItemsResponse",
+    "MDEJobInputs",
+    "MDEJobOutputs",
+    "MetadataOnlyMatch",
     "PageDataEliseCollectionInfo",
     "PageDataEliseFileInfo",
     "PageDataFSProviderExternal",
+    "PageDataFindSimilarApiJobDto",
     "PageDataJob",
     "PolicyId",
     "PolicyIdExternal",
@@ -99,6 +115,9 @@ __all__ = [
     "ProviderItem",
     "QAJobInputs",
     "QAJobOutputs",
+    "SearchSources",
+    "SourceIdentifiers",
+    "SourceMatches",
     "UpdateCollectionRequest",
     "UploadUrlRequest",
     "UploadUrlResponse",
@@ -110,6 +129,8 @@ __all__ = [
 from biolevate_client.api.collections_api import CollectionsApi as CollectionsApi
 from biolevate_client.api.extraction_api import ExtractionApi as ExtractionApi
 from biolevate_client.api.files_api import FilesApi as FilesApi
+from biolevate_client.api.find_similar_files_api import FindSimilarFilesApi as FindSimilarFilesApi
+from biolevate_client.api.multi_dimensional_extraction_api import MultiDimensionalExtractionApi as MultiDimensionalExtractionApi
 from biolevate_client.api.provider_items_api import ProviderItemsApi as ProviderItemsApi
 from biolevate_client.api.providers_api import ProvidersApi as ProvidersApi
 from biolevate_client.api.question_answering_api import QuestionAnsweringApi as QuestionAnsweringApi
@@ -136,6 +157,7 @@ from biolevate_client.models.create_collection_request import CreateCollectionRe
 from biolevate_client.models.create_extract_request import CreateExtractRequest as CreateExtractRequest
 from biolevate_client.models.create_file_request import CreateFileRequest as CreateFileRequest
 from biolevate_client.models.create_item_request import CreateItemRequest as CreateItemRequest
+from biolevate_client.models.create_mde_request import CreateMDERequest as CreateMDERequest
 from biolevate_client.models.create_qa_request import CreateQARequest as CreateQARequest
 from biolevate_client.models.data_value import DataValue as DataValue
 from biolevate_client.models.download_url_response import DownloadUrlResponse as DownloadUrlResponse
@@ -145,6 +167,11 @@ from biolevate_client.models.elise_annotation_data import EliseAnnotationData as
 from biolevate_client.models.elise_collection_info import EliseCollectionInfo as EliseCollectionInfo
 from biolevate_client.models.elise_document_statement import EliseDocumentStatement as EliseDocumentStatement
 from biolevate_client.models.elise_document_statement_all_of_positions import EliseDocumentStatementAllOfPositions as EliseDocumentStatementAllOfPositions
+from biolevate_client.models.elise_entity_cell_result import EliseEntityCellResult as EliseEntityCellResult
+from biolevate_client.models.elise_entity_column_input import EliseEntityColumnInput as EliseEntityColumnInput
+from biolevate_client.models.elise_entity_extraction_result import EliseEntityExtractionResult as EliseEntityExtractionResult
+from biolevate_client.models.elise_entity_row_result import EliseEntityRowResult as EliseEntityRowResult
+from biolevate_client.models.elise_entity_schema_input import EliseEntitySchemaInput as EliseEntitySchemaInput
 from biolevate_client.models.elise_external_document_statement import EliseExternalDocumentStatement as EliseExternalDocumentStatement
 from biolevate_client.models.elise_file_info import EliseFileInfo as EliseFileInfo
 from biolevate_client.models.elise_full_document_statement import EliseFullDocumentStatement as EliseFullDocumentStatement
@@ -172,14 +199,22 @@ from biolevate_client.models.fs_provider_s3_config_external import FSProviderS3C
 from biolevate_client.models.fs_provider_sftp_config_external import FSProviderSFTPConfigExternal as FSProviderSFTPConfigExternal
 from biolevate_client.models.fs_provider_sharepoint_online_config_external import FSProviderSharepointOnlineConfigExternal as FSProviderSharepointOnlineConfigExternal
 from biolevate_client.models.file_id import FileId as FileId
+from biolevate_client.models.file_match import FileMatch as FileMatch
 from biolevate_client.models.files_input import FilesInput as FilesInput
+from biolevate_client.models.find_similar_api_job_dto import FindSimilarApiJobDto as FindSimilarApiJobDto
 from biolevate_client.models.item_reference import ItemReference as ItemReference
 from biolevate_client.models.job import Job as Job
+from biolevate_client.models.job_statistics import JobStatistics as JobStatistics
+from biolevate_client.models.knowledge_source import KnowledgeSource as KnowledgeSource
 from biolevate_client.models.lib_item_indexation_infos import LibItemIndexationInfos as LibItemIndexationInfos
 from biolevate_client.models.list_items_response import ListItemsResponse as ListItemsResponse
+from biolevate_client.models.mde_job_inputs import MDEJobInputs as MDEJobInputs
+from biolevate_client.models.mde_job_outputs import MDEJobOutputs as MDEJobOutputs
+from biolevate_client.models.metadata_only_match import MetadataOnlyMatch as MetadataOnlyMatch
 from biolevate_client.models.page_data_elise_collection_info import PageDataEliseCollectionInfo as PageDataEliseCollectionInfo
 from biolevate_client.models.page_data_elise_file_info import PageDataEliseFileInfo as PageDataEliseFileInfo
 from biolevate_client.models.page_data_fs_provider_external import PageDataFSProviderExternal as PageDataFSProviderExternal
+from biolevate_client.models.page_data_find_similar_api_job_dto import PageDataFindSimilarApiJobDto as PageDataFindSimilarApiJobDto
 from biolevate_client.models.page_data_job import PageDataJob as PageDataJob
 from biolevate_client.models.policy_id import PolicyId as PolicyId
 from biolevate_client.models.policy_id_external import PolicyIdExternal as PolicyIdExternal
@@ -192,6 +227,9 @@ from biolevate_client.models.provider_id_external import ProviderIdExternal as P
 from biolevate_client.models.provider_item import ProviderItem as ProviderItem
 from biolevate_client.models.qa_job_inputs import QAJobInputs as QAJobInputs
 from biolevate_client.models.qa_job_outputs import QAJobOutputs as QAJobOutputs
+from biolevate_client.models.search_sources import SearchSources as SearchSources
+from biolevate_client.models.source_identifiers import SourceIdentifiers as SourceIdentifiers
+from biolevate_client.models.source_matches import SourceMatches as SourceMatches
 from biolevate_client.models.update_collection_request import UpdateCollectionRequest as UpdateCollectionRequest
 from biolevate_client.models.upload_url_request import UploadUrlRequest as UploadUrlRequest
 from biolevate_client.models.upload_url_response import UploadUrlResponse as UploadUrlResponse

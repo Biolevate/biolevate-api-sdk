@@ -45,8 +45,8 @@ class TestEliseAnnotationData(unittest.TestCase):
                 meta_data = biolevate_client.models.additional_info.additionalInfo(),
                 name = '',
                 value = '',
-                url = '',
-                source = 'WIKIPEDIA'
+                source = 'WIKIPEDIA',
+                url = ''
             )
         else:
             return EliseAnnotationData(

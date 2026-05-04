@@ -13,8 +13,8 @@ Name | Type | Description | Notes
 **meta_data** | **object** |  | [optional] 
 **name** | **str** |  | [optional] 
 **value** | **str** |  | [optional] 
-**url** | **str** |  | [optional] 
 **source** | **str** |  | [optional] 
+**url** | **str** |  | [optional] 
 
 ## Example
 

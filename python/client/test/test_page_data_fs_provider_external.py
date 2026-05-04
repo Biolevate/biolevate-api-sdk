@@ -37,11 +37,11 @@ class TestPageDataFSProviderExternal(unittest.TestCase):
             return PageDataFSProviderExternal(
                 data = [
                     biolevate_client.models.fs_provider_external.FSProvider_External(
-                        id = biolevate_client.models.file_id.FileId(
+                        id = biolevate_client.models.entity_id.EntityId(
                             entity_type = 'POLICY', ), 
                         created_time = 56, 
                         owner = biolevate_client.models.user_id.UserId(), 
-                        policy = biolevate_client.models.file_id.FileId(
+                        policy = biolevate_client.models.entity_id.EntityId(
                             entity_type = 'POLICY', ), 
                         name = '', 
                         icon = '', 

@@ -20,6 +20,7 @@ import json
 from pydantic import ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from biolevate_client.models.elise_annotation_config import EliseAnnotationConfig
+from biolevate_client.models.knowledge_source import KnowledgeSource
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -29,7 +30,8 @@ class EliseKnowledgeStatement(EliseAnnotationConfig):
     """ # noqa: E501
     name: Optional[StrictStr] = None
     value: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["type", "name", "value"]
+    source: Optional[KnowledgeSource] = None
+    __properties: ClassVar[List[str]] = ["type", "name", "value", "source"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -70,6 +72,9 @@ class EliseKnowledgeStatement(EliseAnnotationConfig):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of source
+        if self.source:
+            _dict['source'] = self.source.to_dict()
         return _dict
 
     @classmethod
@@ -84,7 +89,8 @@ class EliseKnowledgeStatement(EliseAnnotationConfig):
         _obj = cls.model_validate({
             "type": obj.get("type"),
             "name": obj.get("name"),
-            "value": obj.get("value")
+            "value": obj.get("value"),
+            "source": KnowledgeSource.from_dict(obj["source"]) if obj.get("source") is not None else None
         })
         return _obj
 

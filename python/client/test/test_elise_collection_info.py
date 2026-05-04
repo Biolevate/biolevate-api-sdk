@@ -35,13 +35,13 @@ class TestEliseCollectionInfo(unittest.TestCase):
         model = EliseCollectionInfo()
         if include_optional:
             return EliseCollectionInfo(
-                id = biolevate_client.models.file_id.FileId(
+                id = biolevate_client.models.entity_id.EntityId(
                     id = '', 
                     entity_type = 'POLICY', ),
                 created_time = 56,
                 owner = biolevate_client.models.user_id.UserId(
                     id = '', ),
-                policy = biolevate_client.models.file_id.FileId(
+                policy = biolevate_client.models.entity_id.EntityId(
                     id = '', 
                     entity_type = 'POLICY', ),
                 name = '',
@@ -52,16 +52,16 @@ class TestEliseCollectionInfo(unittest.TestCase):
                 owner_email = '',
                 owner_avatar_url = '',
                 files_count = 56,
-                derived_from_collection_id = biolevate_client.models.file_id.FileId(
+                derived_from_collection_id = biolevate_client.models.entity_id.EntityId(
                     id = '', 
                     entity_type = 'POLICY', ),
                 derived_from_collection_name = '',
-                derived_from_view_id = biolevate_client.models.file_id.FileId(
+                derived_from_view_id = biolevate_client.models.entity_id.EntityId(
                     id = '', 
                     entity_type = 'POLICY', ),
                 derived_from_view_name = '',
                 chained = True,
-                derived_to_collection_id = biolevate_client.models.file_id.FileId(
+                derived_to_collection_id = biolevate_client.models.entity_id.EntityId(
                     id = '', 
                     entity_type = 'POLICY', ),
                 derived_to_collection_name = ''

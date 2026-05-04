@@ -184,6 +184,79 @@ def extraction_job_outputs_payload() -> dict:
 
 
 @pytest.fixture
+def mde_job_inputs_payload() -> dict:
+    return {
+        "files": {"fileIds": ["a1b2c3d4-e5f6-7890-abcd-ef1234567890"], "collectionIds": []},
+        "schema": {
+            "name": "compounds",
+            "columns": [
+                {
+                    "key": "compound",
+                    "label": "Compound",
+                    "type": "ENTITY_COLUMN_TYPE_STRING",
+                    "role": "ENTITY_COLUMN_ROLE_IDENTIFIER",
+                }
+            ],
+        },
+    }
+
+
+@pytest.fixture
+def mde_job_outputs_payload() -> dict:
+    return {
+        "entityExtraction": {
+            "meta": "compounds",
+            "schema": {
+                "name": "compounds",
+                "columns": [{"key": "compound", "label": "Compound"}],
+            },
+            "rows": [
+                {
+                    "cells": [
+                        {
+                            "columnKey": "compound",
+                            "value": {"strValue": "aspirin"},
+                            "explanation": "Aspirin is mentioned in the document.",
+                        }
+                    ]
+                }
+            ],
+            "referenceIds": [],
+        }
+    }
+
+
+@pytest.fixture
+def find_similar_job_payload() -> dict:
+    return {
+        "jobId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+        "status": "COMPLETED",
+        "createdTime": 1708123456789,
+        "modifiedTime": 1708123460000,
+        "sources": {"sourceIdentifiers": [{"doi": "10.1000/example"}]},
+        "result": [],
+        "statistics": {
+            "sourcesQueried": 1,
+            "sourcesMatchedLocally": 0,
+            "sourcesMatchedRemotely": 0,
+            "sourcesUnmatched": 1,
+            "totalFileMatches": 0,
+            "totalMetadataOnlyMatches": 0,
+        },
+    }
+
+
+@pytest.fixture
+def find_similar_job_page_payload(find_similar_job_payload: dict) -> dict:
+    return {
+        "data": [find_similar_job_payload],
+        "totalPages": 1,
+        "totalElements": 1,
+        "hasNext": False,
+    }
+
+
+@pytest.fixture
 def annotation_payload() -> dict:
     return {
         "id": {"id": "aaaabbbb-cccc-dddd-eeee-ffffaaaabbbb", "entityType": "ANNOTATION"},

@@ -35,16 +35,16 @@ class TestEliseFileInfo(unittest.TestCase):
         model = EliseFileInfo()
         if include_optional:
             return EliseFileInfo(
-                id = biolevate_client.models.file_id.FileId(
+                id = biolevate_client.models.entity_id.EntityId(
                     id = '', 
                     entity_type = 'POLICY', ),
                 created_time = 56,
                 owner = biolevate_client.models.user_id.UserId(
                     id = '', ),
-                policy = biolevate_client.models.file_id.FileId(
+                policy = biolevate_client.models.entity_id.EntityId(
                     id = '', 
                     entity_type = 'POLICY', ),
-                provider_id = biolevate_client.models.file_id.FileId(
+                provider_id = biolevate_client.models.entity_id.EntityId(
                     id = '', 
                     entity_type = 'POLICY', ),
                 name = '',

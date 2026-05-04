@@ -74,7 +74,7 @@ class TestEliseMetaResult(unittest.TestCase):
                         datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f')
                         ], ),
                 reference_ids = [
-                    biolevate_client.models.file_id.FileId(
+                    biolevate_client.models.entity_id.EntityId(
                         id = '', 
                         entity_type = 'POLICY', )
                     ],

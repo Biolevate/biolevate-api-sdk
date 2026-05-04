@@ -7,6 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **name** | **str** |  | [optional] 
 **value** | **str** |  | [optional] 
+**source** | [**KnowledgeSource**](KnowledgeSource.md) |  | [optional] 
 
 ## Example
 

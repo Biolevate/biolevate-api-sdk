@@ -14,7 +14,7 @@ help:
 
 # Generate Python client from OpenAPI spec (via Docker)
 # Then apply patches:
-#   - EliseOntologyMeta.meta_value -> Any (backend sends arbitrary JSON)
+#   - generated model fields that need nullable IDs or arbitrary JSON values
 #   - oneOf classes accept first match instead of failing on multiple matches
 generate-python:
 	rm -rf python/client
@@ -23,7 +23,7 @@ generate-python:
 		$(OPENAPI_GENERATOR_IMAGE) \
 		generate \
 		-c /workspace/tools/openapi-generator-config.yaml
-	python3 tools/patch-elise-ontology-meta.py
+	python3 tools/patch-generated-python-models.py
 	python3 tools/patch-oneof-multiple-matches.py
 
 # Install Python workspace (all packages with dev dependencies)

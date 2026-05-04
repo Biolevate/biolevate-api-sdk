@@ -1,0 +1,38 @@
+Biolevate Multi-Dimensional Extraction Test Document
+
+Clinical outcomes summary:
+
+Study ID: NCT-2026-001
+Treatment arm: Placebo
+Timepoint: Week 12
+Outcome value: 18.4
+Unit: points on the symptom severity scale
+Note: Baseline-adjusted mean change from the randomized population.
+
+Study ID: NCT-2026-001
+Treatment arm: Biolevate-101 low dose
+Timepoint: Week 12
+Outcome value: 24.9
+Unit: points on the symptom severity scale
+Note: The low dose arm showed a moderate improvement versus placebo.
+
+Study ID: NCT-2026-001
+Treatment arm: Biolevate-101 high dose
+Timepoint: Week 12
+Outcome value: 31.7
+Unit: points on the symptom severity scale
+Note: The high dose arm met the primary endpoint with p=0.004.
+
+Study ID: NCT-2026-002
+Treatment arm: Standard of care
+Timepoint: Month 6
+Outcome value: 62
+Unit: percent response rate
+Note: Response was defined as at least a 50 percent reduction in symptoms.
+
+Study ID: NCT-2026-002
+Treatment arm: Biolevate-202
+Timepoint: Month 6
+Outcome value: 78
+Unit: percent response rate
+Note: The investigational arm had a higher response rate than standard of care.

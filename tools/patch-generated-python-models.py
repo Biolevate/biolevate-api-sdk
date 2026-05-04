@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
-"""Patch Dict[str, Any] fields to Any for arbitrary JSON values.
+"""Patch generated Python models to match backend response shapes.
 
-The backend returns certain fields as arbitrary Java-serialized values (object,
-array, string, etc.). The generator emits Optional[Dict[str, Any]] for
-type: object; we override to Optional[Any] so any JSON value is accepted.
-
-Run after: make generate-python
+Some OpenAPI-generated models are stricter than the JSON currently returned by
+the backend. Run this after `make generate-python` so regenerated clients keep
+accepting nullable IDs and arbitrary JSON values where the API can return them.
 """
 
 from __future__ import annotations
@@ -17,6 +15,16 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 MODELS_DIR = REPO_ROOT / "python/client/biolevate_client/models"
 
 PATCHES: list[tuple[str, str, str]] = [
+    (
+        "elise_ontology.py",
+        '    concept_id: EntityId = Field(alias="conceptId")',
+        '    concept_id: EntityId | None = Field(default=None, alias="conceptId")',
+    ),
+    (
+        "elise_entity_cell_result.py",
+        "    value: Optional[Dict[str, Any]] = None",
+        "    value: Optional[Any] = None",
+    ),
     (
         "elise_ontology_meta.py",
         '    meta_value: Optional[Dict[str, Any]] = Field(default=None, alias="metaValue")',
@@ -45,13 +53,15 @@ def main() -> int:
             skipped.append(filename)
             continue
         if old not in text:
-            errors.append(f"{filename}: target line not found; generator output may have changed.")
+            errors.append(
+                f"{filename}: target line not found; generator output may have changed."
+            )
             continue
         target.write_text(text.replace(old, new, 1))
         patched.append(filename)
 
     if patched:
-        print(f"Patched {len(patched)} files to use Optional[Any]:")
+        print(f"Patched {len(patched)} generated model files:")
         for f in patched:
             print(f"  - {f}")
     if skipped:

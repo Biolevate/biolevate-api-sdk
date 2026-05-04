@@ -229,6 +229,65 @@ for result in results:
     print("Explanation:", result.explanation)
 ```
 
+### Multi-Dimensional Extraction
+
+Extract tabular/entity data from indexed documents using a schema of columns.
+
+```python
+from biolevate import EntityColumnInput, EntitySchemaInput
+
+schema = EntitySchemaInput(
+    name="compounds",
+    columns=[
+        EntityColumnInput(
+            key="compound",
+            label="Compound",
+            type="ENTITY_COLUMN_TYPE_STRING",
+            role="ENTITY_COLUMN_ROLE_IDENTIFIER",
+            description="Compound or treatment name",
+            is_row_key=True,
+        ),
+        EntityColumnInput(
+            key="dose",
+            label="Dose",
+            type="ENTITY_COLUMN_TYPE_FLOAT",
+            role="ENTITY_COLUMN_ROLE_VALUE",
+        ),
+    ],
+)
+
+job = await client.mde.create_job(schema=schema, file_ids=["file-uuid"])
+
+# Poll until complete, then retrieve extracted rows
+outputs = await client.mde.get_job_outputs(job.job_id)
+for row in outputs.entity_extraction.rows:
+    for cell in row.cells:
+        print(cell.column_key, cell.value)
+```
+
+### Find Similar Files
+
+Create a job that matches source identifiers against local files and remote bibliographic search results.
+
+```python
+from biolevate import SourceIdentifiers
+
+job = await client.find_similar.create_job(
+    source_identifiers=[
+        SourceIdentifiers(doi="10.1000/example"),
+    ]
+)
+
+# Poll until complete
+status = await client.find_similar.get_job(job.job_id)
+print(status.status)
+
+for match in status.result or []:
+    print(match.source)
+    print("Local files:", match.files)
+    print("Metadata-only matches:", match.metadata_only)
+```
+
 ## Error Handling
 
 ```python

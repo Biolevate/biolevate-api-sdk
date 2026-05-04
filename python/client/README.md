@@ -116,6 +116,15 @@ Class | Method | HTTP request | Description
 *FilesApi* | [**list_files**](docs/FilesApi.md#list_files) | **GET** /api/core/files | List files in a provider
 *FilesApi* | [**recompute_file_ontologies**](docs/FilesApi.md#recompute_file_ontologies) | **POST** /api/core/files/{id}/recompute-ontologies | Recompute file ontologies
 *FilesApi* | [**reindex_file**](docs/FilesApi.md#reindex_file) | **POST** /api/core/files/{id}/reindex | Reindex a file
+*FindSimilarFilesApi* | [**create_job**](docs/FindSimilarFilesApi.md#create_job) | **POST** /api/core/find-similar/jobs | Create find-similar job
+*FindSimilarFilesApi* | [**get_job**](docs/FindSimilarFilesApi.md#get_job) | **GET** /api/core/find-similar/jobs/{jobId} | Get find-similar job
+*FindSimilarFilesApi* | [**list_jobs**](docs/FindSimilarFilesApi.md#list_jobs) | **GET** /api/core/find-similar/jobs | List find-similar jobs
+*MultiDimensionalExtractionApi* | [**create_mde_job**](docs/MultiDimensionalExtractionApi.md#create_mde_job) | **POST** /api/core/multi-dim-extraction/jobs | Create multi-dimensional extraction job
+*MultiDimensionalExtractionApi* | [**get_mde_job**](docs/MultiDimensionalExtractionApi.md#get_mde_job) | **GET** /api/core/multi-dim-extraction/jobs/{jobId} | Get multi-dimensional extraction job
+*MultiDimensionalExtractionApi* | [**get_mde_job_annotations**](docs/MultiDimensionalExtractionApi.md#get_mde_job_annotations) | **GET** /api/core/multi-dim-extraction/jobs/{jobId}/annotations | Get multi-dimensional extraction job annotations
+*MultiDimensionalExtractionApi* | [**get_mde_job_inputs**](docs/MultiDimensionalExtractionApi.md#get_mde_job_inputs) | **GET** /api/core/multi-dim-extraction/jobs/{jobId}/inputs | Get multi-dimensional extraction job inputs
+*MultiDimensionalExtractionApi* | [**get_mde_job_outputs**](docs/MultiDimensionalExtractionApi.md#get_mde_job_outputs) | **GET** /api/core/multi-dim-extraction/jobs/{jobId}/results | Get multi-dimensional extraction job outputs
+*MultiDimensionalExtractionApi* | [**list_mde_jobs**](docs/MultiDimensionalExtractionApi.md#list_mde_jobs) | **GET** /api/core/multi-dim-extraction/jobs | List multi-dimensional extraction jobs
 *ProviderItemsApi* | [**confirm_upload**](docs/ProviderItemsApi.md#confirm_upload) | **POST** /api/core/providers/{providerId}/items/confirm | Confirm presigned upload
 *ProviderItemsApi* | [**delete_item**](docs/ProviderItemsApi.md#delete_item) | **DELETE** /api/core/providers/{providerId}/items | Delete item
 *ProviderItemsApi* | [**get_download_url**](docs/ProviderItemsApi.md#get_download_url) | **GET** /api/core/providers/{providerId}/items/download-url | Get download URL
@@ -146,6 +155,7 @@ Class | Method | HTTP request | Description
  - [CreateExtractRequest](docs/CreateExtractRequest.md)
  - [CreateFileRequest](docs/CreateFileRequest.md)
  - [CreateItemRequest](docs/CreateItemRequest.md)
+ - [CreateMDERequest](docs/CreateMDERequest.md)
  - [CreateQARequest](docs/CreateQARequest.md)
  - [DataValue](docs/DataValue.md)
  - [DownloadUrlResponse](docs/DownloadUrlResponse.md)
@@ -155,6 +165,11 @@ Class | Method | HTTP request | Description
  - [EliseCollectionInfo](docs/EliseCollectionInfo.md)
  - [EliseDocumentStatement](docs/EliseDocumentStatement.md)
  - [EliseDocumentStatementAllOfPositions](docs/EliseDocumentStatementAllOfPositions.md)
+ - [EliseEntityCellResult](docs/EliseEntityCellResult.md)
+ - [EliseEntityColumnInput](docs/EliseEntityColumnInput.md)
+ - [EliseEntityExtractionResult](docs/EliseEntityExtractionResult.md)
+ - [EliseEntityRowResult](docs/EliseEntityRowResult.md)
+ - [EliseEntitySchemaInput](docs/EliseEntitySchemaInput.md)
  - [EliseExternalDocumentStatement](docs/EliseExternalDocumentStatement.md)
  - [EliseFileInfo](docs/EliseFileInfo.md)
  - [EliseFullDocumentStatement](docs/EliseFullDocumentStatement.md)
@@ -182,14 +197,22 @@ Class | Method | HTTP request | Description
  - [FSProviderSFTPConfigExternal](docs/FSProviderSFTPConfigExternal.md)
  - [FSProviderSharepointOnlineConfigExternal](docs/FSProviderSharepointOnlineConfigExternal.md)
  - [FileId](docs/FileId.md)
+ - [FileMatch](docs/FileMatch.md)
  - [FilesInput](docs/FilesInput.md)
+ - [FindSimilarApiJobDto](docs/FindSimilarApiJobDto.md)
  - [ItemReference](docs/ItemReference.md)
  - [Job](docs/Job.md)
+ - [JobStatistics](docs/JobStatistics.md)
+ - [KnowledgeSource](docs/KnowledgeSource.md)
  - [LibItemIndexationInfos](docs/LibItemIndexationInfos.md)
  - [ListItemsResponse](docs/ListItemsResponse.md)
+ - [MDEJobInputs](docs/MDEJobInputs.md)
+ - [MDEJobOutputs](docs/MDEJobOutputs.md)
+ - [MetadataOnlyMatch](docs/MetadataOnlyMatch.md)
  - [PageDataEliseCollectionInfo](docs/PageDataEliseCollectionInfo.md)
  - [PageDataEliseFileInfo](docs/PageDataEliseFileInfo.md)
  - [PageDataFSProviderExternal](docs/PageDataFSProviderExternal.md)
+ - [PageDataFindSimilarApiJobDto](docs/PageDataFindSimilarApiJobDto.md)
  - [PageDataJob](docs/PageDataJob.md)
  - [PolicyId](docs/PolicyId.md)
  - [PolicyIdExternal](docs/PolicyIdExternal.md)
@@ -202,6 +225,9 @@ Class | Method | HTTP request | Description
  - [ProviderItem](docs/ProviderItem.md)
  - [QAJobInputs](docs/QAJobInputs.md)
  - [QAJobOutputs](docs/QAJobOutputs.md)
+ - [SearchSources](docs/SearchSources.md)
+ - [SourceIdentifiers](docs/SourceIdentifiers.md)
+ - [SourceMatches](docs/SourceMatches.md)
  - [UpdateCollectionRequest](docs/UpdateCollectionRequest.md)
  - [UploadUrlRequest](docs/UploadUrlRequest.md)
  - [UploadUrlResponse](docs/UploadUrlResponse.md)

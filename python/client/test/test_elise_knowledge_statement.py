@@ -36,7 +36,10 @@ class TestEliseKnowledgeStatement(unittest.TestCase):
         if include_optional:
             return EliseKnowledgeStatement(
                 name = '',
-                value = ''
+                value = '',
+                source = biolevate_client.models.knowledge_source.KnowledgeSource(
+                    source_id = '', 
+                    source_type = '', )
             )
         else:
             return EliseKnowledgeStatement(

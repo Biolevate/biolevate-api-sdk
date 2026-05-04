@@ -37,11 +37,11 @@ class TestPageDataEliseFileInfo(unittest.TestCase):
             return PageDataEliseFileInfo(
                 data = [
                     biolevate_client.models.elise_file_info.EliseFileInfo(
-                        id = biolevate_client.models.file_id.FileId(
+                        id = biolevate_client.models.entity_id.EntityId(
                             entity_type = 'POLICY', ), 
                         created_time = 56, 
                         owner = biolevate_client.models.user_id.UserId(), 
-                        policy = biolevate_client.models.file_id.FileId(
+                        policy = biolevate_client.models.entity_id.EntityId(
                             entity_type = 'POLICY', ), 
                         provider_id = , 
                         name = '', 

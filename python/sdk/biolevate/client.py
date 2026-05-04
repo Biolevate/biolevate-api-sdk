@@ -7,6 +7,8 @@ from typing import TYPE_CHECKING
 from biolevate.resources.collections import CollectionsResource
 from biolevate.resources.extraction import ExtractionResource
 from biolevate.resources.files import FilesResource
+from biolevate.resources.find_similar import FindSimilarResource
+from biolevate.resources.multi_dimensional_extraction import MultiDimensionalExtractionResource
 from biolevate.resources.provider_items import ProviderItemsResource
 from biolevate.resources.providers import ProvidersResource
 from biolevate.resources.question_answering import QuestionAnsweringResource
@@ -45,6 +47,8 @@ class BiolevateClient:
         self._files: FilesResource | None = None
         self._collections: CollectionsResource | None = None
         self._extraction: ExtractionResource | None = None
+        self._mde: MultiDimensionalExtractionResource | None = None
+        self._find_similar: FindSimilarResource | None = None
         self._qa: QuestionAnsweringResource | None = None
 
     def _get_client(self) -> ApiClient:
@@ -94,6 +98,20 @@ class BiolevateClient:
         if self._extraction is None:
             self._extraction = ExtractionResource(self._get_client())
         return self._extraction
+
+    @property
+    def mde(self) -> MultiDimensionalExtractionResource:
+        """Access the multi-dimensional extraction resource for entity extraction jobs."""
+        if self._mde is None:
+            self._mde = MultiDimensionalExtractionResource(self._get_client())
+        return self._mde
+
+    @property
+    def find_similar(self) -> FindSimilarResource:
+        """Access the find-similar resource for local and remote matching jobs."""
+        if self._find_similar is None:
+            self._find_similar = FindSimilarResource(self._get_client())
+        return self._find_similar
 
     @property
     def qa(self) -> QuestionAnsweringResource:

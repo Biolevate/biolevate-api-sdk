@@ -35,7 +35,7 @@ class TestEliseOntology(unittest.TestCase):
         model = EliseOntology()
         if include_optional:
             return EliseOntology(
-                concept_id = biolevate_client.models.file_id.FileId(
+                concept_id = biolevate_client.models.entity_id.EntityId(
                     id = '', 
                     entity_type = 'POLICY', ),
                 name = '',
@@ -43,7 +43,7 @@ class TestEliseOntology(unittest.TestCase):
                     'key' : biolevate_client.models.elise_ontology_meta.EliseOntologyMeta(
                         explanation = '', 
                         annotation_ids = [
-                            biolevate_client.models.file_id.FileId(
+                            biolevate_client.models.entity_id.EntityId(
                                 id = '', 
                                 entity_type = 'POLICY', )
                             ], 
@@ -53,7 +53,7 @@ class TestEliseOntology(unittest.TestCase):
             )
         else:
             return EliseOntology(
-                concept_id = biolevate_client.models.file_id.FileId(
+                concept_id = biolevate_client.models.entity_id.EntityId(
                     id = '', 
                     entity_type = 'POLICY', ),
                 name = '',

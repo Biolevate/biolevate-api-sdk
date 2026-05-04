@@ -1,5 +1,5 @@
 [project]
-name = "biolevate-client"
+name = "biolevate_client"
 version = "1.0.0"
 description = "Biolevate API"
 authors = [

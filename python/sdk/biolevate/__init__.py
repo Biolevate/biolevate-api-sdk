@@ -11,14 +11,27 @@ from biolevate.models import (
     Annotation,
     Collection,
     CollectionPage,
+    EntityCellResult,
+    EntityColumnInput,
+    EntityExtractionResult,
+    EntityRowResult,
+    EntitySchemaInput,
     ExtractionJobInputs,
     ExtractionJobOutputs,
     ExtractionResult,
     File,
+    FileMatch,
     FilePage,
+    FindSimilarJob,
+    FindSimilarJobPage,
     Job,
     JobPage,
+    JobStatistics,
+    KnowledgeSource,
     ListItemsResponse,
+    MDEJobInputs,
+    MDEJobOutputs,
+    MetadataOnlyMatch,
     MetaInput,
     Ontology,
     Provider,
@@ -28,6 +41,9 @@ from biolevate.models import (
     QAJobOutputs,
     QAResult,
     QuestionInput,
+    SearchSources,
+    SourceIdentifiers,
+    SourceMatches,
 )
 
 __all__ = [
@@ -57,6 +73,23 @@ __all__ = [
     "ExtractionResult",
     "ExtractionJobInputs",
     "ExtractionJobOutputs",
+    # Multi-dimensional extraction
+    "EntitySchemaInput",
+    "EntityColumnInput",
+    "EntityExtractionResult",
+    "EntityRowResult",
+    "EntityCellResult",
+    "MDEJobInputs",
+    "MDEJobOutputs",
+    # Find similar
+    "SourceIdentifiers",
+    "SearchSources",
+    "FindSimilarJob",
+    "FindSimilarJobPage",
+    "SourceMatches",
+    "FileMatch",
+    "MetadataOnlyMatch",
+    "JobStatistics",
     # QA
     "QuestionInput",
     "QAResult",
@@ -65,5 +98,6 @@ __all__ = [
     # Shared
     "Annotation",
     "Ontology",
+    "KnowledgeSource",
 ]
 __version__ = "0.5.1"  # x-release-please-version

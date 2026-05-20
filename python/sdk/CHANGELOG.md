@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.6.0](https://github.com/Biolevate/biolevate-api-sdk/compare/biolevate-v0.5.1...biolevate-v0.6.0) (2026-05-04)
+
+
+### Features
+
+* add MDE and find-similar jobs documentation ([4f1438a](https://github.com/Biolevate/biolevate-api-sdk/commit/4f1438a103e4ceca0e72dfa99b3cdc77cd3e82f0))
+* add MDE and find-similar jobs documentation ([65a7f3a](https://github.com/Biolevate/biolevate-api-sdk/commit/65a7f3a3db4bd73608450fba956ac69587ebab51))
+* add MDE test ([4d7adf2](https://github.com/Biolevate/biolevate-api-sdk/commit/4d7adf285597b2260d3d8104dc2ffd6dbf510d08))
+
 ## [0.5.1](https://github.com/Biolevate/biolevate-api-sdk/compare/biolevate-v0.5.0...biolevate-v0.5.1) (2026-02-24)
 
 

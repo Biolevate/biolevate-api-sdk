@@ -9,6 +9,6 @@ additionalProperties:
   library: httpx
   packageName: biolevate_client
   projectName: biolevate-client
-  packageVersion: 1.0.0
+  packageVersion: 1.1.0
   generateSourceCodeOnly: false
   hideGenerationTimestamp: true

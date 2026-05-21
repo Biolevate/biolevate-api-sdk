@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.1](https://github.com/Biolevate/biolevate-api-sdk/compare/biolevate-v0.6.0...biolevate-v0.6.1) (2026-05-21)
+
+
+### Bug Fixes
+
+* bump biolevate-client to 1.1.0 and harden PyPI publish workflow ([#12](https://github.com/Biolevate/biolevate-api-sdk/issues/12)) ([8394dce](https://github.com/Biolevate/biolevate-api-sdk/commit/8394dce75a42fd90196554059c58d4e987932fe3))
+
 ## [0.6.0](https://github.com/Biolevate/biolevate-api-sdk/compare/biolevate-v0.5.1...biolevate-v0.6.0) (2026-05-04)
 
 

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from biolevate.resources.agent import AgentResource
 from biolevate.resources.collections import CollectionsResource
 from biolevate.resources.extraction import ExtractionResource
 from biolevate.resources.files import FilesResource
@@ -50,6 +51,7 @@ class BiolevateClient:
         self._mde: MultiDimensionalExtractionResource | None = None
         self._find_similar: FindSimilarResource | None = None
         self._qa: QuestionAnsweringResource | None = None
+        self._agent: AgentResource | None = None
 
     def _get_client(self) -> ApiClient:
         """Get or create the underlying API client."""
@@ -119,6 +121,13 @@ class BiolevateClient:
         if self._qa is None:
             self._qa = QuestionAnsweringResource(self._get_client())
         return self._qa
+
+    @property
+    def agent(self) -> AgentResource:
+        """Access the agent resource for conversational agent jobs."""
+        if self._agent is None:
+            self._agent = AgentResource(self._get_client())
+        return self._agent
 
     async def __aenter__(self) -> BiolevateClient:
         """Enter async context."""

@@ -26,6 +26,11 @@ PATCHES: list[tuple[str, str, str]] = [
         "    value: Optional[Any] = None",
     ),
     (
+        "agent_job_outputs.py",
+        "    answer: Optional[Dict[str, Any]] = None",
+        "    answer: Optional[Any] = None",
+    ),
+    (
         "elise_ontology_meta.py",
         '    meta_value: Optional[Dict[str, Any]] = Field(default=None, alias="metaValue")',
         '    meta_value: Optional[Any] = Field(default=None, alias="metaValue")',

@@ -18,7 +18,7 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "biolevate-client>=1.1.0",
+    "biolevate-client>=1.2.0",
 ]
 
 [project.optional-dependencies]

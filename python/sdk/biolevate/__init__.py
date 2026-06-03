@@ -8,6 +8,10 @@ from biolevate.exceptions import (
     NotFoundError,
 )
 from biolevate.models import (
+    AgentCompletionConfig,
+    AgentJobInputs,
+    AgentJobOutputs,
+    AgentMessage,
     Annotation,
     Collection,
     CollectionPage,
@@ -95,6 +99,11 @@ __all__ = [
     "QAResult",
     "QAJobInputs",
     "QAJobOutputs",
+    # Agent
+    "AgentMessage",
+    "AgentCompletionConfig",
+    "AgentJobInputs",
+    "AgentJobOutputs",
     # Shared
     "Annotation",
     "Ontology",

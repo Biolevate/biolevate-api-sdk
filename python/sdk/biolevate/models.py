@@ -5,6 +5,28 @@ making the SDK more user-friendly while decoupling from internal naming.
 """
 
 from biolevate_client.models import (
+    AgentCompletionConfig,
+    AgentJobInputs,
+    AgentJobOutputs,
+    FileMatch,
+    Job,
+    JobStatistics,
+    KnowledgeSource,
+    ListItemsResponse,
+    MDEJobInputs,
+    MDEJobOutputs,
+    MetadataOnlyMatch,
+    ProviderItem,
+    QAJobInputs,
+    QAJobOutputs,
+    SearchSources,
+    SourceIdentifiers,
+    SourceMatches,
+)
+from biolevate_client.models import (
+    AgentInput as AgentMessage,
+)
+from biolevate_client.models import (
     EliseAnnotation as Annotation,
 )
 from biolevate_client.models import (
@@ -53,22 +75,6 @@ from biolevate_client.models import (
     ExtractJobOutputs as ExtractionJobOutputs,
 )
 from biolevate_client.models import (
-    FileMatch,
-    Job,
-    JobStatistics,
-    KnowledgeSource,
-    ListItemsResponse,
-    MDEJobInputs,
-    MDEJobOutputs,
-    MetadataOnlyMatch,
-    ProviderItem,
-    QAJobInputs,
-    QAJobOutputs,
-    SearchSources,
-    SourceIdentifiers,
-    SourceMatches,
-)
-from biolevate_client.models import (
     FindSimilarApiJobDto as FindSimilarJob,
 )
 from biolevate_client.models import (
@@ -91,6 +97,10 @@ from biolevate_client.models import (
 )
 
 __all__ = [
+    "AgentCompletionConfig",
+    "AgentJobInputs",
+    "AgentJobOutputs",
+    "AgentMessage",
     "Annotation",
     "AnswerType",
     "Collection",

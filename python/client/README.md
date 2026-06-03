@@ -76,13 +76,12 @@ configuration = biolevate_client.Configuration(
 async with biolevate_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = biolevate_client.AgentApi(api_client)
-    authorization = 'authorization_example' # str | 
     create_agent_request = biolevate_client.CreateAgentRequest() # CreateAgentRequest | 
     idempotency_key = 'idempotency_key_example' # str |  (optional)
 
     try:
         # Create agent job
-        api_response = await api_instance.create_agent_job(authorization, create_agent_request, idempotency_key=idempotency_key)
+        api_response = await api_instance.create_agent_job(create_agent_request, idempotency_key=idempotency_key)
         print("The response of AgentApi->create_agent_job:\n")
         pprint(api_response)
     except ApiException as e:

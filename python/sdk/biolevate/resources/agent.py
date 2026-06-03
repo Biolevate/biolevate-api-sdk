@@ -36,6 +36,26 @@ class AgentResource:
         """
         self._client = client
 
+    @staticmethod
+    def _parse_conversation_id(conversation_id: str | None) -> UUID | None:
+        """Parse a conversation id into a UUID.
+
+        Args:
+            conversation_id: The conversation id as a string, or None.
+
+        Returns:
+            The parsed UUID, or None if no id was provided.
+
+        Raises:
+            ValueError: If ``conversation_id`` is not a valid UUID string.
+        """
+        if conversation_id is None:
+            return None
+        try:
+            return UUID(conversation_id)
+        except ValueError as e:
+            raise ValueError(f"Invalid conversation_id: {conversation_id!r} is not a valid UUID") from e
+
     async def list_jobs(
         self,
         page: int = 0,
@@ -53,6 +73,7 @@ class AgentResource:
             Paginated list of agent jobs.
 
         Raises:
+            ValueError: If ``conversation_id`` is not a valid UUID string.
             AuthenticationError: If authentication fails.
             APIError: If the API returns an unexpected error.
         """
@@ -64,13 +85,13 @@ class AgentResource:
         )
 
         api = AgentApi(self._client)
+        conversation_uuid = self._parse_conversation_id(conversation_id)
 
         try:
             return await api.list_agent_jobs(
                 page=page,
                 page_size=page_size,
-                authorization="",
-                conversation_id=UUID(conversation_id) if conversation_id else None,
+                conversation_id=conversation_uuid,
             )
         except UnauthorizedException as e:
             raise AuthenticationError("Authentication failed") from e
@@ -115,6 +136,8 @@ class AgentResource:
             The created job.
 
         Raises:
+            ValueError: If both ``message`` and ``messages`` are provided, or
+                if ``conversation_id`` is not a valid UUID string.
             AuthenticationError: If authentication fails.
             APIError: If the API returns an unexpected error.
         """
@@ -126,7 +149,11 @@ class AgentResource:
         )
         from biolevate_client.models import CreateAgentRequest, FilesInput
 
+        if message is not None and messages is not None:
+            raise ValueError("Provide either 'message' or 'messages', not both.")
+
         api = AgentApi(self._client)
+        conversation_uuid = self._parse_conversation_id(conversation_id)
 
         files = None
         if file_ids is not None or collection_ids is not None:
@@ -139,12 +166,11 @@ class AgentResource:
             output_model_schema=output_model_schema,
             completion_config=completion_config,
             max_iterations=max_iterations,
-            conversation_id=UUID(conversation_id) if conversation_id else None,
+            conversation_id=conversation_uuid,
         )
 
         try:
             return await api.create_agent_job(
-                authorization="",
                 create_agent_request=request,
                 idempotency_key=idempotency_key,
             )
@@ -180,7 +206,7 @@ class AgentResource:
         api = AgentApi(self._client)
 
         try:
-            return await api.get_agent_job(job_id=job_id, authorization="")
+            return await api.get_agent_job(job_id=job_id)
         except NotFoundException as e:
             raise NotFoundError(f"Job '{job_id}' not found") from e
         except UnauthorizedException as e:
@@ -215,7 +241,7 @@ class AgentResource:
         api = AgentApi(self._client)
 
         try:
-            return await api.get_agent_job_inputs(job_id=job_id, authorization="")
+            return await api.get_agent_job_inputs(job_id=job_id)
         except NotFoundException as e:
             raise NotFoundError(f"Job '{job_id}' not found") from e
         except UnauthorizedException as e:
@@ -250,7 +276,7 @@ class AgentResource:
         api = AgentApi(self._client)
 
         try:
-            return await api.get_agent_job_outputs(job_id=job_id, authorization="")
+            return await api.get_agent_job_outputs(job_id=job_id)
         except NotFoundException as e:
             raise NotFoundError(f"Job '{job_id}' not found") from e
         except UnauthorizedException as e:
@@ -285,7 +311,7 @@ class AgentResource:
         api = AgentApi(self._client)
 
         try:
-            return await api.get_agent_job_annotations(job_id=job_id, authorization="")
+            return await api.get_agent_job_annotations(job_id=job_id)
         except NotFoundException as e:
             raise NotFoundError(f"Job '{job_id}' not found") from e
         except UnauthorizedException as e:

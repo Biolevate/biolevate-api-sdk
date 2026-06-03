@@ -13,7 +13,7 @@ Method | HTTP request | Description
 
 
 # **create_agent_job**
-> Job create_agent_job(authorization, create_agent_request, idempotency_key=idempotency_key)
+> Job create_agent_job(create_agent_request, idempotency_key=idempotency_key)
 
 Create agent job
 
@@ -50,13 +50,12 @@ configuration = biolevate_client.Configuration(
 async with biolevate_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = biolevate_client.AgentApi(api_client)
-    authorization = 'authorization_example' # str | 
     create_agent_request = biolevate_client.CreateAgentRequest() # CreateAgentRequest | 
     idempotency_key = 'idempotency_key_example' # str |  (optional)
 
     try:
         # Create agent job
-        api_response = await api_instance.create_agent_job(authorization, create_agent_request, idempotency_key=idempotency_key)
+        api_response = await api_instance.create_agent_job(create_agent_request, idempotency_key=idempotency_key)
         print("The response of AgentApi->create_agent_job:\n")
         pprint(api_response)
     except Exception as e:
@@ -70,7 +69,6 @@ async with biolevate_client.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **authorization** | **str**|  | 
  **create_agent_request** | [**CreateAgentRequest**](CreateAgentRequest.md)|  | 
  **idempotency_key** | **str**|  | [optional] 
 
@@ -99,7 +97,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_agent_job**
-> Job get_agent_job(job_id, authorization)
+> Job get_agent_job(job_id)
 
 Get agent job
 
@@ -136,11 +134,10 @@ async with biolevate_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = biolevate_client.AgentApi(api_client)
     job_id = 'job_id_example' # str | The job Id
-    authorization = 'authorization_example' # str | 
 
     try:
         # Get agent job
-        api_response = await api_instance.get_agent_job(job_id, authorization)
+        api_response = await api_instance.get_agent_job(job_id)
         print("The response of AgentApi->get_agent_job:\n")
         pprint(api_response)
     except Exception as e:
@@ -155,7 +152,6 @@ async with biolevate_client.ApiClient(configuration) as api_client:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **job_id** | **str**| The job Id | 
- **authorization** | **str**|  | 
 
 ### Return type
 
@@ -182,7 +178,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_agent_job_annotations**
-> List[EliseAnnotation] get_agent_job_annotations(job_id, authorization)
+> List[EliseAnnotation] get_agent_job_annotations(job_id)
 
 Get agent job annotations
 
@@ -219,11 +215,10 @@ async with biolevate_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = biolevate_client.AgentApi(api_client)
     job_id = 'job_id_example' # str | The job Id
-    authorization = 'authorization_example' # str | 
 
     try:
         # Get agent job annotations
-        api_response = await api_instance.get_agent_job_annotations(job_id, authorization)
+        api_response = await api_instance.get_agent_job_annotations(job_id)
         print("The response of AgentApi->get_agent_job_annotations:\n")
         pprint(api_response)
     except Exception as e:
@@ -238,7 +233,6 @@ async with biolevate_client.ApiClient(configuration) as api_client:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **job_id** | **str**| The job Id | 
- **authorization** | **str**|  | 
 
 ### Return type
 
@@ -265,7 +259,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_agent_job_inputs**
-> AgentJobInputs get_agent_job_inputs(job_id, authorization)
+> AgentJobInputs get_agent_job_inputs(job_id)
 
 Get agent job inputs
 
@@ -302,11 +296,10 @@ async with biolevate_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = biolevate_client.AgentApi(api_client)
     job_id = 'job_id_example' # str | The job Id
-    authorization = 'authorization_example' # str | 
 
     try:
         # Get agent job inputs
-        api_response = await api_instance.get_agent_job_inputs(job_id, authorization)
+        api_response = await api_instance.get_agent_job_inputs(job_id)
         print("The response of AgentApi->get_agent_job_inputs:\n")
         pprint(api_response)
     except Exception as e:
@@ -321,7 +314,6 @@ async with biolevate_client.ApiClient(configuration) as api_client:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **job_id** | **str**| The job Id | 
- **authorization** | **str**|  | 
 
 ### Return type
 
@@ -348,7 +340,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_agent_job_outputs**
-> AgentJobOutputs get_agent_job_outputs(job_id, authorization)
+> AgentJobOutputs get_agent_job_outputs(job_id)
 
 Get agent job outputs
 
@@ -385,11 +377,10 @@ async with biolevate_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = biolevate_client.AgentApi(api_client)
     job_id = 'job_id_example' # str | The job Id
-    authorization = 'authorization_example' # str | 
 
     try:
         # Get agent job outputs
-        api_response = await api_instance.get_agent_job_outputs(job_id, authorization)
+        api_response = await api_instance.get_agent_job_outputs(job_id)
         print("The response of AgentApi->get_agent_job_outputs:\n")
         pprint(api_response)
     except Exception as e:
@@ -404,7 +395,6 @@ async with biolevate_client.ApiClient(configuration) as api_client:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **job_id** | **str**| The job Id | 
- **authorization** | **str**|  | 
 
 ### Return type
 
@@ -431,7 +421,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **list_agent_jobs**
-> PageDataJob list_agent_jobs(page_size, page, authorization, conversation_id=conversation_id)
+> PageDataJob list_agent_jobs(page_size, page, conversation_id=conversation_id)
 
 List agent jobs
 
@@ -469,12 +459,11 @@ async with biolevate_client.ApiClient(configuration) as api_client:
     api_instance = biolevate_client.AgentApi(api_client)
     page_size = 56 # int | Page size
     page = 56 # int | Page number (0-based)
-    authorization = 'authorization_example' # str | 
     conversation_id = UUID('38400000-8cf0-11bd-b23e-10b96e4ef00d') # UUID | Restrict the results to jobs attached to this conversation (optional)
 
     try:
         # List agent jobs
-        api_response = await api_instance.list_agent_jobs(page_size, page, authorization, conversation_id=conversation_id)
+        api_response = await api_instance.list_agent_jobs(page_size, page, conversation_id=conversation_id)
         print("The response of AgentApi->list_agent_jobs:\n")
         pprint(api_response)
     except Exception as e:
@@ -490,7 +479,6 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **page_size** | **int**| Page size | 
  **page** | **int**| Page number (0-based) | 
- **authorization** | **str**|  | 
  **conversation_id** | **UUID**| Restrict the results to jobs attached to this conversation | [optional] 
 
 ### Return type

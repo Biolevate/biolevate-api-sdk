@@ -65,6 +65,13 @@ class TestAgentListJobs:
         with pytest.raises(AuthenticationError):
             await client.agent.list_jobs()
 
+    async def test_raises_value_error_on_invalid_conversation_id(
+        self,
+        client: BiolevateClient,
+    ) -> None:
+        with pytest.raises(ValueError, match="not a valid UUID"):
+            await client.agent.list_jobs(conversation_id="not-a-uuid")
+
 
 @pytest.mark.asyncio
 class TestAgentCreateJob:
@@ -145,6 +152,25 @@ class TestAgentCreateJob:
             await client.agent.create_job(message="Hi", file_ids=[FILE_ID])
 
         assert exc_info.value.status_code == 500
+
+    async def test_raises_value_error_when_message_and_messages(
+        self,
+        client: BiolevateClient,
+    ) -> None:
+        from biolevate import AgentMessage
+
+        with pytest.raises(ValueError, match="not both"):
+            await client.agent.create_job(
+                message="Hi",
+                messages=[AgentMessage(role="USER", content="Hi")],
+            )
+
+    async def test_raises_value_error_on_invalid_conversation_id(
+        self,
+        client: BiolevateClient,
+    ) -> None:
+        with pytest.raises(ValueError, match="not a valid UUID"):
+            await client.agent.create_job(message="Hi", conversation_id="not-a-uuid")
 
 
 @pytest.mark.asyncio

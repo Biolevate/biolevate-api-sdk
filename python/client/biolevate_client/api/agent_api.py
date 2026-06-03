@@ -47,7 +47,6 @@ class AgentApi:
     @validate_call
     async def create_agent_job(
         self,
-        authorization: StrictStr,
         create_agent_request: CreateAgentRequest,
         idempotency_key: Optional[StrictStr] = None,
         _request_timeout: Union[
@@ -67,8 +66,6 @@ class AgentApi:
 
         Schedules an asynchronous agent run and returns the initial Job (status PENDING).
 
-        :param authorization: (required)
-        :type authorization: str
         :param create_agent_request: (required)
         :type create_agent_request: CreateAgentRequest
         :param idempotency_key:
@@ -96,7 +93,6 @@ class AgentApi:
         """ # noqa: E501
 
         _param = self._create_agent_job_serialize(
-            authorization=authorization,
             create_agent_request=create_agent_request,
             idempotency_key=idempotency_key,
             _request_auth=_request_auth,
@@ -125,7 +121,6 @@ class AgentApi:
     @validate_call
     async def create_agent_job_with_http_info(
         self,
-        authorization: StrictStr,
         create_agent_request: CreateAgentRequest,
         idempotency_key: Optional[StrictStr] = None,
         _request_timeout: Union[
@@ -145,8 +140,6 @@ class AgentApi:
 
         Schedules an asynchronous agent run and returns the initial Job (status PENDING).
 
-        :param authorization: (required)
-        :type authorization: str
         :param create_agent_request: (required)
         :type create_agent_request: CreateAgentRequest
         :param idempotency_key:
@@ -174,7 +167,6 @@ class AgentApi:
         """ # noqa: E501
 
         _param = self._create_agent_job_serialize(
-            authorization=authorization,
             create_agent_request=create_agent_request,
             idempotency_key=idempotency_key,
             _request_auth=_request_auth,
@@ -203,7 +195,6 @@ class AgentApi:
     @validate_call
     async def create_agent_job_without_preload_content(
         self,
-        authorization: StrictStr,
         create_agent_request: CreateAgentRequest,
         idempotency_key: Optional[StrictStr] = None,
         _request_timeout: Union[
@@ -223,8 +214,6 @@ class AgentApi:
 
         Schedules an asynchronous agent run and returns the initial Job (status PENDING).
 
-        :param authorization: (required)
-        :type authorization: str
         :param create_agent_request: (required)
         :type create_agent_request: CreateAgentRequest
         :param idempotency_key:
@@ -252,7 +241,6 @@ class AgentApi:
         """ # noqa: E501
 
         _param = self._create_agent_job_serialize(
-            authorization=authorization,
             create_agent_request=create_agent_request,
             idempotency_key=idempotency_key,
             _request_auth=_request_auth,
@@ -276,7 +264,6 @@ class AgentApi:
 
     def _create_agent_job_serialize(
         self,
-        authorization,
         create_agent_request,
         idempotency_key,
         _request_auth,
@@ -302,8 +289,6 @@ class AgentApi:
         # process the path parameters
         # process the query parameters
         # process the header parameters
-        if authorization is not None:
-            _header_params['Authorization'] = authorization
         if idempotency_key is not None:
             _header_params['Idempotency-Key'] = idempotency_key
         # process the form parameters
@@ -361,7 +346,6 @@ class AgentApi:
     async def get_agent_job(
         self,
         job_id: Annotated[StrictStr, Field(description="The job Id")],
-        authorization: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -381,8 +365,6 @@ class AgentApi:
 
         :param job_id: The job Id (required)
         :type job_id: str
-        :param authorization: (required)
-        :type authorization: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -407,7 +389,6 @@ class AgentApi:
 
         _param = self._get_agent_job_serialize(
             job_id=job_id,
-            authorization=authorization,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -435,7 +416,6 @@ class AgentApi:
     async def get_agent_job_with_http_info(
         self,
         job_id: Annotated[StrictStr, Field(description="The job Id")],
-        authorization: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -455,8 +435,6 @@ class AgentApi:
 
         :param job_id: The job Id (required)
         :type job_id: str
-        :param authorization: (required)
-        :type authorization: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -481,7 +459,6 @@ class AgentApi:
 
         _param = self._get_agent_job_serialize(
             job_id=job_id,
-            authorization=authorization,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -509,7 +486,6 @@ class AgentApi:
     async def get_agent_job_without_preload_content(
         self,
         job_id: Annotated[StrictStr, Field(description="The job Id")],
-        authorization: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -529,8 +505,6 @@ class AgentApi:
 
         :param job_id: The job Id (required)
         :type job_id: str
-        :param authorization: (required)
-        :type authorization: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -555,7 +529,6 @@ class AgentApi:
 
         _param = self._get_agent_job_serialize(
             job_id=job_id,
-            authorization=authorization,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -578,7 +551,6 @@ class AgentApi:
     def _get_agent_job_serialize(
         self,
         job_id,
-        authorization,
         _request_auth,
         _content_type,
         _headers,
@@ -604,8 +576,6 @@ class AgentApi:
             _path_params['jobId'] = job_id
         # process the query parameters
         # process the header parameters
-        if authorization is not None:
-            _header_params['Authorization'] = authorization
         # process the form parameters
         # process the body parameter
 
@@ -646,7 +616,6 @@ class AgentApi:
     async def get_agent_job_annotations(
         self,
         job_id: Annotated[StrictStr, Field(description="The job Id")],
-        authorization: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -666,8 +635,6 @@ class AgentApi:
 
         :param job_id: The job Id (required)
         :type job_id: str
-        :param authorization: (required)
-        :type authorization: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -692,7 +659,6 @@ class AgentApi:
 
         _param = self._get_agent_job_annotations_serialize(
             job_id=job_id,
-            authorization=authorization,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -720,7 +686,6 @@ class AgentApi:
     async def get_agent_job_annotations_with_http_info(
         self,
         job_id: Annotated[StrictStr, Field(description="The job Id")],
-        authorization: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -740,8 +705,6 @@ class AgentApi:
 
         :param job_id: The job Id (required)
         :type job_id: str
-        :param authorization: (required)
-        :type authorization: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -766,7 +729,6 @@ class AgentApi:
 
         _param = self._get_agent_job_annotations_serialize(
             job_id=job_id,
-            authorization=authorization,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -794,7 +756,6 @@ class AgentApi:
     async def get_agent_job_annotations_without_preload_content(
         self,
         job_id: Annotated[StrictStr, Field(description="The job Id")],
-        authorization: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -814,8 +775,6 @@ class AgentApi:
 
         :param job_id: The job Id (required)
         :type job_id: str
-        :param authorization: (required)
-        :type authorization: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -840,7 +799,6 @@ class AgentApi:
 
         _param = self._get_agent_job_annotations_serialize(
             job_id=job_id,
-            authorization=authorization,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -863,7 +821,6 @@ class AgentApi:
     def _get_agent_job_annotations_serialize(
         self,
         job_id,
-        authorization,
         _request_auth,
         _content_type,
         _headers,
@@ -889,8 +846,6 @@ class AgentApi:
             _path_params['jobId'] = job_id
         # process the query parameters
         # process the header parameters
-        if authorization is not None:
-            _header_params['Authorization'] = authorization
         # process the form parameters
         # process the body parameter
 
@@ -931,7 +886,6 @@ class AgentApi:
     async def get_agent_job_inputs(
         self,
         job_id: Annotated[StrictStr, Field(description="The job Id")],
-        authorization: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -951,8 +905,6 @@ class AgentApi:
 
         :param job_id: The job Id (required)
         :type job_id: str
-        :param authorization: (required)
-        :type authorization: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -977,7 +929,6 @@ class AgentApi:
 
         _param = self._get_agent_job_inputs_serialize(
             job_id=job_id,
-            authorization=authorization,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1005,7 +956,6 @@ class AgentApi:
     async def get_agent_job_inputs_with_http_info(
         self,
         job_id: Annotated[StrictStr, Field(description="The job Id")],
-        authorization: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1025,8 +975,6 @@ class AgentApi:
 
         :param job_id: The job Id (required)
         :type job_id: str
-        :param authorization: (required)
-        :type authorization: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1051,7 +999,6 @@ class AgentApi:
 
         _param = self._get_agent_job_inputs_serialize(
             job_id=job_id,
-            authorization=authorization,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1079,7 +1026,6 @@ class AgentApi:
     async def get_agent_job_inputs_without_preload_content(
         self,
         job_id: Annotated[StrictStr, Field(description="The job Id")],
-        authorization: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1099,8 +1045,6 @@ class AgentApi:
 
         :param job_id: The job Id (required)
         :type job_id: str
-        :param authorization: (required)
-        :type authorization: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1125,7 +1069,6 @@ class AgentApi:
 
         _param = self._get_agent_job_inputs_serialize(
             job_id=job_id,
-            authorization=authorization,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1148,7 +1091,6 @@ class AgentApi:
     def _get_agent_job_inputs_serialize(
         self,
         job_id,
-        authorization,
         _request_auth,
         _content_type,
         _headers,
@@ -1174,8 +1116,6 @@ class AgentApi:
             _path_params['jobId'] = job_id
         # process the query parameters
         # process the header parameters
-        if authorization is not None:
-            _header_params['Authorization'] = authorization
         # process the form parameters
         # process the body parameter
 
@@ -1216,7 +1156,6 @@ class AgentApi:
     async def get_agent_job_outputs(
         self,
         job_id: Annotated[StrictStr, Field(description="The job Id")],
-        authorization: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1236,8 +1175,6 @@ class AgentApi:
 
         :param job_id: The job Id (required)
         :type job_id: str
-        :param authorization: (required)
-        :type authorization: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1262,7 +1199,6 @@ class AgentApi:
 
         _param = self._get_agent_job_outputs_serialize(
             job_id=job_id,
-            authorization=authorization,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1290,7 +1226,6 @@ class AgentApi:
     async def get_agent_job_outputs_with_http_info(
         self,
         job_id: Annotated[StrictStr, Field(description="The job Id")],
-        authorization: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1310,8 +1245,6 @@ class AgentApi:
 
         :param job_id: The job Id (required)
         :type job_id: str
-        :param authorization: (required)
-        :type authorization: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1336,7 +1269,6 @@ class AgentApi:
 
         _param = self._get_agent_job_outputs_serialize(
             job_id=job_id,
-            authorization=authorization,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1364,7 +1296,6 @@ class AgentApi:
     async def get_agent_job_outputs_without_preload_content(
         self,
         job_id: Annotated[StrictStr, Field(description="The job Id")],
-        authorization: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1384,8 +1315,6 @@ class AgentApi:
 
         :param job_id: The job Id (required)
         :type job_id: str
-        :param authorization: (required)
-        :type authorization: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1410,7 +1339,6 @@ class AgentApi:
 
         _param = self._get_agent_job_outputs_serialize(
             job_id=job_id,
-            authorization=authorization,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1433,7 +1361,6 @@ class AgentApi:
     def _get_agent_job_outputs_serialize(
         self,
         job_id,
-        authorization,
         _request_auth,
         _content_type,
         _headers,
@@ -1459,8 +1386,6 @@ class AgentApi:
             _path_params['jobId'] = job_id
         # process the query parameters
         # process the header parameters
-        if authorization is not None:
-            _header_params['Authorization'] = authorization
         # process the form parameters
         # process the body parameter
 
@@ -1502,7 +1427,6 @@ class AgentApi:
         self,
         page_size: Annotated[StrictInt, Field(description="Page size")],
         page: Annotated[StrictInt, Field(description="Page number (0-based)")],
-        authorization: StrictStr,
         conversation_id: Annotated[Optional[UUID], Field(description="Restrict the results to jobs attached to this conversation")] = None,
         _request_timeout: Union[
             None,
@@ -1525,8 +1449,6 @@ class AgentApi:
         :type page_size: int
         :param page: Page number (0-based) (required)
         :type page: int
-        :param authorization: (required)
-        :type authorization: str
         :param conversation_id: Restrict the results to jobs attached to this conversation
         :type conversation_id: UUID
         :param _request_timeout: timeout setting for this request. If one
@@ -1554,7 +1476,6 @@ class AgentApi:
         _param = self._list_agent_jobs_serialize(
             page_size=page_size,
             page=page,
-            authorization=authorization,
             conversation_id=conversation_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1582,7 +1503,6 @@ class AgentApi:
         self,
         page_size: Annotated[StrictInt, Field(description="Page size")],
         page: Annotated[StrictInt, Field(description="Page number (0-based)")],
-        authorization: StrictStr,
         conversation_id: Annotated[Optional[UUID], Field(description="Restrict the results to jobs attached to this conversation")] = None,
         _request_timeout: Union[
             None,
@@ -1605,8 +1525,6 @@ class AgentApi:
         :type page_size: int
         :param page: Page number (0-based) (required)
         :type page: int
-        :param authorization: (required)
-        :type authorization: str
         :param conversation_id: Restrict the results to jobs attached to this conversation
         :type conversation_id: UUID
         :param _request_timeout: timeout setting for this request. If one
@@ -1634,7 +1552,6 @@ class AgentApi:
         _param = self._list_agent_jobs_serialize(
             page_size=page_size,
             page=page,
-            authorization=authorization,
             conversation_id=conversation_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1662,7 +1579,6 @@ class AgentApi:
         self,
         page_size: Annotated[StrictInt, Field(description="Page size")],
         page: Annotated[StrictInt, Field(description="Page number (0-based)")],
-        authorization: StrictStr,
         conversation_id: Annotated[Optional[UUID], Field(description="Restrict the results to jobs attached to this conversation")] = None,
         _request_timeout: Union[
             None,
@@ -1685,8 +1601,6 @@ class AgentApi:
         :type page_size: int
         :param page: Page number (0-based) (required)
         :type page: int
-        :param authorization: (required)
-        :type authorization: str
         :param conversation_id: Restrict the results to jobs attached to this conversation
         :type conversation_id: UUID
         :param _request_timeout: timeout setting for this request. If one
@@ -1714,7 +1628,6 @@ class AgentApi:
         _param = self._list_agent_jobs_serialize(
             page_size=page_size,
             page=page,
-            authorization=authorization,
             conversation_id=conversation_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1737,7 +1650,6 @@ class AgentApi:
         self,
         page_size,
         page,
-        authorization,
         conversation_id,
         _request_auth,
         _content_type,
@@ -1774,8 +1686,6 @@ class AgentApi:
             _query_params.append(('conversationId', conversation_id))
             
         # process the header parameters
-        if authorization is not None:
-            _header_params['Authorization'] = authorization
         # process the form parameters
         # process the body parameter
 

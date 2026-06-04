@@ -256,6 +256,38 @@ def find_similar_job_page_payload(find_similar_job_payload: dict) -> dict:
     }
 
 
+# Stateless mode: the inputs carry the full ``messages`` list.
+@pytest.fixture
+def agent_job_inputs_payload() -> dict:
+    return {
+        "messages": [
+            {"role": "USER", "content": "Summarize the attached report and list the main risks."},
+        ],
+        "files": {"fileIds": ["a1b2c3d4-e5f6-7890-abcd-ef1234567890"], "collectionIds": []},
+        "maxIterations": 10,
+    }
+
+
+# Stateful mode: the inputs carry a single ``message`` and a ``conversationId``.
+@pytest.fixture
+def agent_job_inputs_stateful_payload() -> dict:
+    return {
+        "message": "And what about the secondary endpoints?",
+        "files": {"fileIds": ["a1b2c3d4-e5f6-7890-abcd-ef1234567890"], "collectionIds": []},
+        "maxIterations": 10,
+        "conversationId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    }
+
+
+@pytest.fixture
+def agent_job_outputs_payload() -> dict:
+    return {
+        "answer": {"verdict": "low risk", "summary": "The report shows stable results."},
+        "explanation": "Derived from the attached report.",
+        "referenceIds": ["aaaabbbb-cccc-dddd-eeee-ffffaaaabbbb"],
+    }
+
+
 @pytest.fixture
 def annotation_payload() -> dict:
     return {

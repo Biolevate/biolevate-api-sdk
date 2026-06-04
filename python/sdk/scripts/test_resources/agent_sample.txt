@@ -1,0 +1,21 @@
+Biolevate Agent Test Document
+
+Project: Project Helios - Phase II clinical study readout
+
+Summary:
+Project Helios is a Phase II, randomized, double-blind study evaluating
+Biolevate-101 versus placebo in 240 adult patients over 24 weeks.
+
+Key facts:
+- Primary endpoint: change in symptom severity score at week 24.
+- The Biolevate-101 high-dose arm met the primary endpoint (p=0.004).
+- The most common adverse events were mild headache and nausea.
+- No serious treatment-related adverse events were reported.
+- The study was conducted across 18 sites in 4 countries.
+
+Risks and caveats:
+- The open-label extension is still ongoing, so long-term safety data are limited.
+- The placebo response was higher than expected, which may affect interpretation.
+
+Conclusion:
+The data support advancing Biolevate-101 to a confirmatory Phase III trial.

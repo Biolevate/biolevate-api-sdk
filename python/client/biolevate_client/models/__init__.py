@@ -14,11 +14,16 @@
 
 # import models into model package
 from biolevate_client.models.add_file_to_collection_request import AddFileToCollectionRequest
+from biolevate_client.models.agent_completion_config import AgentCompletionConfig
+from biolevate_client.models.agent_input import AgentInput
+from biolevate_client.models.agent_job_inputs import AgentJobInputs
+from biolevate_client.models.agent_job_outputs import AgentJobOutputs
 from biolevate_client.models.annotation_id import AnnotationId
 from biolevate_client.models.bbox_dto import BboxDto
 from biolevate_client.models.collection_id import CollectionId
 from biolevate_client.models.collection_view_id import CollectionViewId
 from biolevate_client.models.confirm_upload_request import ConfirmUploadRequest
+from biolevate_client.models.create_agent_request import CreateAgentRequest
 from biolevate_client.models.create_collection_request import CreateCollectionRequest
 from biolevate_client.models.create_extract_request import CreateExtractRequest
 from biolevate_client.models.create_file_request import CreateFileRequest

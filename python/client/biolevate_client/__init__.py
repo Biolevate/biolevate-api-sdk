@@ -14,10 +14,11 @@
 """  # noqa: E501
 
 
-__version__ = "1.1.0"
+__version__ = "1.2.0"
 
 # Define package exports
 __all__ = [
+    "AgentApi",
     "CollectionsApi",
     "ExtractionApi",
     "FilesApi",
@@ -36,11 +37,16 @@ __all__ = [
     "ApiAttributeError",
     "ApiException",
     "AddFileToCollectionRequest",
+    "AgentCompletionConfig",
+    "AgentInput",
+    "AgentJobInputs",
+    "AgentJobOutputs",
     "AnnotationId",
     "BboxDto",
     "CollectionId",
     "CollectionViewId",
     "ConfirmUploadRequest",
+    "CreateAgentRequest",
     "CreateCollectionRequest",
     "CreateExtractRequest",
     "CreateFileRequest",
@@ -126,6 +132,7 @@ __all__ = [
 ]
 
 # import apis into sdk package
+from biolevate_client.api.agent_api import AgentApi as AgentApi
 from biolevate_client.api.collections_api import CollectionsApi as CollectionsApi
 from biolevate_client.api.extraction_api import ExtractionApi as ExtractionApi
 from biolevate_client.api.files_api import FilesApi as FilesApi
@@ -148,11 +155,16 @@ from biolevate_client.exceptions import ApiException as ApiException
 
 # import models into sdk package
 from biolevate_client.models.add_file_to_collection_request import AddFileToCollectionRequest as AddFileToCollectionRequest
+from biolevate_client.models.agent_completion_config import AgentCompletionConfig as AgentCompletionConfig
+from biolevate_client.models.agent_input import AgentInput as AgentInput
+from biolevate_client.models.agent_job_inputs import AgentJobInputs as AgentJobInputs
+from biolevate_client.models.agent_job_outputs import AgentJobOutputs as AgentJobOutputs
 from biolevate_client.models.annotation_id import AnnotationId as AnnotationId
 from biolevate_client.models.bbox_dto import BboxDto as BboxDto
 from biolevate_client.models.collection_id import CollectionId as CollectionId
 from biolevate_client.models.collection_view_id import CollectionViewId as CollectionViewId
 from biolevate_client.models.confirm_upload_request import ConfirmUploadRequest as ConfirmUploadRequest
+from biolevate_client.models.create_agent_request import CreateAgentRequest as CreateAgentRequest
 from biolevate_client.models.create_collection_request import CreateCollectionRequest as CreateCollectionRequest
 from biolevate_client.models.create_extract_request import CreateExtractRequest as CreateExtractRequest
 from biolevate_client.models.create_file_request import CreateFileRequest as CreateFileRequest

@@ -101,30 +101,26 @@ class EliseDocumentStatementAllOfPositions(BaseModel):
         # deserialize data into PositionBboxDto
         try:
             instance.actual_instance = PositionBboxDto.from_json(json_str)
-            match += 1
+            return instance
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
         # deserialize data into PositionCellDto
         try:
             instance.actual_instance = PositionCellDto.from_json(json_str)
-            match += 1
+            return instance
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
         # deserialize data into PositionLineDto
         try:
             instance.actual_instance = PositionLineDto.from_json(json_str)
-            match += 1
+            return instance
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
 
-        if match > 1:
-            # More than 1 match - use first successful parse (patched behavior)
-            pass  # raise ValueError("Multiple matches found when deserializing the JSON string into EliseDocumentStatementAllOfPositions with oneOf schemas: PositionBboxDto, PositionCellDto, PositionLineDto. Details: " + ", ".join(error_messages))
-        elif match == 0:
-            # no match
-            raise ValueError("No match found when deserializing the JSON string into EliseDocumentStatementAllOfPositions with oneOf schemas: PositionBboxDto, PositionCellDto, PositionLineDto. Details: " + ", ".join(error_messages))
-        else:
-            return instance
+
+        # no match
+        raise ValueError("No match found when deserializing the JSON string into EliseDocumentStatementAllOfPositions with oneOf schemas: PositionBboxDto, PositionCellDto, PositionLineDto. Details: " + ", ".join(error_messages))
+
 
     def to_json(self) -> str:
         """Returns the JSON representation of the actual instance"""

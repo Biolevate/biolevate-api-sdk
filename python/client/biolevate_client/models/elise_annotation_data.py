@@ -122,48 +122,44 @@ class EliseAnnotationData(BaseModel):
         # deserialize data into EliseDocumentStatement
         try:
             instance.actual_instance = EliseDocumentStatement.from_json(json_str)
-            match += 1
+            return instance
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
         # deserialize data into EliseExternalDocumentStatement
         try:
             instance.actual_instance = EliseExternalDocumentStatement.from_json(json_str)
-            match += 1
+            return instance
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
         # deserialize data into EliseFullDocumentStatement
         try:
             instance.actual_instance = EliseFullDocumentStatement.from_json(json_str)
-            match += 1
+            return instance
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
         # deserialize data into EliseKnowledgeStatement
         try:
             instance.actual_instance = EliseKnowledgeStatement.from_json(json_str)
-            match += 1
+            return instance
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
         # deserialize data into EliseReviewComment
         try:
             instance.actual_instance = EliseReviewComment.from_json(json_str)
-            match += 1
+            return instance
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
         # deserialize data into EliseWebStatement
         try:
             instance.actual_instance = EliseWebStatement.from_json(json_str)
-            match += 1
+            return instance
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
 
-        if match > 1:
-            # More than 1 match - use first successful parse (patched behavior)
-            pass  # raise ValueError("Multiple matches found when deserializing the JSON string into EliseAnnotationData with oneOf schemas: EliseDocumentStatement, EliseExternalDocumentStatement, EliseFullDocumentStatement, EliseKnowledgeStatement, EliseReviewComment, EliseWebStatement. Details: " + ", ".join(error_messages))
-        elif match == 0:
-            # no match
-            raise ValueError("No match found when deserializing the JSON string into EliseAnnotationData with oneOf schemas: EliseDocumentStatement, EliseExternalDocumentStatement, EliseFullDocumentStatement, EliseKnowledgeStatement, EliseReviewComment, EliseWebStatement. Details: " + ", ".join(error_messages))
-        else:
-            return instance
+
+        # no match
+        raise ValueError("No match found when deserializing the JSON string into EliseAnnotationData with oneOf schemas: EliseDocumentStatement, EliseExternalDocumentStatement, EliseFullDocumentStatement, EliseKnowledgeStatement, EliseReviewComment, EliseWebStatement. Details: " + ", ".join(error_messages))
+
 
     def to_json(self) -> str:
         """Returns the JSON representation of the actual instance"""

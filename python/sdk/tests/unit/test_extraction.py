@@ -5,6 +5,7 @@ import respx
 from httpx import Response
 
 from biolevate import APIError, AuthenticationError, BiolevateClient, NotFoundError
+from biolevate_client.models.elise_document_statement import EliseDocumentStatement
 
 JOB_ID = "f47ac10b-58cc-4372-a567-0e02b2c3d479"
 FILE_ID = "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
@@ -352,6 +353,11 @@ class TestExtractionGetJobAnnotations:
         assert isinstance(annotations, list)
         assert len(annotations) == 1
         assert annotations[0].type == "DOCUMENT_STATEMENT"
+        assert annotations[0].data is not None
+        stmt = annotations[0].data.actual_instance
+        assert isinstance(stmt, EliseDocumentStatement)
+        assert stmt.document_name == "report.pdf"
+        assert stmt.content == "Biolevate is a leading company in document intelligence."
 
     @respx.mock
     async def test_returns_empty_list(

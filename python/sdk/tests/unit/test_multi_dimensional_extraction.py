@@ -175,6 +175,8 @@ class TestMultiDimensionalExtractionGetters:
         annotations = await client.mde.get_job_annotations(JOB_ID)
 
         assert len(annotations) == 1
+        assert annotations[0].data is not None
+        assert annotations[0].data.actual_instance is not None
 
     @respx.mock
     async def test_raises_not_found_on_404(

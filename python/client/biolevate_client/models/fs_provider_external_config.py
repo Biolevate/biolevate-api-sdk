@@ -133,54 +133,50 @@ class FSProviderExternalConfig(BaseModel):
         # deserialize data into FSProviderAzureConfigExternal
         try:
             instance.actual_instance = FSProviderAzureConfigExternal.from_json(json_str)
-            match += 1
+            return instance
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
         # deserialize data into FSProviderGCSConfigExternal
         try:
             instance.actual_instance = FSProviderGCSConfigExternal.from_json(json_str)
-            match += 1
+            return instance
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
         # deserialize data into FSProviderLeanearConfigExternal
         try:
             instance.actual_instance = FSProviderLeanearConfigExternal.from_json(json_str)
-            match += 1
+            return instance
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
         # deserialize data into FSProviderLocalConfigExternal
         try:
             instance.actual_instance = FSProviderLocalConfigExternal.from_json(json_str)
-            match += 1
+            return instance
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
         # deserialize data into FSProviderS3ConfigExternal
         try:
             instance.actual_instance = FSProviderS3ConfigExternal.from_json(json_str)
-            match += 1
+            return instance
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
         # deserialize data into FSProviderSFTPConfigExternal
         try:
             instance.actual_instance = FSProviderSFTPConfigExternal.from_json(json_str)
-            match += 1
+            return instance
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
         # deserialize data into FSProviderSharepointOnlineConfigExternal
         try:
             instance.actual_instance = FSProviderSharepointOnlineConfigExternal.from_json(json_str)
-            match += 1
+            return instance
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
 
-        if match > 1:
-            # More than 1 match - use first successful parse (patched behavior)
-            pass  # raise ValueError("Multiple matches found when deserializing the JSON string into FSProviderExternalConfig with oneOf schemas: FSProviderAzureConfigExternal, FSProviderGCSConfigExternal, FSProviderLeanearConfigExternal, FSProviderLocalConfigExternal, FSProviderS3ConfigExternal, FSProviderSFTPConfigExternal, FSProviderSharepointOnlineConfigExternal. Details: " + ", ".join(error_messages))
-        elif match == 0:
-            # no match
-            raise ValueError("No match found when deserializing the JSON string into FSProviderExternalConfig with oneOf schemas: FSProviderAzureConfigExternal, FSProviderGCSConfigExternal, FSProviderLeanearConfigExternal, FSProviderLocalConfigExternal, FSProviderS3ConfigExternal, FSProviderSFTPConfigExternal, FSProviderSharepointOnlineConfigExternal. Details: " + ", ".join(error_messages))
-        else:
-            return instance
+
+        # no match
+        raise ValueError("No match found when deserializing the JSON string into FSProviderExternalConfig with oneOf schemas: FSProviderAzureConfigExternal, FSProviderGCSConfigExternal, FSProviderLeanearConfigExternal, FSProviderLocalConfigExternal, FSProviderS3ConfigExternal, FSProviderSFTPConfigExternal, FSProviderSharepointOnlineConfigExternal. Details: " + ", ".join(error_messages))
+
 
     def to_json(self) -> str:
         """Returns the JSON representation of the actual instance"""

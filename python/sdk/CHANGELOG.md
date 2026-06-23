@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/Biolevate/biolevate-api-sdk/compare/biolevate-v0.6.1...biolevate-v0.7.0) (2026-06-04)
+
+
+### Features
+
+* add agent documentation ([#14](https://github.com/Biolevate/biolevate-api-sdk/issues/14)) ([80c2eca](https://github.com/Biolevate/biolevate-api-sdk/commit/80c2eca970bb421b853ce9399b8c28eac346749a))
+
 ## [0.6.1](https://github.com/Biolevate/biolevate-api-sdk/compare/biolevate-v0.6.0...biolevate-v0.6.1) (2026-05-21)
 
 

@@ -41,10 +41,8 @@ biolevate_client/models/data_value.py
 biolevate_client/models/download_url_response.py
 biolevate_client/models/elise_annotation.py
 biolevate_client/models/elise_annotation_config.py
-biolevate_client/models/elise_annotation_data.py
 biolevate_client/models/elise_collection_info.py
 biolevate_client/models/elise_document_statement.py
-biolevate_client/models/elise_document_statement_all_of_positions.py
 biolevate_client/models/elise_entity_cell_result.py
 biolevate_client/models/elise_entity_column_input.py
 biolevate_client/models/elise_entity_extraction_result.py
@@ -73,7 +71,6 @@ biolevate_client/models/find_similar_api_job_dto.py
 biolevate_client/models/fs_provider_azure_config_external.py
 biolevate_client/models/fs_provider_configuration_external.py
 biolevate_client/models/fs_provider_external.py
-biolevate_client/models/fs_provider_external_config.py
 biolevate_client/models/fs_provider_gcs_config_external.py
 biolevate_client/models/fs_provider_leanear_config_external.py
 biolevate_client/models/fs_provider_local_config_external.py
@@ -82,6 +79,7 @@ biolevate_client/models/fs_provider_sftp_config_external.py
 biolevate_client/models/fs_provider_sharepoint_online_config_external.py
 biolevate_client/models/item_reference.py
 biolevate_client/models/job.py
+biolevate_client/models/job_launch_config.py
 biolevate_client/models/job_statistics.py
 biolevate_client/models/knowledge_source.py
 biolevate_client/models/lib_item_indexation_infos.py
@@ -138,10 +136,8 @@ docs/DataValue.md
 docs/DownloadUrlResponse.md
 docs/EliseAnnotation.md
 docs/EliseAnnotationConfig.md
-docs/EliseAnnotationData.md
 docs/EliseCollectionInfo.md
 docs/EliseDocumentStatement.md
-docs/EliseDocumentStatementAllOfPositions.md
 docs/EliseEntityCellResult.md
 docs/EliseEntityColumnInput.md
 docs/EliseEntityExtractionResult.md
@@ -167,7 +163,6 @@ docs/ExtractionApi.md
 docs/FSProviderAzureConfigExternal.md
 docs/FSProviderConfigurationExternal.md
 docs/FSProviderExternal.md
-docs/FSProviderExternalConfig.md
 docs/FSProviderGCSConfigExternal.md
 docs/FSProviderLeanearConfigExternal.md
 docs/FSProviderLocalConfigExternal.md
@@ -182,6 +177,7 @@ docs/FindSimilarApiJobDto.md
 docs/FindSimilarFilesApi.md
 docs/ItemReference.md
 docs/Job.md
+docs/JobLaunchConfig.md
 docs/JobStatistics.md
 docs/KnowledgeSource.md
 docs/LibItemIndexationInfos.md
@@ -247,10 +243,8 @@ test/test_data_value.py
 test/test_download_url_response.py
 test/test_elise_annotation.py
 test/test_elise_annotation_config.py
-test/test_elise_annotation_data.py
 test/test_elise_collection_info.py
 test/test_elise_document_statement.py
-test/test_elise_document_statement_all_of_positions.py
 test/test_elise_entity_cell_result.py
 test/test_elise_entity_column_input.py
 test/test_elise_entity_extraction_result.py
@@ -282,7 +276,6 @@ test/test_find_similar_files_api.py
 test/test_fs_provider_azure_config_external.py
 test/test_fs_provider_configuration_external.py
 test/test_fs_provider_external.py
-test/test_fs_provider_external_config.py
 test/test_fs_provider_gcs_config_external.py
 test/test_fs_provider_leanear_config_external.py
 test/test_fs_provider_local_config_external.py
@@ -291,6 +284,7 @@ test/test_fs_provider_sftp_config_external.py
 test/test_fs_provider_sharepoint_online_config_external.py
 test/test_item_reference.py
 test/test_job.py
+test/test_job_launch_config.py
 test/test_job_statistics.py
 test/test_knowledge_source.py
 test/test_lib_item_indexation_infos.py

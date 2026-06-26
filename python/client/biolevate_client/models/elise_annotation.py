@@ -20,7 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from biolevate_client.models.annotation_id import AnnotationId
-from biolevate_client.models.elise_annotation_data import EliseAnnotationData
+from biolevate_client.models.elise_annotation_config import EliseAnnotationConfig
 from biolevate_client.models.entity_id import EntityId
 from biolevate_client.models.user_id import UserId
 from typing import Optional, Set
@@ -34,7 +34,7 @@ class EliseAnnotation(BaseModel):
     created_time: Optional[StrictInt] = Field(default=None, alias="createdTime")
     owner: Optional[UserId] = None
     space: Optional[EntityId] = None
-    data: Optional[EliseAnnotationData] = None
+    data: Optional[EliseAnnotationConfig] = None
     type: Optional[StrictStr] = None
     modified_time: Optional[StrictInt] = Field(default=None, alias="modifiedTime")
     last_modifier: Optional[UserId] = Field(default=None, alias="lastModifier")
@@ -47,8 +47,8 @@ class EliseAnnotation(BaseModel):
         if value is None:
             return value
 
-        if value not in set(['DOCUMENT_STATEMENT', 'WEB_STATEMENT', 'ENTIRE_DOCUMENT_STATEMENT', 'EXTERNAL_DOCUMENT_STATEMENT', 'KNOWLEDGE_STATEMENT', 'REVIEW_STATEMENT', 'UNRECOGNIZED']):
-            raise ValueError("must be one of enum values ('DOCUMENT_STATEMENT', 'WEB_STATEMENT', 'ENTIRE_DOCUMENT_STATEMENT', 'EXTERNAL_DOCUMENT_STATEMENT', 'KNOWLEDGE_STATEMENT', 'REVIEW_STATEMENT', 'UNRECOGNIZED')")
+        if value not in set(['DOCUMENT_STATEMENT', 'WEB_STATEMENT', 'ENTIRE_DOCUMENT_STATEMENT', 'EXTERNAL_DOCUMENT_STATEMENT', 'KNOWLEDGE_STATEMENT', 'REVIEW_STATEMENT']):
+            raise ValueError("must be one of enum values ('DOCUMENT_STATEMENT', 'WEB_STATEMENT', 'ENTIRE_DOCUMENT_STATEMENT', 'EXTERNAL_DOCUMENT_STATEMENT', 'KNOWLEDGE_STATEMENT', 'REVIEW_STATEMENT')")
         return value
 
     @field_validator('status')
@@ -131,7 +131,7 @@ class EliseAnnotation(BaseModel):
             "createdTime": obj.get("createdTime"),
             "owner": UserId.from_dict(obj["owner"]) if obj.get("owner") is not None else None,
             "space": EntityId.from_dict(obj["space"]) if obj.get("space") is not None else None,
-            "data": EliseAnnotationData.from_dict(obj["data"]) if obj.get("data") is not None else None,
+            "data": EliseAnnotationConfig.from_dict(obj["data"]) if obj.get("data") is not None else None,
             "type": obj.get("type"),
             "modifiedTime": obj.get("modifiedTime"),
             "lastModifier": UserId.from_dict(obj["lastModifier"]) if obj.get("lastModifier") is not None else None,

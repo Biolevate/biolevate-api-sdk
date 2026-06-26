@@ -42,8 +42,8 @@ class ExpectedAnswerTypeDto(BaseModel):
         if value is None:
             return value
 
-        if value not in set(['STRING', 'INT', 'FLOAT', 'BOOL', 'DATE', 'ENUM', 'UNRECOGNIZED']):
-            raise ValueError("must be one of enum values ('STRING', 'INT', 'FLOAT', 'BOOL', 'DATE', 'ENUM', 'UNRECOGNIZED')")
+        if value not in set(['STRING', 'INT', 'FLOAT', 'BOOL', 'DATE', 'ENUM']):
+            raise ValueError("must be one of enum values ('STRING', 'INT', 'FLOAT', 'BOOL', 'DATE', 'ENUM')")
         return value
 
     @field_validator('date_format')
@@ -62,8 +62,8 @@ class ExpectedAnswerTypeDto(BaseModel):
         if value is None:
             return value
 
-        if value not in set(['ZERO_DECIMALS', 'ONE_DECIMAL', 'TWO_DECIMALS', 'THREE_DECIMALS', 'FOUR_DECIMALS', 'FIVE_DECIMALS', 'UNRECOGNIZED']):
-            raise ValueError("must be one of enum values ('ZERO_DECIMALS', 'ONE_DECIMAL', 'TWO_DECIMALS', 'THREE_DECIMALS', 'FOUR_DECIMALS', 'FIVE_DECIMALS', 'UNRECOGNIZED')")
+        if value not in set(['ZERO_DECIMALS', 'ONE_DECIMAL', 'TWO_DECIMALS', 'THREE_DECIMALS', 'FOUR_DECIMALS', 'FIVE_DECIMALS']):
+            raise ValueError("must be one of enum values ('ZERO_DECIMALS', 'ONE_DECIMAL', 'TWO_DECIMALS', 'THREE_DECIMALS', 'FOUR_DECIMALS', 'FIVE_DECIMALS')")
         return value
 
     model_config = ConfigDict(

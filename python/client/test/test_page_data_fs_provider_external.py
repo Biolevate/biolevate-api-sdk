@@ -45,7 +45,7 @@ class TestPageDataFSProviderExternal(unittest.TestCase):
                             entity_type = 'POLICY', ), 
                         name = '', 
                         icon = '', 
-                        config = null, 
+                        config = biolevate_client.models.fs_provider_configuration_external.FSProviderConfiguration_External(), 
                         type = 'LOCAL', 
                         system = True, )
                     ],

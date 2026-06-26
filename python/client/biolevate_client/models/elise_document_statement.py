@@ -20,7 +20,7 @@ import json
 from pydantic import ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from biolevate_client.models.elise_annotation_config import EliseAnnotationConfig
-from biolevate_client.models.elise_document_statement_all_of_positions import EliseDocumentStatementAllOfPositions
+from biolevate_client.models.position_dto import PositionDto
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -31,7 +31,7 @@ class EliseDocumentStatement(EliseAnnotationConfig):
     content: Optional[StrictStr] = None
     document_name: Optional[StrictStr] = Field(default=None, alias="documentName")
     document_id: Optional[StrictStr] = Field(default=None, alias="documentId")
-    positions: Optional[List[EliseDocumentStatementAllOfPositions]] = None
+    positions: Optional[List[PositionDto]] = None
     __properties: ClassVar[List[str]] = ["type", "content", "documentName", "documentId", "positions"]
 
     model_config = ConfigDict(
@@ -96,7 +96,7 @@ class EliseDocumentStatement(EliseAnnotationConfig):
             "content": obj.get("content"),
             "documentName": obj.get("documentName"),
             "documentId": obj.get("documentId"),
-            "positions": [EliseDocumentStatementAllOfPositions.from_dict(_item) for _item in obj["positions"]] if obj.get("positions") is not None else None
+            "positions": [PositionDto.from_dict(_item) for _item in obj["positions"]] if obj.get("positions") is not None else None
         })
         return _obj
 

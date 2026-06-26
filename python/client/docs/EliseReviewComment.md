@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **content** | **str** |  | [optional] 
 **document_name** | **str** |  | [optional] 
 **document_id** | **str** |  | [optional] 
-**positions** | [**List[EliseDocumentStatementAllOfPositions]**](EliseDocumentStatementAllOfPositions.md) |  | [optional] 
+**positions** | [**List[PositionDto]**](PositionDto.md) |  | [optional] 
 
 ## Example
 

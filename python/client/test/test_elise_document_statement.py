@@ -39,7 +39,7 @@ class TestEliseDocumentStatement(unittest.TestCase):
                 document_name = '',
                 document_id = '',
                 positions = [
-                    null
+                    biolevate_client.models.position_dto.PositionDto()
                     ]
             )
         else:

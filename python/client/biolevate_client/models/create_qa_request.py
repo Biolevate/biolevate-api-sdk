@@ -21,6 +21,7 @@ from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List, Optional
 from biolevate_client.models.elise_question_input import EliseQuestionInput
 from biolevate_client.models.files_input import FilesInput
+from biolevate_client.models.job_launch_config import JobLaunchConfig
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -30,7 +31,8 @@ class CreateQARequest(BaseModel):
     """ # noqa: E501
     files: Optional[FilesInput] = None
     questions: Optional[List[EliseQuestionInput]] = None
-    __properties: ClassVar[List[str]] = ["files", "questions"]
+    config: Optional[JobLaunchConfig] = None
+    __properties: ClassVar[List[str]] = ["files", "questions", "config"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -81,6 +83,9 @@ class CreateQARequest(BaseModel):
                 if _item_questions:
                     _items.append(_item_questions.to_dict())
             _dict['questions'] = _items
+        # override the default output from pydantic by calling `to_dict()` of config
+        if self.config:
+            _dict['config'] = self.config.to_dict()
         return _dict
 
     @classmethod
@@ -94,7 +99,8 @@ class CreateQARequest(BaseModel):
 
         _obj = cls.model_validate({
             "files": FilesInput.from_dict(obj["files"]) if obj.get("files") is not None else None,
-            "questions": [EliseQuestionInput.from_dict(_item) for _item in obj["questions"]] if obj.get("questions") is not None else None
+            "questions": [EliseQuestionInput.from_dict(_item) for _item in obj["questions"]] if obj.get("questions") is not None else None,
+            "config": JobLaunchConfig.from_dict(obj["config"]) if obj.get("config") is not None else None
         })
         return _obj
 

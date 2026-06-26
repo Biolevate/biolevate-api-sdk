@@ -14,10 +14,10 @@
 
 import unittest
 
-from biolevate_client.models.elise_review_comment import EliseReviewComment
+from biolevate_client.models.job_launch_config import JobLaunchConfig
 
-class TestEliseReviewComment(unittest.TestCase):
-    """EliseReviewComment unit test stubs"""
+class TestJobLaunchConfig(unittest.TestCase):
+    """JobLaunchConfig unit test stubs"""
 
     def setUp(self):
         pass
@@ -25,30 +25,25 @@ class TestEliseReviewComment(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional) -> EliseReviewComment:
-        """Test EliseReviewComment
+    def make_instance(self, include_optional) -> JobLaunchConfig:
+        """Test JobLaunchConfig
             include_optional is a boolean, when False only required
             params are included, when True both required and
             optional params are included """
-        # uncomment below to create an instance of `EliseReviewComment`
+        # uncomment below to create an instance of `JobLaunchConfig`
         """
-        model = EliseReviewComment()
+        model = JobLaunchConfig()
         if include_optional:
-            return EliseReviewComment(
-                content = '',
-                document_name = '',
-                document_id = '',
-                positions = [
-                    biolevate_client.models.position_dto.PositionDto()
-                    ]
+            return JobLaunchConfig(
+                skip_unindexed_files = False
             )
         else:
-            return EliseReviewComment(
+            return JobLaunchConfig(
         )
         """
 
-    def testEliseReviewComment(self):
-        """Test EliseReviewComment"""
+    def testJobLaunchConfig(self):
+        """Test JobLaunchConfig"""
         # inst_req_only = self.make_instance(include_optional=False)
         # inst_req_and_optional = self.make_instance(include_optional=True)
 

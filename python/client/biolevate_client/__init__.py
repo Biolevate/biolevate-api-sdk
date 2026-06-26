@@ -14,7 +14,7 @@
 """  # noqa: E501
 
 
-__version__ = "1.2.0"
+__version__ = "1.3.0"
 
 # Define package exports
 __all__ = [
@@ -57,10 +57,8 @@ __all__ = [
     "DownloadUrlResponse",
     "EliseAnnotation",
     "EliseAnnotationConfig",
-    "EliseAnnotationData",
     "EliseCollectionInfo",
     "EliseDocumentStatement",
-    "EliseDocumentStatementAllOfPositions",
     "EliseEntityCellResult",
     "EliseEntityColumnInput",
     "EliseEntityExtractionResult",
@@ -85,7 +83,6 @@ __all__ = [
     "FSProviderAzureConfigExternal",
     "FSProviderConfigurationExternal",
     "FSProviderExternal",
-    "FSProviderExternalConfig",
     "FSProviderGCSConfigExternal",
     "FSProviderLeanearConfigExternal",
     "FSProviderLocalConfigExternal",
@@ -98,6 +95,7 @@ __all__ = [
     "FindSimilarApiJobDto",
     "ItemReference",
     "Job",
+    "JobLaunchConfig",
     "JobStatistics",
     "KnowledgeSource",
     "LibItemIndexationInfos",
@@ -175,10 +173,8 @@ from biolevate_client.models.data_value import DataValue as DataValue
 from biolevate_client.models.download_url_response import DownloadUrlResponse as DownloadUrlResponse
 from biolevate_client.models.elise_annotation import EliseAnnotation as EliseAnnotation
 from biolevate_client.models.elise_annotation_config import EliseAnnotationConfig as EliseAnnotationConfig
-from biolevate_client.models.elise_annotation_data import EliseAnnotationData as EliseAnnotationData
 from biolevate_client.models.elise_collection_info import EliseCollectionInfo as EliseCollectionInfo
 from biolevate_client.models.elise_document_statement import EliseDocumentStatement as EliseDocumentStatement
-from biolevate_client.models.elise_document_statement_all_of_positions import EliseDocumentStatementAllOfPositions as EliseDocumentStatementAllOfPositions
 from biolevate_client.models.elise_entity_cell_result import EliseEntityCellResult as EliseEntityCellResult
 from biolevate_client.models.elise_entity_column_input import EliseEntityColumnInput as EliseEntityColumnInput
 from biolevate_client.models.elise_entity_extraction_result import EliseEntityExtractionResult as EliseEntityExtractionResult
@@ -203,7 +199,6 @@ from biolevate_client.models.extract_job_outputs import ExtractJobOutputs as Ext
 from biolevate_client.models.fs_provider_azure_config_external import FSProviderAzureConfigExternal as FSProviderAzureConfigExternal
 from biolevate_client.models.fs_provider_configuration_external import FSProviderConfigurationExternal as FSProviderConfigurationExternal
 from biolevate_client.models.fs_provider_external import FSProviderExternal as FSProviderExternal
-from biolevate_client.models.fs_provider_external_config import FSProviderExternalConfig as FSProviderExternalConfig
 from biolevate_client.models.fs_provider_gcs_config_external import FSProviderGCSConfigExternal as FSProviderGCSConfigExternal
 from biolevate_client.models.fs_provider_leanear_config_external import FSProviderLeanearConfigExternal as FSProviderLeanearConfigExternal
 from biolevate_client.models.fs_provider_local_config_external import FSProviderLocalConfigExternal as FSProviderLocalConfigExternal
@@ -216,6 +211,7 @@ from biolevate_client.models.files_input import FilesInput as FilesInput
 from biolevate_client.models.find_similar_api_job_dto import FindSimilarApiJobDto as FindSimilarApiJobDto
 from biolevate_client.models.item_reference import ItemReference as ItemReference
 from biolevate_client.models.job import Job as Job
+from biolevate_client.models.job_launch_config import JobLaunchConfig as JobLaunchConfig
 from biolevate_client.models.job_statistics import JobStatistics as JobStatistics
 from biolevate_client.models.knowledge_source import KnowledgeSource as KnowledgeSource
 from biolevate_client.models.lib_item_indexation_infos import LibItemIndexationInfos as LibItemIndexationInfos

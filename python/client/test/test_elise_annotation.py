@@ -44,7 +44,7 @@ class TestEliseAnnotation(unittest.TestCase):
                 space = biolevate_client.models.entity_id.EntityId(
                     id = '', 
                     entity_type = 'POLICY', ),
-                data = None,
+                data = biolevate_client.models.elise_annotation_config.EliseAnnotationConfig(),
                 type = 'DOCUMENT_STATEMENT',
                 modified_time = 56,
                 last_modifier = biolevate_client.models.user_id.UserId(

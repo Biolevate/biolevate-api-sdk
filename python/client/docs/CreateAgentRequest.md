@@ -9,6 +9,7 @@ Name | Type | Description | Notes
 **message** | **str** | Stateful mode: the new user message for this turn. Prior turns are loaded server-side from &#x60;conversationId&#x60;. Mutually exclusive with &#x60;messages&#x60;.  | [optional] 
 **messages** | [**List[AgentInput]**](AgentInput.md) |  | [optional] 
 **files** | [**FilesInput**](FilesInput.md) | Files the agent can read from | [optional] 
+**config** | [**JobLaunchConfig**](JobLaunchConfig.md) | Optional job launch behaviour for input files | [optional] 
 **history_input_valid** | **bool** |  | [optional] 
 **conversation_id_valid** | **bool** |  | [optional] 
 **output_model_schema** | **object** | Optional JSON Schema constraining the agent&#39;s final answer to a structured object. Free-form: any valid JSON Schema is accepted | [optional] 

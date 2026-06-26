@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **created_time** | **int** |  | [optional] 
 **owner** | [**UserId**](UserId.md) |  | [optional] 
 **space** | [**EntityId**](EntityId.md) |  | [optional] 
-**data** | [**EliseAnnotationData**](EliseAnnotationData.md) |  | [optional] 
+**data** | [**EliseAnnotationConfig**](EliseAnnotationConfig.md) |  | [optional] 
 **type** | **str** |  | [optional] 
 **modified_time** | **int** |  | [optional] 
 **last_modifier** | [**UserId**](UserId.md) |  | [optional] 

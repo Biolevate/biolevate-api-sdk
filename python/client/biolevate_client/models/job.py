@@ -42,8 +42,8 @@ class Job(BaseModel):
         if value is None:
             return value
 
-        if value not in set(['SUCCESS', 'FAILED', 'ABORTED', 'RUNNING', 'PENDING', 'UNRECOGNIZED']):
-            raise ValueError("must be one of enum values ('SUCCESS', 'FAILED', 'ABORTED', 'RUNNING', 'PENDING', 'UNRECOGNIZED')")
+        if value not in set(['SUCCESS', 'FAILED', 'ABORTED', 'RUNNING', 'PENDING']):
+            raise ValueError("must be one of enum values ('SUCCESS', 'FAILED', 'ABORTED', 'RUNNING', 'PENDING')")
         return value
 
     model_config = ConfigDict(

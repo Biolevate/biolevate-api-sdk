@@ -37,8 +37,8 @@ class EliseWebStatement(EliseAnnotationConfig):
         if value is None:
             return value
 
-        if value not in set(['WIKIPEDIA', 'BRAVE', 'WEB', 'UNRECOGNIZED']):
-            raise ValueError("must be one of enum values ('WIKIPEDIA', 'BRAVE', 'WEB', 'UNRECOGNIZED')")
+        if value not in set(['WIKIPEDIA', 'BRAVE', 'WEB']):
+            raise ValueError("must be one of enum values ('WIKIPEDIA', 'BRAVE', 'WEB')")
         return value
 
     model_config = ConfigDict(

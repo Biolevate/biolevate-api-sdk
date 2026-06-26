@@ -42,8 +42,8 @@ class PositionDto(BaseModel):
         if value is None:
             return value
 
-        if value not in set(['BBOX', 'CELL', 'LINE', 'UNRECOGNIZED']):
-            raise ValueError("must be one of enum values ('BBOX', 'CELL', 'LINE', 'UNRECOGNIZED')")
+        if value not in set(['BBOX', 'CELL', 'LINE']):
+            raise ValueError("must be one of enum values ('BBOX', 'CELL', 'LINE')")
         return value
 
     model_config = ConfigDict(

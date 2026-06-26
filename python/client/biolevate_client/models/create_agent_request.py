@@ -23,6 +23,7 @@ from uuid import UUID
 from biolevate_client.models.agent_completion_config import AgentCompletionConfig
 from biolevate_client.models.agent_input import AgentInput
 from biolevate_client.models.files_input import FilesInput
+from biolevate_client.models.job_launch_config import JobLaunchConfig
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -33,13 +34,14 @@ class CreateAgentRequest(BaseModel):
     message: Optional[StrictStr] = Field(default=None, description="Stateful mode: the new user message for this turn. Prior turns are loaded server-side from `conversationId`. Mutually exclusive with `messages`. ")
     messages: Optional[List[AgentInput]] = None
     files: Optional[FilesInput] = Field(default=None, description="Files the agent can read from")
+    config: Optional[JobLaunchConfig] = Field(default=None, description="Optional job launch behaviour for input files")
     history_input_valid: Optional[StrictBool] = Field(default=None, alias="historyInputValid")
     conversation_id_valid: Optional[StrictBool] = Field(default=None, alias="conversationIdValid")
     output_model_schema: Optional[Dict[str, Any]] = Field(default=None, description="Optional JSON Schema constraining the agent's final answer to a structured object. Free-form: any valid JSON Schema is accepted")
     completion_config: Optional[AgentCompletionConfig] = Field(default=None, description="Per-completion LLM knobs (model preset, temperature, max tokens)")
     max_iterations: Optional[StrictInt] = Field(default=None, description="Hard cap on the number of agent-loop iterations")
     conversation_id: Optional[UUID] = Field(default=None, description="Stateful only: continue an existing server session. Omit to start a new conversation. Must not be set for stateless runs.")
-    __properties: ClassVar[List[str]] = ["message", "messages", "files", "historyInputValid", "conversationIdValid", "output_model_schema", "completion_config", "max_iterations", "conversation_id"]
+    __properties: ClassVar[List[str]] = ["message", "messages", "files", "config", "historyInputValid", "conversationIdValid", "output_model_schema", "completion_config", "max_iterations", "conversation_id"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -90,6 +92,9 @@ class CreateAgentRequest(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of files
         if self.files:
             _dict['files'] = self.files.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of config
+        if self.config:
+            _dict['config'] = self.config.to_dict()
         # override the default output from pydantic by calling `to_dict()` of completion_config
         if self.completion_config:
             _dict['completion_config'] = self.completion_config.to_dict()
@@ -108,6 +113,7 @@ class CreateAgentRequest(BaseModel):
             "message": obj.get("message"),
             "messages": [AgentInput.from_dict(_item) for _item in obj["messages"]] if obj.get("messages") is not None else None,
             "files": FilesInput.from_dict(obj["files"]) if obj.get("files") is not None else None,
+            "config": JobLaunchConfig.from_dict(obj["config"]) if obj.get("config") is not None else None,
             "historyInputValid": obj.get("historyInputValid"),
             "conversationIdValid": obj.get("conversationIdValid"),
             "output_model_schema": obj.get("output_model_schema"),

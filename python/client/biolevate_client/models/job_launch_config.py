@@ -17,22 +17,17 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, StrictBool
 from typing import Any, ClassVar, Dict, List, Optional
-from biolevate_client.models.elise_entity_schema_input import EliseEntitySchemaInput
-from biolevate_client.models.files_input import FilesInput
-from biolevate_client.models.job_launch_config import JobLaunchConfig
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateMDERequest(BaseModel):
+class JobLaunchConfig(BaseModel):
     """
-    CreateMDERequest
+    Optional job launch behaviour for input files
     """ # noqa: E501
-    files: Optional[FilesInput] = None
-    var_schema: Optional[EliseEntitySchemaInput] = Field(default=None, alias="schema")
-    config: Optional[JobLaunchConfig] = None
-    __properties: ClassVar[List[str]] = ["files", "schema", "config"]
+    skip_unindexed_files: Optional[StrictBool] = Field(default=None, description="When false or omitted, the request is rejected if any input file is not indexed. When true, unindexed files are excluded and the job runs on indexed files only. ")
+    __properties: ClassVar[List[str]] = ["skip_unindexed_files"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -52,7 +47,7 @@ class CreateMDERequest(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateMDERequest from a JSON string"""
+        """Create an instance of JobLaunchConfig from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,20 +68,11 @@ class CreateMDERequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of files
-        if self.files:
-            _dict['files'] = self.files.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of var_schema
-        if self.var_schema:
-            _dict['schema'] = self.var_schema.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of config
-        if self.config:
-            _dict['config'] = self.config.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateMDERequest from a dict"""
+        """Create an instance of JobLaunchConfig from a dict"""
         if obj is None:
             return None
 
@@ -94,9 +80,7 @@ class CreateMDERequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "files": FilesInput.from_dict(obj["files"]) if obj.get("files") is not None else None,
-            "schema": EliseEntitySchemaInput.from_dict(obj["schema"]) if obj.get("schema") is not None else None,
-            "config": JobLaunchConfig.from_dict(obj["config"]) if obj.get("config") is not None else None
+            "skip_unindexed_files": obj.get("skip_unindexed_files")
         })
         return _obj
 

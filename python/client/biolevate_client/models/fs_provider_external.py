@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from biolevate_client.models.fs_provider_external_config import FSProviderExternalConfig
+from biolevate_client.models.fs_provider_configuration_external import FSProviderConfigurationExternal
 from biolevate_client.models.policy_id_external import PolicyIdExternal
 from biolevate_client.models.provider_id_external import ProviderIdExternal
 from biolevate_client.models.user_id_external import UserIdExternal
@@ -36,7 +36,7 @@ class FSProviderExternal(BaseModel):
     policy: Optional[PolicyIdExternal] = None
     name: Optional[StrictStr] = None
     icon: Optional[StrictStr] = None
-    config: Optional[FSProviderExternalConfig] = None
+    config: Optional[FSProviderConfigurationExternal] = None
     type: Optional[StrictStr] = None
     system: Optional[StrictBool] = None
     __properties: ClassVar[List[str]] = ["id", "createdTime", "owner", "policy", "name", "icon", "config", "type", "system"]
@@ -120,7 +120,7 @@ class FSProviderExternal(BaseModel):
             "policy": PolicyIdExternal.from_dict(obj["policy"]) if obj.get("policy") is not None else None,
             "name": obj.get("name"),
             "icon": obj.get("icon"),
-            "config": FSProviderExternalConfig.from_dict(obj["config"]) if obj.get("config") is not None else None,
+            "config": FSProviderConfigurationExternal.from_dict(obj["config"]) if obj.get("config") is not None else None,
             "type": obj.get("type"),
             "system": obj.get("system")
         })

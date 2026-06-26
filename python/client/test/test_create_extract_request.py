@@ -61,7 +61,9 @@ class TestCreateExtractRequest(unittest.TestCase):
                             date_format = 'ISO', 
                             decimal_precision = 'ZERO_DECIMALS', ), 
                         description = '', )
-                    ]
+                    ],
+                config = biolevate_client.models.job_launch_config.JobLaunchConfig(
+                    skip_unindexed_files = False, )
             )
         else:
             return CreateExtractRequest(

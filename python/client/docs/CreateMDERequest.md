@@ -7,6 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **files** | [**FilesInput**](FilesInput.md) |  | [optional] 
 **var_schema** | [**EliseEntitySchemaInput**](EliseEntitySchemaInput.md) |  | [optional] 
+**config** | [**JobLaunchConfig**](JobLaunchConfig.md) |  | [optional] 
 
 ## Example
 

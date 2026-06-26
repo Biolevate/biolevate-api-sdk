@@ -66,7 +66,9 @@ class TestCreateQARequest(unittest.TestCase):
                         input_question_ids = [
                             ''
                             ], )
-                    ]
+                    ],
+                config = biolevate_client.models.job_launch_config.JobLaunchConfig(
+                    skip_unindexed_files = False, )
             )
         else:
             return CreateQARequest(

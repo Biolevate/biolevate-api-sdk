@@ -21,6 +21,7 @@ from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List, Optional
 from biolevate_client.models.elise_meta_input import EliseMetaInput
 from biolevate_client.models.files_input import FilesInput
+from biolevate_client.models.job_launch_config import JobLaunchConfig
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -30,7 +31,8 @@ class CreateExtractRequest(BaseModel):
     """ # noqa: E501
     files: Optional[FilesInput] = None
     metas: Optional[List[EliseMetaInput]] = None
-    __properties: ClassVar[List[str]] = ["files", "metas"]
+    config: Optional[JobLaunchConfig] = None
+    __properties: ClassVar[List[str]] = ["files", "metas", "config"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -81,6 +83,9 @@ class CreateExtractRequest(BaseModel):
                 if _item_metas:
                     _items.append(_item_metas.to_dict())
             _dict['metas'] = _items
+        # override the default output from pydantic by calling `to_dict()` of config
+        if self.config:
+            _dict['config'] = self.config.to_dict()
         return _dict
 
     @classmethod
@@ -94,7 +99,8 @@ class CreateExtractRequest(BaseModel):
 
         _obj = cls.model_validate({
             "files": FilesInput.from_dict(obj["files"]) if obj.get("files") is not None else None,
-            "metas": [EliseMetaInput.from_dict(_item) for _item in obj["metas"]] if obj.get("metas") is not None else None
+            "metas": [EliseMetaInput.from_dict(_item) for _item in obj["metas"]] if obj.get("metas") is not None else None,
+            "config": JobLaunchConfig.from_dict(obj["config"]) if obj.get("config") is not None else None
         })
         return _obj
 

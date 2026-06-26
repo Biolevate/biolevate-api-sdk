@@ -48,6 +48,8 @@ class TestCreateAgentRequest(unittest.TestCase):
                     collection_ids = [
                         ''
                         ], ),
+                config = biolevate_client.models.job_launch_config.JobLaunchConfig(
+                    skip_unindexed_files = False, ),
                 history_input_valid = True,
                 conversation_id_valid = True,
                 output_model_schema = None,

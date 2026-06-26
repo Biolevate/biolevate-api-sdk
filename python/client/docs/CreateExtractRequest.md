@@ -7,6 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **files** | [**FilesInput**](FilesInput.md) |  | [optional] 
 **metas** | [**List[EliseMetaInput]**](EliseMetaInput.md) |  | [optional] 
+**config** | [**JobLaunchConfig**](JobLaunchConfig.md) |  | [optional] 
 
 ## Example
 

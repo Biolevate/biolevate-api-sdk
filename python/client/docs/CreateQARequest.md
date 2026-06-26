@@ -7,6 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **files** | [**FilesInput**](FilesInput.md) |  | [optional] 
 **questions** | [**List[EliseQuestionInput]**](EliseQuestionInput.md) |  | [optional] 
+**config** | [**JobLaunchConfig**](JobLaunchConfig.md) |  | [optional] 
 
 ## Example
 

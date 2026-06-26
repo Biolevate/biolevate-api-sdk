@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **policy** | [**PolicyIdExternal**](PolicyIdExternal.md) |  | [optional] 
 **name** | **str** |  | [optional] 
 **icon** | **str** |  | [optional] 
-**config** | [**FSProviderExternalConfig**](FSProviderExternalConfig.md) |  | [optional] 
+**config** | [**FSProviderConfigurationExternal**](FSProviderConfigurationExternal.md) |  | [optional] 
 **type** | **str** |  | [optional] 
 **system** | **bool** |  | [optional] 
 

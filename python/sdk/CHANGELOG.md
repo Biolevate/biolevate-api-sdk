@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.7.1](https://github.com/Biolevate/biolevate-api-sdk/compare/biolevate-v0.7.0...biolevate-v0.7.1) (2026-06-26)
+
+
+### Bug Fixes
+
+* add OpenAPI discriminators so annotation.data deserializes in th… ([6b74af5](https://github.com/Biolevate/biolevate-api-sdk/commit/6b74af58e240e0138885187ba382d1806daa7be1))
+* add OpenAPI discriminators so annotation.data deserializes in the Python SDK ([3089135](https://github.com/Biolevate/biolevate-api-sdk/commit/30891353d449b74f09bd7f5b54f6bbf266d302cd))
+
 ## [0.7.0](https://github.com/Biolevate/biolevate-api-sdk/compare/biolevate-v0.6.1...biolevate-v0.7.0) (2026-06-04)
 
 

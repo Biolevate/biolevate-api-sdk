@@ -30,6 +30,7 @@ Name | Type | Description | Notes
 **description** | **str** |  | [optional] 
 **authors** | **str** |  | [optional] 
 **title** | **str** |  | [optional] 
+**last_merge_job** | [**LastMergeJobInfo**](LastMergeJobInfo.md) |  | [optional] 
 **additional_infos** | **object** |  | [optional] 
 **type** | **str** |  | [optional] 
 

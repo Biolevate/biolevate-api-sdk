@@ -19,18 +19,16 @@ import json
 
 from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from biolevate_client.models.elise_entity_column_input import EliseEntityColumnInput
 from typing import Optional, Set
 from typing_extensions import Self
 
-class EliseEntitySchemaInput(BaseModel):
+class LastMergeJobInfo(BaseModel):
     """
-    EliseEntitySchemaInput
+    LastMergeJobInfo
     """ # noqa: E501
-    name: Optional[StrictStr] = None
-    description: Optional[StrictStr] = None
-    columns: Optional[List[EliseEntityColumnInput]] = None
-    __properties: ClassVar[List[str]] = ["name", "description", "columns"]
+    id: Optional[StrictStr] = None
+    status: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["id", "status"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -50,7 +48,7 @@ class EliseEntitySchemaInput(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of EliseEntitySchemaInput from a JSON string"""
+        """Create an instance of LastMergeJobInfo from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -71,18 +69,11 @@ class EliseEntitySchemaInput(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in columns (list)
-        _items = []
-        if self.columns:
-            for _item_columns in self.columns:
-                if _item_columns:
-                    _items.append(_item_columns.to_dict())
-            _dict['columns'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of EliseEntitySchemaInput from a dict"""
+        """Create an instance of LastMergeJobInfo from a dict"""
         if obj is None:
             return None
 
@@ -90,9 +81,8 @@ class EliseEntitySchemaInput(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "description": obj.get("description"),
-            "columns": [EliseEntityColumnInput.from_dict(_item) for _item in obj["columns"]] if obj.get("columns") is not None else None
+            "id": obj.get("id"),
+            "status": obj.get("status")
         })
         return _obj
 

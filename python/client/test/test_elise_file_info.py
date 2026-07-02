@@ -70,6 +70,9 @@ class TestEliseFileInfo(unittest.TestCase):
                 description = '',
                 authors = '',
                 title = '',
+                last_merge_job = biolevate_client.models.last_merge_job_info.LastMergeJobInfo(
+                    id = '', 
+                    status = '', ),
                 additional_infos = None,
                 type = 'FILE'
             )

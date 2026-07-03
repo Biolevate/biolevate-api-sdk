@@ -15,7 +15,7 @@ if TYPE_CHECKING:
         QAJobOutputs,
     )
     from biolevate_client import ApiClient
-    from biolevate_client.models import EliseQuestionInput
+    from biolevate_client.models import EliseQuestionInput, JobLaunchConfig
 
 
 class QuestionAnsweringResource:
@@ -83,6 +83,7 @@ class QuestionAnsweringResource:
         questions: list[EliseQuestionInput],
         file_ids: list[str] | None = None,
         collection_ids: list[str] | None = None,
+        config: JobLaunchConfig | None = None,
     ) -> Job:
         """Create a new QA job.
 
@@ -97,6 +98,9 @@ class QuestionAnsweringResource:
                 - input_question_ids: Optional list of dependent question IDs
             file_ids: List of file IDs to search for answers.
             collection_ids: List of collection IDs to search for answers.
+            config: Optional job launch behaviour. Set
+                ``JobLaunchConfig(skip_unindexed_files=True)`` to exclude
+                unindexed input files instead of rejecting the request.
 
         Returns:
             The created job.
@@ -123,6 +127,7 @@ class QuestionAnsweringResource:
                         collectionIds=collection_ids,
                     ),
                     questions=questions,
+                    config=config,
                 )
             )
         except UnauthorizedException as e:

@@ -82,6 +82,7 @@ biolevate_client/models/job.py
 biolevate_client/models/job_launch_config.py
 biolevate_client/models/job_statistics.py
 biolevate_client/models/knowledge_source.py
+biolevate_client/models/last_merge_job_info.py
 biolevate_client/models/lib_item_indexation_infos.py
 biolevate_client/models/list_items_response.py
 biolevate_client/models/mde_job_inputs.py
@@ -180,6 +181,7 @@ docs/Job.md
 docs/JobLaunchConfig.md
 docs/JobStatistics.md
 docs/KnowledgeSource.md
+docs/LastMergeJobInfo.md
 docs/LibItemIndexationInfos.md
 docs/ListItemsResponse.md
 docs/MDEJobInputs.md
@@ -287,6 +289,7 @@ test/test_job.py
 test/test_job_launch_config.py
 test/test_job_statistics.py
 test/test_knowledge_source.py
+test/test_last_merge_job_info.py
 test/test_lib_item_indexation_infos.py
 test/test_list_items_response.py
 test/test_mde_job_inputs.py

@@ -75,6 +75,7 @@ from biolevate_client.models.job import Job
 from biolevate_client.models.job_launch_config import JobLaunchConfig
 from biolevate_client.models.job_statistics import JobStatistics
 from biolevate_client.models.knowledge_source import KnowledgeSource
+from biolevate_client.models.last_merge_job_info import LastMergeJobInfo
 from biolevate_client.models.lib_item_indexation_infos import LibItemIndexationInfos
 from biolevate_client.models.list_items_response import ListItemsResponse
 from biolevate_client.models.mde_job_inputs import MDEJobInputs

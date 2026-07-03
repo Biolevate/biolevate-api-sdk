@@ -29,6 +29,7 @@ from biolevate.models import (
     FindSimilarJob,
     FindSimilarJobPage,
     Job,
+    JobLaunchConfig,
     JobPage,
     JobStatistics,
     KnowledgeSource,
@@ -72,6 +73,7 @@ __all__ = [
     # Jobs
     "Job",
     "JobPage",
+    "JobLaunchConfig",
     # Extraction
     "MetaInput",
     "ExtractionResult",

@@ -14,7 +14,7 @@
 """  # noqa: E501
 
 
-__version__ = "1.3.0"
+__version__ = "1.4.0"
 
 # Define package exports
 __all__ = [
@@ -98,6 +98,7 @@ __all__ = [
     "JobLaunchConfig",
     "JobStatistics",
     "KnowledgeSource",
+    "LastMergeJobInfo",
     "LibItemIndexationInfos",
     "ListItemsResponse",
     "MDEJobInputs",
@@ -214,6 +215,7 @@ from biolevate_client.models.job import Job as Job
 from biolevate_client.models.job_launch_config import JobLaunchConfig as JobLaunchConfig
 from biolevate_client.models.job_statistics import JobStatistics as JobStatistics
 from biolevate_client.models.knowledge_source import KnowledgeSource as KnowledgeSource
+from biolevate_client.models.last_merge_job_info import LastMergeJobInfo as LastMergeJobInfo
 from biolevate_client.models.lib_item_indexation_infos import LibItemIndexationInfos as LibItemIndexationInfos
 from biolevate_client.models.list_items_response import ListItemsResponse as ListItemsResponse
 from biolevate_client.models.mde_job_inputs import MDEJobInputs as MDEJobInputs

@@ -238,6 +238,7 @@ from biolevate import EntityColumnInput, EntitySchemaInput
 
 schema = EntitySchemaInput(
     name="compounds",
+    description="Compounds studied in the source documents and their administered doses",
     columns=[
         EntityColumnInput(
             key="compound",

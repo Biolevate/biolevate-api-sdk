@@ -20,6 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from biolevate_client.models.file_id import FileId
+from biolevate_client.models.last_merge_job_info import LastMergeJobInfo
 from biolevate_client.models.lib_item_indexation_infos import LibItemIndexationInfos
 from biolevate_client.models.policy_id import PolicyId
 from biolevate_client.models.provider_id import ProviderId
@@ -56,9 +57,10 @@ class EliseFileInfo(BaseModel):
     description: Optional[StrictStr] = None
     authors: Optional[StrictStr] = None
     title: Optional[StrictStr] = None
+    last_merge_job: Optional[LastMergeJobInfo] = Field(default=None, alias="lastMergeJob")
     additional_infos: Optional[Dict[str, Any]] = Field(default=None, alias="additionalInfos")
     type: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["id", "createdTime", "owner", "policy", "providerId", "name", "path", "size", "checksum", "mediaType", "extension", "indexed", "matchComputed", "displayName", "dbName", "lastIndexationInfos", "ownerFirstName", "ownerLastName", "ownerEmail", "ownerAvatarUrl", "providerName", "additionalInfo", "description", "authors", "title", "additionalInfos", "type"]
+    __properties: ClassVar[List[str]] = ["id", "createdTime", "owner", "policy", "providerId", "name", "path", "size", "checksum", "mediaType", "extension", "indexed", "matchComputed", "displayName", "dbName", "lastIndexationInfos", "ownerFirstName", "ownerLastName", "ownerEmail", "ownerAvatarUrl", "providerName", "additionalInfo", "description", "authors", "title", "lastMergeJob", "additionalInfos", "type"]
 
     @field_validator('type')
     def type_validate_enum(cls, value):
@@ -124,6 +126,9 @@ class EliseFileInfo(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of last_indexation_infos
         if self.last_indexation_infos:
             _dict['lastIndexationInfos'] = self.last_indexation_infos.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of last_merge_job
+        if self.last_merge_job:
+            _dict['lastMergeJob'] = self.last_merge_job.to_dict()
         return _dict
 
     @classmethod
@@ -161,6 +166,7 @@ class EliseFileInfo(BaseModel):
             "description": obj.get("description"),
             "authors": obj.get("authors"),
             "title": obj.get("title"),
+            "lastMergeJob": LastMergeJobInfo.from_dict(obj["lastMergeJob"]) if obj.get("lastMergeJob") is not None else None,
             "additionalInfos": obj.get("additionalInfos"),
             "type": obj.get("type")
         })

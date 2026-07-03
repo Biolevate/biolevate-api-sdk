@@ -16,6 +16,7 @@ if TYPE_CHECKING:
         MDEJobOutputs,
     )
     from biolevate_client import ApiClient
+    from biolevate_client.models import JobLaunchConfig
 
 
 class MultiDimensionalExtractionResource:
@@ -83,6 +84,7 @@ class MultiDimensionalExtractionResource:
         schema: EntitySchemaInput,
         file_ids: list[str] | None = None,
         collection_ids: list[str] | None = None,
+        config: JobLaunchConfig | None = None,
     ) -> Job:
         """Create a new multi-dimensional extraction job.
 
@@ -90,6 +92,9 @@ class MultiDimensionalExtractionResource:
             schema: Entity schema describing the columns to extract.
             file_ids: List of file IDs to extract from.
             collection_ids: List of collection IDs to extract from.
+            config: Optional job launch behaviour. Set
+                ``JobLaunchConfig(skip_unindexed_files=True)`` to exclude
+                unindexed input files instead of rejecting the request.
 
         Returns:
             The created job.
@@ -116,6 +121,7 @@ class MultiDimensionalExtractionResource:
                         collectionIds=collection_ids,
                     ),
                     schema=schema,
+                    config=config,
                 )
             )
         except UnauthorizedException as e:

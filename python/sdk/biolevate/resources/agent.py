@@ -17,7 +17,7 @@ if TYPE_CHECKING:
         JobPage,
     )
     from biolevate_client import ApiClient
-    from biolevate_client.models import AgentCompletionConfig
+    from biolevate_client.models import AgentCompletionConfig, JobLaunchConfig
 
 
 class AgentResource:
@@ -111,6 +111,7 @@ class AgentResource:
         max_iterations: int | None = None,
         conversation_id: str | None = None,
         idempotency_key: str | None = None,
+        config: JobLaunchConfig | None = None,
     ) -> Job:
         """Create a new agent job.
 
@@ -131,6 +132,9 @@ class AgentResource:
             conversation_id: Continue an existing server-side conversation
                 (stateful only). Omit to start a new conversation.
             idempotency_key: Optional idempotency key for safe retries.
+            config: Optional job launch behaviour. Set
+                ``JobLaunchConfig(skip_unindexed_files=True)`` to exclude
+                unindexed input files instead of rejecting the request.
 
         Returns:
             The created job.
@@ -167,6 +171,7 @@ class AgentResource:
             completion_config=completion_config,
             max_iterations=max_iterations,
             conversation_id=conversation_uuid,
+            config=config,
         )
 
         try:

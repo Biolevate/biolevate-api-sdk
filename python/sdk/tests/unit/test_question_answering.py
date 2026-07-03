@@ -103,6 +103,49 @@ class TestQACreateJob:
         assert job.job_id == JOB_ID
 
     @respx.mock
+    async def test_forwards_job_launch_config(
+        self,
+        client: BiolevateClient,
+        base_url: str,
+        job_payload: dict,
+    ) -> None:
+        import json
+
+        from biolevate import JobLaunchConfig
+        from biolevate_client.models import EliseQuestionInput
+
+        route = respx.post(f"{base_url}/api/core/qa/jobs").mock(return_value=Response(200, json=job_payload))
+
+        question = EliseQuestionInput.model_validate(_question_input())
+        await client.qa.create_job(
+            questions=[question],
+            file_ids=[FILE_ID],
+            config=JobLaunchConfig(skip_unindexed_files=True),
+        )
+
+        body = json.loads(route.calls.last.request.content)
+        assert body["config"]["skip_unindexed_files"] is True
+
+    @respx.mock
+    async def test_omits_config_when_not_provided(
+        self,
+        client: BiolevateClient,
+        base_url: str,
+        job_payload: dict,
+    ) -> None:
+        import json
+
+        from biolevate_client.models import EliseQuestionInput
+
+        route = respx.post(f"{base_url}/api/core/qa/jobs").mock(return_value=Response(200, json=job_payload))
+
+        question = EliseQuestionInput.model_validate(_question_input())
+        await client.qa.create_job(questions=[question], file_ids=[FILE_ID])
+
+        body = json.loads(route.calls.last.request.content)
+        assert "config" not in body
+
+    @respx.mock
     async def test_raises_authentication_error_on_401(
         self,
         client: BiolevateClient,

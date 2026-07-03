@@ -40,6 +40,7 @@ class TestMDEJobOutputs(unittest.TestCase):
                     meta = '', 
                     schema = biolevate_client.models.elise_entity_schema_input.EliseEntitySchemaInput(
                         name = '', 
+                        description = '', 
                         columns = [
                             biolevate_client.models.elise_entity_column_input.EliseEntityColumnInput(
                                 key = '', 

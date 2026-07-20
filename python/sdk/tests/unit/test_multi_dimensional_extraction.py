@@ -219,6 +219,7 @@ class TestMultiDimensionalExtractionGetters:
 
         assert inputs.var_schema is not None
         assert inputs.var_schema.name == "compounds"
+        assert inputs.prompt == "Extract one row per compound."
 
     @respx.mock
     async def test_returns_job_outputs(

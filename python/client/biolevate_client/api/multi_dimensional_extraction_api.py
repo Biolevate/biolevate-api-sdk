@@ -885,7 +885,7 @@ class MultiDimensionalExtractionApi:
     ) -> MDEJobInputs:
         """Get multi-dimensional extraction job inputs
 
-        Returns the input files and entity schema used for the multi-dimensional extraction job
+        Returns the input files, prompt, and entity schema used for the multi-dimensional extraction job
 
         :param job_id: The job Id (required)
         :type job_id: str
@@ -955,7 +955,7 @@ class MultiDimensionalExtractionApi:
     ) -> ApiResponse[MDEJobInputs]:
         """Get multi-dimensional extraction job inputs
 
-        Returns the input files and entity schema used for the multi-dimensional extraction job
+        Returns the input files, prompt, and entity schema used for the multi-dimensional extraction job
 
         :param job_id: The job Id (required)
         :type job_id: str
@@ -1025,7 +1025,7 @@ class MultiDimensionalExtractionApi:
     ) -> RESTResponseType:
         """Get multi-dimensional extraction job inputs
 
-        Returns the input files and entity schema used for the multi-dimensional extraction job
+        Returns the input files, prompt, and entity schema used for the multi-dimensional extraction job
 
         :param job_id: The job Id (required)
         :type job_id: str

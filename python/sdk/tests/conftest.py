@@ -198,6 +198,7 @@ def mde_job_inputs_payload() -> dict:
                 }
             ],
         },
+        "prompt": "Extract one row per compound.",
     }
 
 

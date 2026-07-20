@@ -56,7 +56,8 @@ class TestMDEJobInputs(unittest.TestCase):
                                 ''
                                 ], 
                             is_row_key = True, )
-                        ], )
+                        ], ),
+                prompt = ''
             )
         else:
             return MDEJobInputs(

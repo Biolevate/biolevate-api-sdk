@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from biolevate_client.models.elise_entity_schema_input import EliseEntitySchemaInput
 from biolevate_client.models.files_input import FilesInput
@@ -30,7 +30,8 @@ class MDEJobInputs(BaseModel):
     """ # noqa: E501
     files: Optional[FilesInput] = None
     var_schema: Optional[EliseEntitySchemaInput] = Field(default=None, alias="schema")
-    __properties: ClassVar[List[str]] = ["files", "schema"]
+    prompt: Optional[StrictStr] = Field(default=None, description="Natural-language extraction instructions submitted with the job.")
+    __properties: ClassVar[List[str]] = ["files", "schema", "prompt"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -90,7 +91,8 @@ class MDEJobInputs(BaseModel):
 
         _obj = cls.model_validate({
             "files": FilesInput.from_dict(obj["files"]) if obj.get("files") is not None else None,
-            "schema": EliseEntitySchemaInput.from_dict(obj["schema"]) if obj.get("schema") is not None else None
+            "schema": EliseEntitySchemaInput.from_dict(obj["schema"]) if obj.get("schema") is not None else None,
+            "prompt": obj.get("prompt")
         })
         return _obj
 

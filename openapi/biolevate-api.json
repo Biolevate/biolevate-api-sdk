@@ -2008,7 +2008,7 @@
       "get": {
         "tags": ["Multi-Dimensional Extraction"],
         "summary": "Get multi-dimensional extraction job inputs",
-        "description": "Returns the input files and entity schema used for the multi-dimensional extraction job",
+        "description": "Returns the input files, prompt, and entity schema used for the multi-dimensional extraction job",
         "operationId": "getMDEJobInputs",
         "parameters": [
           {
@@ -4339,7 +4339,11 @@
         "type": "object",
         "properties": {
           "files": { "$ref": "#/components/schemas/FilesInput" },
-          "schema": { "$ref": "#/components/schemas/EliseEntitySchemaInput" }
+          "schema": { "$ref": "#/components/schemas/EliseEntitySchemaInput" },
+          "prompt": {
+            "type": "string",
+            "description": "Natural-language extraction instructions submitted with the job."
+          }
         }
       },
       "PageDataFindSimilarApiJobDto": {

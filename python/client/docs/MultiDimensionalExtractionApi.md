@@ -261,7 +261,7 @@ Name | Type | Description  | Notes
 
 Get multi-dimensional extraction job inputs
 
-Returns the input files and entity schema used for the multi-dimensional extraction job
+Returns the input files, prompt, and entity schema used for the multi-dimensional extraction job
 
 ### Example
 

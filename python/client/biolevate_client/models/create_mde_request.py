@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from biolevate_client.models.elise_entity_schema_input import EliseEntitySchemaInput
 from biolevate_client.models.files_input import FilesInput
@@ -27,12 +27,13 @@ from typing_extensions import Self
 
 class CreateMDERequest(BaseModel):
     """
-    CreateMDERequest
+    Multi-dimensional extraction request. Provide a prompt, a schema, or both.
     """ # noqa: E501
     files: Optional[FilesInput] = None
     var_schema: Optional[EliseEntitySchemaInput] = Field(default=None, alias="schema")
+    prompt: Optional[StrictStr] = Field(default=None, description="Optional natural-language extraction instructions. Required when schema is omitted.")
     config: Optional[JobLaunchConfig] = None
-    __properties: ClassVar[List[str]] = ["files", "schema", "config"]
+    __properties: ClassVar[List[str]] = ["files", "schema", "prompt", "config"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -96,6 +97,7 @@ class CreateMDERequest(BaseModel):
         _obj = cls.model_validate({
             "files": FilesInput.from_dict(obj["files"]) if obj.get("files") is not None else None,
             "schema": EliseEntitySchemaInput.from_dict(obj["schema"]) if obj.get("schema") is not None else None,
+            "prompt": obj.get("prompt"),
             "config": JobLaunchConfig.from_dict(obj["config"]) if obj.get("config") is not None else None
         })
         return _obj

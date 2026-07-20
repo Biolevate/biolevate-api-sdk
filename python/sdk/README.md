@@ -257,7 +257,17 @@ schema = EntitySchemaInput(
     ],
 )
 
-job = await client.mde.create_job(schema=schema, file_ids=["file-uuid"])
+job = await client.mde.create_job(
+    schema=schema,
+    file_ids=["file-uuid"],
+    prompt="Extract one row per compound and preserve reported units.",
+)
+
+# The API can also infer the output schema from natural-language instructions.
+inferred_schema_job = await client.mde.create_job(
+    file_ids=["file-uuid"],
+    prompt="Extract one row per study arm with all reported baseline characteristics.",
+)
 
 # Poll until complete, then retrieve extracted rows
 outputs = await client.mde.get_job_outputs(job.job_id)

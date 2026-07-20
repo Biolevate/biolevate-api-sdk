@@ -81,25 +81,30 @@ class MultiDimensionalExtractionResource:
 
     async def create_job(
         self,
-        schema: EntitySchemaInput,
+        schema: EntitySchemaInput | None = None,
         file_ids: list[str] | None = None,
         collection_ids: list[str] | None = None,
         config: JobLaunchConfig | None = None,
+        prompt: str | None = None,
     ) -> Job:
         """Create a new multi-dimensional extraction job.
 
         Args:
-            schema: Entity schema describing the columns to extract.
+            schema: Optional fixed output schema. When omitted, the API infers
+                the schema from ``prompt``.
             file_ids: List of file IDs to extract from.
             collection_ids: List of collection IDs to extract from.
             config: Optional job launch behaviour. Set
                 ``JobLaunchConfig(skip_unindexed_files=True)`` to exclude
                 unindexed input files instead of rejecting the request.
+            prompt: Optional natural-language extraction instructions. Required
+                when ``schema`` is omitted.
 
         Returns:
             The created job.
 
         Raises:
+            ValueError: If neither a schema nor a non-blank prompt is provided.
             AuthenticationError: If authentication fails or access is denied.
             APIError: If the API returns an unexpected error.
         """
@@ -112,6 +117,9 @@ class MultiDimensionalExtractionResource:
         from biolevate_client.models import CreateMDERequest, FilesInput
 
         api = MultiDimensionalExtractionApi(self._client)
+        effective_prompt = prompt if prompt is not None and prompt.strip() else None
+        if schema is None and effective_prompt is None:
+            raise ValueError("prompt or schema is required")
 
         try:
             return await api.create_mde_job(
@@ -121,6 +129,7 @@ class MultiDimensionalExtractionResource:
                         collectionIds=collection_ids,
                     ),
                     schema=schema,
+                    prompt=effective_prompt,
                     config=config,
                 )
             )

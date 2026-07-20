@@ -535,7 +535,7 @@
       "post": {
         "tags": ["Multi-Dimensional Extraction"],
         "summary": "Create multi-dimensional extraction job",
-        "description": "Creates a new entity extraction job using a structured schema (multi-column) on the specified files",
+        "description": "Creates a new entity extraction job from natural-language instructions, a fixed output schema, or both",
         "operationId": "createMDEJob",
         "requestBody": {
           "content": {
@@ -2968,9 +2968,14 @@
       },
       "CreateMDERequest": {
         "type": "object",
+        "description": "Multi-dimensional extraction request. Provide a prompt, a schema, or both.",
         "properties": {
           "files": { "$ref": "#/components/schemas/FilesInput" },
           "schema": { "$ref": "#/components/schemas/EliseEntitySchemaInput" },
+          "prompt": {
+            "type": "string",
+            "description": "Optional natural-language extraction instructions. Required when schema is omitted."
+          },
           "config": { "$ref": "#/components/schemas/JobLaunchConfig" }
         }
       },

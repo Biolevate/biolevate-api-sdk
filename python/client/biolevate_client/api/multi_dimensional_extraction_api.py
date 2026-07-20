@@ -62,7 +62,7 @@ class MultiDimensionalExtractionApi:
     ) -> Job:
         """Create multi-dimensional extraction job
 
-        Creates a new entity extraction job using a structured schema (multi-column) on the specified files
+        Creates a new entity extraction job from natural-language instructions, a fixed output schema, or both
 
         :param create_mde_request: (required)
         :type create_mde_request: CreateMDERequest
@@ -132,7 +132,7 @@ class MultiDimensionalExtractionApi:
     ) -> ApiResponse[Job]:
         """Create multi-dimensional extraction job
 
-        Creates a new entity extraction job using a structured schema (multi-column) on the specified files
+        Creates a new entity extraction job from natural-language instructions, a fixed output schema, or both
 
         :param create_mde_request: (required)
         :type create_mde_request: CreateMDERequest
@@ -202,7 +202,7 @@ class MultiDimensionalExtractionApi:
     ) -> RESTResponseType:
         """Create multi-dimensional extraction job
 
-        Creates a new entity extraction job using a structured schema (multi-column) on the specified files
+        Creates a new entity extraction job from natural-language instructions, a fixed output schema, or both
 
         :param create_mde_request: (required)
         :type create_mde_request: CreateMDERequest

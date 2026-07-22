@@ -117,7 +117,7 @@ class TestMultiDimensionalExtractionCreateJob:
         body = json.loads(route.calls.last.request.content)
         assert body["prompt"] == "Extract one row per study arm."
         assert body["schema"]["name"] == "compounds"
-        assert schema.description is None
+        assert "description" not in body["schema"]
 
     @respx.mock
     async def test_creates_prompt_only_job(

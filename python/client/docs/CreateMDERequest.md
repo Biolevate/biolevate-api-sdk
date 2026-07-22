@@ -6,10 +6,10 @@ Multi-dimensional extraction request. Provide a prompt, a schema, or both.
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**files** | [**FilesInput**](FilesInput.md) |  | [optional] 
-**var_schema** | [**EliseEntitySchemaInput**](EliseEntitySchemaInput.md) |  | [optional] 
-**prompt** | **str** | Optional natural-language extraction instructions. Required when schema is omitted. | [optional]
-**config** | [**JobLaunchConfig**](JobLaunchConfig.md) |  | [optional] 
+**files** | [**FilesInput**](FilesInput.md) |  | [optional]
+**var_schema** | [**EliseEntitySchemaInput**](EliseEntitySchemaInput.md) | Optional fixed output schema. Per-column descriptions define each field. When omitted, the schema is inferred from prompt. | [optional]
+**prompt** | **str** | Optional global extraction guidelines. Required when schema is omitted. | [optional]
+**config** | [**JobLaunchConfig**](JobLaunchConfig.md) |  | [optional]
 
 ## Example
 

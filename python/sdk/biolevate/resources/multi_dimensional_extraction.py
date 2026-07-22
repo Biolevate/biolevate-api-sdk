@@ -97,8 +97,8 @@ class MultiDimensionalExtractionResource:
             config: Optional job launch behaviour. Set
                 ``JobLaunchConfig(skip_unindexed_files=True)`` to exclude
                 unindexed input files instead of rejecting the request.
-            prompt: Optional natural-language extraction instructions. Required
-                when ``schema`` is omitted.
+            prompt: Optional global extraction guidelines. Required when
+                ``schema`` is omitted.
 
         Returns:
             The created job.

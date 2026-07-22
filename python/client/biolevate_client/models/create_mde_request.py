@@ -30,8 +30,8 @@ class CreateMDERequest(BaseModel):
     Multi-dimensional extraction request. Provide a prompt, a schema, or both.
     """ # noqa: E501
     files: Optional[FilesInput] = None
-    var_schema: Optional[EliseEntitySchemaInput] = Field(default=None, alias="schema")
-    prompt: Optional[StrictStr] = Field(default=None, description="Optional natural-language extraction instructions. Required when schema is omitted.")
+    var_schema: Optional[EliseEntitySchemaInput] = Field(default=None, description="Optional fixed output schema. Per-column descriptions define each field. When omitted, the schema is inferred from prompt.", alias="schema")
+    prompt: Optional[StrictStr] = Field(default=None, description="Optional global extraction guidelines. Required when schema is omitted.")
     config: Optional[JobLaunchConfig] = None
     __properties: ClassVar[List[str]] = ["files", "schema", "prompt", "config"]
 

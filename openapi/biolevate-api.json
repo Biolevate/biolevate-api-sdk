@@ -2971,10 +2971,13 @@
         "description": "Multi-dimensional extraction request. Provide a prompt, a schema, or both.",
         "properties": {
           "files": { "$ref": "#/components/schemas/FilesInput" },
-          "schema": { "$ref": "#/components/schemas/EliseEntitySchemaInput" },
+          "schema": {
+            "allOf": [{ "$ref": "#/components/schemas/EliseEntitySchemaInput" }],
+            "description": "Optional fixed output schema. Per-column descriptions define each field. When omitted, the schema is inferred from prompt."
+          },
           "prompt": {
             "type": "string",
-            "description": "Optional natural-language extraction instructions. Required when schema is omitted."
+            "description": "Optional global extraction guidelines. Required when schema is omitted."
           },
           "config": { "$ref": "#/components/schemas/JobLaunchConfig" }
         }
@@ -3017,7 +3020,6 @@
         "type": "object",
         "properties": {
           "name": { "type": "string" },
-          "description": { "type": "string" },
           "columns": {
             "type": "array",
             "items": { "$ref": "#/components/schemas/EliseEntityColumnInput" }

@@ -5,8 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**files** | [**FilesInput**](FilesInput.md) |  | [optional] 
-**var_schema** | [**EliseEntitySchemaInput**](EliseEntitySchemaInput.md) |  | [optional] 
+**files** | [**FilesInput**](FilesInput.md) |  | [optional]
+**var_schema** | [**EliseEntitySchemaInput**](EliseEntitySchemaInput.md) |  | [optional]
 **prompt** | **str** | Natural-language extraction instructions submitted with the job. | [optional]
 
 ## Example
@@ -27,4 +27,3 @@ mde_job_inputs_dict = mde_job_inputs_instance.to_dict()
 mde_job_inputs_from_dict = MDEJobInputs.from_dict(mde_job_inputs_dict)
 ```
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-

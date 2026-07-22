@@ -104,7 +104,6 @@ class MultiDimensionalExtractionResource:
             The created job.
 
         Raises:
-            ValueError: If neither a schema nor a non-blank prompt is provided.
             AuthenticationError: If authentication fails or access is denied.
             APIError: If the API returns an unexpected error.
         """
@@ -117,9 +116,6 @@ class MultiDimensionalExtractionResource:
         from biolevate_client.models import CreateMDERequest, FilesInput
 
         api = MultiDimensionalExtractionApi(self._client)
-        effective_prompt = prompt if prompt is not None and prompt.strip() else None
-        if schema is None and effective_prompt is None:
-            raise ValueError("prompt or schema is required")
 
         try:
             return await api.create_mde_job(
@@ -129,7 +125,7 @@ class MultiDimensionalExtractionResource:
                         collectionIds=collection_ids,
                     ),
                     schema=schema,
-                    prompt=effective_prompt,
+                    prompt=prompt,
                     config=config,
                 )
             )

@@ -139,40 +139,6 @@ class TestMultiDimensionalExtractionCreateJob:
         assert body["prompt"] == "Infer a table of study arms and reported outcomes."
         assert "schema" not in body
 
-    async def test_requires_prompt_or_schema(
-        self,
-        client: BiolevateClient,
-    ) -> None:
-        with pytest.raises(ValueError, match="prompt or schema is required"):
-            await client.mde.create_job(file_ids=[FILE_ID])
-
-    async def test_rejects_blank_prompt_without_schema(
-        self,
-        client: BiolevateClient,
-    ) -> None:
-        with pytest.raises(ValueError, match="prompt or schema is required"):
-            await client.mde.create_job(file_ids=[FILE_ID], prompt="   ")
-
-    @respx.mock
-    async def test_ignores_blank_prompt_when_schema_exists(
-        self,
-        client: BiolevateClient,
-        base_url: str,
-        job_payload: dict,
-    ) -> None:
-        route = respx.post(f"{base_url}/api/core/multi-dim-extraction/jobs").mock(
-            return_value=Response(200, json=job_payload)
-        )
-
-        await client.mde.create_job(
-            schema=_schema_input(),
-            file_ids=[FILE_ID],
-            prompt="   ",
-        )
-
-        body = json.loads(route.calls.last.request.content)
-        assert "prompt" not in body
-
     @respx.mock
     async def test_raises_api_error_on_500(
         self,

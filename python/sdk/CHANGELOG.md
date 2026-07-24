@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.8.0](https://github.com/Biolevate/biolevate-api-sdk/compare/biolevate-v0.7.1...biolevate-v0.8.0) (2026-07-24)
+
+
+### Features
+
+* add JobLaunchConfig add description to EntitySchemaInput ([#19](https://github.com/Biolevate/biolevate-api-sdk/issues/19)) ([daff4d8](https://github.com/Biolevate/biolevate-api-sdk/commit/daff4d8ffbca880f9d26def7cf3f1c9d8f1e1ccb))
+* expose MDE prompt in job inputs ([af1fbfc](https://github.com/Biolevate/biolevate-api-sdk/commit/af1fbfc7a6b1936d692ec139ae61370b99f243e8))
+* support prompt-based MDE jobs ([52ec6fb](https://github.com/Biolevate/biolevate-api-sdk/commit/52ec6fbc2f611f455345957ed8b729133c96906f))
+* support prompt-based MDE jobs ([d0b60e3](https://github.com/Biolevate/biolevate-api-sdk/commit/d0b60e33e1f953441e8e21d921b59f4035af650b))
+
+
+### Bug Fixes
+
+* clarify MDE prompt and schema contract ([0639898](https://github.com/Biolevate/biolevate-api-sdk/commit/0639898e8b41b1c96092a7a8012b0c8ddc100332))
+* require regenerated MDE client ([3a5d9bf](https://github.com/Biolevate/biolevate-api-sdk/commit/3a5d9bf39d4c8e055b6aedf279dbeb571234a5c9))
+
 ## [0.7.1](https://github.com/Biolevate/biolevate-api-sdk/compare/biolevate-v0.7.0...biolevate-v0.7.1) (2026-06-26)
 
 

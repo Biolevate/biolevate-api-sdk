@@ -28,9 +28,8 @@ class EliseEntitySchemaInput(BaseModel):
     EliseEntitySchemaInput
     """ # noqa: E501
     name: Optional[StrictStr] = None
-    description: Optional[StrictStr] = None
     columns: Optional[List[EliseEntityColumnInput]] = None
-    __properties: ClassVar[List[str]] = ["name", "description", "columns"]
+    __properties: ClassVar[List[str]] = ["name", "columns"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -91,7 +90,6 @@ class EliseEntitySchemaInput(BaseModel):
 
         _obj = cls.model_validate({
             "name": obj.get("name"),
-            "description": obj.get("description"),
             "columns": [EliseEntityColumnInput.from_dict(_item) for _item in obj["columns"]] if obj.get("columns") is not None else None
         })
         return _obj

@@ -62,7 +62,7 @@ class MultiDimensionalExtractionApi:
     ) -> Job:
         """Create multi-dimensional extraction job
 
-        Creates a new entity extraction job using a structured schema (multi-column) on the specified files
+        Creates a new entity extraction job from natural-language instructions, a fixed output schema, or both
 
         :param create_mde_request: (required)
         :type create_mde_request: CreateMDERequest
@@ -132,7 +132,7 @@ class MultiDimensionalExtractionApi:
     ) -> ApiResponse[Job]:
         """Create multi-dimensional extraction job
 
-        Creates a new entity extraction job using a structured schema (multi-column) on the specified files
+        Creates a new entity extraction job from natural-language instructions, a fixed output schema, or both
 
         :param create_mde_request: (required)
         :type create_mde_request: CreateMDERequest
@@ -202,7 +202,7 @@ class MultiDimensionalExtractionApi:
     ) -> RESTResponseType:
         """Create multi-dimensional extraction job
 
-        Creates a new entity extraction job using a structured schema (multi-column) on the specified files
+        Creates a new entity extraction job from natural-language instructions, a fixed output schema, or both
 
         :param create_mde_request: (required)
         :type create_mde_request: CreateMDERequest
@@ -885,7 +885,7 @@ class MultiDimensionalExtractionApi:
     ) -> MDEJobInputs:
         """Get multi-dimensional extraction job inputs
 
-        Returns the input files and entity schema used for the multi-dimensional extraction job
+        Returns the input files, prompt, and entity schema used for the multi-dimensional extraction job
 
         :param job_id: The job Id (required)
         :type job_id: str
@@ -955,7 +955,7 @@ class MultiDimensionalExtractionApi:
     ) -> ApiResponse[MDEJobInputs]:
         """Get multi-dimensional extraction job inputs
 
-        Returns the input files and entity schema used for the multi-dimensional extraction job
+        Returns the input files, prompt, and entity schema used for the multi-dimensional extraction job
 
         :param job_id: The job Id (required)
         :type job_id: str
@@ -1025,7 +1025,7 @@ class MultiDimensionalExtractionApi:
     ) -> RESTResponseType:
         """Get multi-dimensional extraction job inputs
 
-        Returns the input files and entity schema used for the multi-dimensional extraction job
+        Returns the input files, prompt, and entity schema used for the multi-dimensional extraction job
 
         :param job_id: The job Id (required)
         :type job_id: str

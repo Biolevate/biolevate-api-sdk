@@ -36,7 +36,6 @@ class TestEliseEntitySchemaInput(unittest.TestCase):
         if include_optional:
             return EliseEntitySchemaInput(
                 name = '',
-                description = '',
                 columns = [
                     biolevate_client.models.elise_entity_column_input.EliseEntityColumnInput(
                         key = '', 

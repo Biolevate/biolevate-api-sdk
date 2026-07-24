@@ -44,7 +44,6 @@ class TestCreateMDERequest(unittest.TestCase):
                         ], ),
                 var_schema = biolevate_client.models.elise_entity_schema_input.EliseEntitySchemaInput(
                     name = '', 
-                    description = '', 
                     columns = [
                         biolevate_client.models.elise_entity_column_input.EliseEntityColumnInput(
                             key = '', 
@@ -57,6 +56,7 @@ class TestCreateMDERequest(unittest.TestCase):
                                 ], 
                             is_row_key = True, )
                         ], ),
+                prompt = '',
                 config = biolevate_client.models.job_launch_config.JobLaunchConfig(
                     skip_unindexed_files = False, )
             )

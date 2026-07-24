@@ -535,7 +535,7 @@
       "post": {
         "tags": ["Multi-Dimensional Extraction"],
         "summary": "Create multi-dimensional extraction job",
-        "description": "Creates a new entity extraction job using a structured schema (multi-column) on the specified files",
+        "description": "Creates a new entity extraction job from natural-language instructions, a fixed output schema, or both",
         "operationId": "createMDEJob",
         "requestBody": {
           "content": {
@@ -2008,7 +2008,7 @@
       "get": {
         "tags": ["Multi-Dimensional Extraction"],
         "summary": "Get multi-dimensional extraction job inputs",
-        "description": "Returns the input files and entity schema used for the multi-dimensional extraction job",
+        "description": "Returns the input files, prompt, and entity schema used for the multi-dimensional extraction job",
         "operationId": "getMDEJobInputs",
         "parameters": [
           {
@@ -2968,9 +2968,17 @@
       },
       "CreateMDERequest": {
         "type": "object",
+        "description": "Multi-dimensional extraction request. Provide a prompt, a schema, or both.",
         "properties": {
           "files": { "$ref": "#/components/schemas/FilesInput" },
-          "schema": { "$ref": "#/components/schemas/EliseEntitySchemaInput" },
+          "schema": {
+            "allOf": [{ "$ref": "#/components/schemas/EliseEntitySchemaInput" }],
+            "description": "Optional fixed output schema. Per-column descriptions define each field. When omitted, the schema is inferred from prompt."
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Optional global extraction guidelines. Required when schema is omitted."
+          },
           "config": { "$ref": "#/components/schemas/JobLaunchConfig" }
         }
       },
@@ -3012,7 +3020,6 @@
         "type": "object",
         "properties": {
           "name": { "type": "string" },
-          "description": { "type": "string" },
           "columns": {
             "type": "array",
             "items": { "$ref": "#/components/schemas/EliseEntityColumnInput" }
@@ -4334,7 +4341,11 @@
         "type": "object",
         "properties": {
           "files": { "$ref": "#/components/schemas/FilesInput" },
-          "schema": { "$ref": "#/components/schemas/EliseEntitySchemaInput" }
+          "schema": { "$ref": "#/components/schemas/EliseEntitySchemaInput" },
+          "prompt": {
+            "type": "string",
+            "description": "Natural-language extraction instructions submitted with the job."
+          }
         }
       },
       "PageDataFindSimilarApiJobDto": {

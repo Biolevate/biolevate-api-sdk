@@ -17,7 +17,7 @@ Method | HTTP request | Description
 
 Create multi-dimensional extraction job
 
-Creates a new entity extraction job using a structured schema (multi-column) on the specified files
+Creates a new entity extraction job from natural-language instructions, a fixed output schema, or both
 
 ### Example
 
@@ -261,7 +261,7 @@ Name | Type | Description  | Notes
 
 Get multi-dimensional extraction job inputs
 
-Returns the input files and entity schema used for the multi-dimensional extraction job
+Returns the input files, prompt, and entity schema used for the multi-dimensional extraction job
 
 ### Example
 

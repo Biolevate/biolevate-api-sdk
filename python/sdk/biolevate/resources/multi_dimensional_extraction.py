@@ -81,20 +81,24 @@ class MultiDimensionalExtractionResource:
 
     async def create_job(
         self,
-        schema: EntitySchemaInput,
+        schema: EntitySchemaInput | None = None,
         file_ids: list[str] | None = None,
         collection_ids: list[str] | None = None,
         config: JobLaunchConfig | None = None,
+        prompt: str | None = None,
     ) -> Job:
         """Create a new multi-dimensional extraction job.
 
         Args:
-            schema: Entity schema describing the columns to extract.
+            schema: Optional fixed output schema. When omitted, the API infers
+                the schema from ``prompt``.
             file_ids: List of file IDs to extract from.
             collection_ids: List of collection IDs to extract from.
             config: Optional job launch behaviour. Set
                 ``JobLaunchConfig(skip_unindexed_files=True)`` to exclude
                 unindexed input files instead of rejecting the request.
+            prompt: Optional global extraction guidelines. Required when
+                ``schema`` is omitted.
 
         Returns:
             The created job.
@@ -121,6 +125,7 @@ class MultiDimensionalExtractionResource:
                         collectionIds=collection_ids,
                     ),
                     schema=schema,
+                    prompt=prompt,
                     config=config,
                 )
             )

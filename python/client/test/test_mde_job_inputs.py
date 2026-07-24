@@ -44,7 +44,6 @@ class TestMDEJobInputs(unittest.TestCase):
                         ], ),
                 var_schema = biolevate_client.models.elise_entity_schema_input.EliseEntitySchemaInput(
                     name = '', 
-                    description = '', 
                     columns = [
                         biolevate_client.models.elise_entity_column_input.EliseEntityColumnInput(
                             key = '', 
@@ -56,7 +55,8 @@ class TestMDEJobInputs(unittest.TestCase):
                                 ''
                                 ], 
                             is_row_key = True, )
-                        ], )
+                        ], ),
+                prompt = ''
             )
         else:
             return MDEJobInputs(

@@ -6,7 +6,6 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **name** | **str** |  | [optional] 
-**description** | **str** |  | [optional] 
 **columns** | [**List[EliseEntityColumnInput]**](EliseEntityColumnInput.md) |  | [optional] 
 
 ## Example

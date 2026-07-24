@@ -97,6 +97,49 @@ class TestMultiDimensionalExtractionCreateJob:
         assert body["schema"]["name"] == "compounds"
 
     @respx.mock
+    async def test_sends_prompt_with_fixed_schema(
+        self,
+        client: BiolevateClient,
+        base_url: str,
+        job_payload: dict,
+    ) -> None:
+        route = respx.post(f"{base_url}/api/core/multi-dim-extraction/jobs").mock(
+            return_value=Response(200, json=job_payload)
+        )
+        schema = _schema_input()
+
+        await client.mde.create_job(
+            schema=schema,
+            file_ids=[FILE_ID],
+            prompt="Extract one row per study arm.",
+        )
+
+        body = json.loads(route.calls.last.request.content)
+        assert body["prompt"] == "Extract one row per study arm."
+        assert body["schema"]["name"] == "compounds"
+        assert "description" not in body["schema"]
+
+    @respx.mock
+    async def test_creates_prompt_only_job(
+        self,
+        client: BiolevateClient,
+        base_url: str,
+        job_payload: dict,
+    ) -> None:
+        route = respx.post(f"{base_url}/api/core/multi-dim-extraction/jobs").mock(
+            return_value=Response(200, json=job_payload)
+        )
+
+        await client.mde.create_job(
+            file_ids=[FILE_ID],
+            prompt="Infer a table of study arms and reported outcomes.",
+        )
+
+        body = json.loads(route.calls.last.request.content)
+        assert body["prompt"] == "Infer a table of study arms and reported outcomes."
+        assert "schema" not in body
+
+    @respx.mock
     async def test_raises_api_error_on_500(
         self,
         client: BiolevateClient,
@@ -142,6 +185,7 @@ class TestMultiDimensionalExtractionGetters:
 
         assert inputs.var_schema is not None
         assert inputs.var_schema.name == "compounds"
+        assert inputs.prompt == "Extract one row per compound."
 
     @respx.mock
     async def test_returns_job_outputs(

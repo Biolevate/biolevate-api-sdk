@@ -41,11 +41,13 @@ async with BiolevateClient(base_url="...", token="...") as client:
 import asyncio
 from biolevate import BiolevateClient
 
+
 async def main():
     async with BiolevateClient(base_url="https://<your-elise-domain>", token="<your-pat>") as client:
         providers = await client.providers.list()
         for provider in providers.data:
             print(provider.name, provider.type_)
+
 
 asyncio.run(main())
 ```
@@ -61,9 +63,9 @@ page = await client.providers.list(page=0, page_size=20, query="s3")
 print(f"{page.total_elements} providers found")
 
 for provider in page.data:
-    print(provider.id.id)   # UUID used in subsequent calls
+    print(provider.id.id)  # UUID used in subsequent calls
     print(provider.name)
-    print(provider.type_)   # S3, AZURE, GCS, LOCAL, ...
+    print(provider.type_)  # S3, AZURE, GCS, LOCAL, ...
 
 provider = await client.providers.get("uuid-here")
 ```
@@ -169,6 +171,7 @@ job = await client.question_answering.create_job(
 
 # Poll until complete
 import asyncio
+
 while True:
     status = await client.question_answering.get_job(job.id.id)
     if status.status in ("SUCCESS", "FAILED"):
@@ -216,6 +219,7 @@ job = await client.extraction.create_job(
 
 # Poll until complete
 import asyncio
+
 while True:
     status = await client.extraction.get_job(job.id.id)
     if status.status in ("SUCCESS", "FAILED"):
